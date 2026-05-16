@@ -56,6 +56,9 @@ importers:
       hono:
         specifier: ^4.12.19
         version: 4.12.19
+      livekit-server-sdk:
+        specifier: ^2.15.3
+        version: 2.15.3
     devDependencies:
       '@types/node':
         specifier: ^20.11.17

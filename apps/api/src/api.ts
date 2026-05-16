@@ -2,6 +2,7 @@ import { Hono } from "hono"
 import { cors } from "hono/cors"
 import { logger } from "hono/logger"
 import { env } from "@/lib/env"
+import { tokenRoutes } from "@/routes/token"
 
 const api = new Hono()
 
@@ -15,8 +16,6 @@ api.use(
 
 api.use(logger())
 
-api.get("/", (c) => {
-  return c.text("Hello Hono!")
-})
+api.route("/token", tokenRoutes)
 
 export default api
