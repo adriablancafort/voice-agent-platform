@@ -9,50 +9,93 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PageRouteImport } from './routes/page'
+import { Route as sidebarLayoutRouteImport } from './routes/(sidebar)/layout'
+import { Route as sidebarPageRouteImport } from './routes/(sidebar)/page'
+import { Route as sidebarTestAgentPageRouteImport } from './routes/(sidebar)/test-agent/page'
 
-const PageRoute = PageRouteImport.update({
+const sidebarLayoutRoute = sidebarLayoutRouteImport.update({
+  id: '/(sidebar)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const sidebarPageRoute = sidebarPageRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => sidebarLayoutRoute,
+} as any)
+const sidebarTestAgentPageRoute = sidebarTestAgentPageRouteImport.update({
+  id: '/test-agent/',
+  path: '/test-agent/',
+  getParentRoute: () => sidebarLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof PageRoute
+  '/': typeof sidebarPageRoute
+  '/test-agent/': typeof sidebarTestAgentPageRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof PageRoute
+  '/': typeof sidebarPageRoute
+  '/test-agent': typeof sidebarTestAgentPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof PageRoute
+  '/(sidebar)': typeof sidebarLayoutRouteWithChildren
+  '/(sidebar)/': typeof sidebarPageRoute
+  '/(sidebar)/test-agent/': typeof sidebarTestAgentPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/test-agent/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/test-agent'
+  id: '__root__' | '/(sidebar)' | '/(sidebar)/' | '/(sidebar)/test-agent/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  PageRoute: typeof PageRoute
+  sidebarLayoutRoute: typeof sidebarLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/(sidebar)': {
+      id: '/(sidebar)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof sidebarLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(sidebar)/': {
+      id: '/(sidebar)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof PageRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof sidebarPageRouteImport
+      parentRoute: typeof sidebarLayoutRoute
+    }
+    '/(sidebar)/test-agent/': {
+      id: '/(sidebar)/test-agent/'
+      path: '/test-agent'
+      fullPath: '/test-agent/'
+      preLoaderRoute: typeof sidebarTestAgentPageRouteImport
+      parentRoute: typeof sidebarLayoutRoute
     }
   }
 }
 
+interface sidebarLayoutRouteChildren {
+  sidebarPageRoute: typeof sidebarPageRoute
+  sidebarTestAgentPageRoute: typeof sidebarTestAgentPageRoute
+}
+
+const sidebarLayoutRouteChildren: sidebarLayoutRouteChildren = {
+  sidebarPageRoute: sidebarPageRoute,
+  sidebarTestAgentPageRoute: sidebarTestAgentPageRoute,
+}
+
+const sidebarLayoutRouteWithChildren = sidebarLayoutRoute._addFileChildren(
+  sidebarLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  PageRoute: PageRoute,
+  sidebarLayoutRoute: sidebarLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

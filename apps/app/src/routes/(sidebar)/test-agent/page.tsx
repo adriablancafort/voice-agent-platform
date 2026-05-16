@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { VoiceAgentClient } from "@/components/voice-agent-client"
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/(sidebar)/test-agent/")({
   component: Page,
 })
 
