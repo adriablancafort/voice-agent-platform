@@ -1,9 +1,23 @@
 {
   "name": "voice-agent-builder",
   "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tanstack/eslint-plugin-query": "^5.100.10",
+    "@tanstack/eslint-plugin-router": "^1.162.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "eslint": "^10.4.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "globals": "^17.6.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.59.3"
   }
 }

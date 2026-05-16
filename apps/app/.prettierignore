@@ -4,9 +4,3 @@ dist
 routeTree.gen.ts
 
 index.html
-
-drizzle
-
-coverage
-
-pnpm-lock.yaml

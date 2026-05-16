@@ -9,7 +9,11 @@
     "pull": "drizzle-kit pull",
     "check": "drizzle-kit check",
     "up": "drizzle-kit up",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "exports": {
     "./*": "./src/*.ts"

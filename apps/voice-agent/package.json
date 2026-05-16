@@ -4,17 +4,15 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{ts,js}\"",
-    "lint:fix": "eslint --fix \"**/*.{ts,js}\"",
-    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
     "test": "vitest --run",
     "test:watch": "vitest",
     "dev": "pnpm run build && node dist/main.js dev",
     "download-files": "pnpm run build && node dist/main.js download-files",
-    "start": "node dist/main.js start"
+    "start": "node dist/main.js start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@livekit/agents": "^1.4.1",
@@ -25,14 +23,9 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^22.19.17",
-    "eslint": "^9.39.4",
-    "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.1",
     "vite": "^7.3.2",
     "vitest": "^4.1.4"
   }
