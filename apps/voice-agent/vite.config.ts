@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
-    ssr: 'src/main.ts', // marks entry as Node
+    ssr: 'src/main.ts',
     target: 'node18',
     sourcemap: true,
     outDir: 'dist',

@@ -1,6 +1,7 @@
 {
   "name": "api",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "rm -rf dist && rolldown -c",

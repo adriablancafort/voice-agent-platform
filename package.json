@@ -1,14 +1,9 @@
 {
   "name": "voice-agent-builder",
-  "version": "0.0.1",
   "private": true,
   "devDependencies": {
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "5.9.3"
-  },
-  "packageManager": "pnpm@9.15.9",
-  "engines": {
-    "node": ">=20"
   }
 }

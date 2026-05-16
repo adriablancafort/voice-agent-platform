@@ -1,24 +1,12 @@
-# Dependencies
 node_modules
-.pnp
-.pnp.js
-
-# Local env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Testing
-coverage
-
-# Build Outputs
 dist
 
-# Debug
-npm-debug.log*
+.tanstack
 
-# Misc
+coverage
+logs
+
+.env
+.env.local
+
 .DS_Store
-*.pem
