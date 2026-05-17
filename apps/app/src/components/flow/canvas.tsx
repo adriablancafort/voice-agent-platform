@@ -1,9 +1,12 @@
 import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
 import { useShallow } from "zustand/react/shallow"
-import { useFlowStore } from "@/stores/flow"
+import { useAgentConfigStore } from "@/stores/agent-config"
+import { ConditionEdge } from "./edges/condition"
+import { ConversationNode } from "./nodes/conversation"
+import { EndNode } from "./nodes/end"
 
-const selector = (state) => ({
+const selector = (state: ReturnType<typeof useAgentConfigStore.getState>) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
@@ -11,9 +14,9 @@ const selector = (state) => ({
   onConnect: state.onConnect,
 })
 
-export function Canvas() {
+export default function Canvas() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } =
-    useFlowStore(useShallow(selector))
+    useAgentConfigStore(useShallow(selector))
 
   return (
     <ReactFlow
@@ -22,6 +25,16 @@ export function Canvas() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      nodeTypes={{
+        conversation: ConversationNode,
+        end: EndNode,
+      }}
+      edgeTypes={{
+        default: ConditionEdge,
+      }}
+      defaultEdgeOptions={{
+        animated: true,
+      }}
       fitView
       proOptions={{ hideAttribution: true }}
     >
