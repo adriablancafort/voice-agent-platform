@@ -3,6 +3,7 @@ import type { AgentConfig } from "../agent-config/types"
 import type {
   createAgentFormSchema,
   createAgentInputSchema,
+  publishAgentFormSchema,
   publishAgentInputSchema,
   updateAgentInputSchema,
 } from "./schemas"
@@ -50,4 +51,5 @@ export type DeleteAgentResponse = {
 export type CreateAgentFormInput = z.infer<typeof createAgentFormSchema>
 export type CreateAgentInput = z.infer<typeof createAgentInputSchema>
 export type UpdateAgentInput = z.infer<typeof updateAgentInputSchema>
+export type PublishAgentFormInput = z.infer<typeof publishAgentFormSchema>
 export type PublishAgentInput = z.infer<typeof publishAgentInputSchema>

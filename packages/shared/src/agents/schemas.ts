@@ -34,3 +34,8 @@ export const publishAgentInputSchema = z.object({
   name: agentNameSchema.optional(),
   description: z.string().trim().min(1).optional(),
 })
+
+export const publishAgentFormSchema = z.object({
+  name: z.union([agentNameSchema, z.literal("")]).optional(),
+  description: z.string().trim().optional().or(z.literal("")),
+})
