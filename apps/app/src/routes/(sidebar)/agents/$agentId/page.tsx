@@ -12,6 +12,7 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { SaveAgentButton } from "@/components/agents/save-agent-button"
 import Canvas from "@/components/flow/canvas"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
@@ -52,6 +53,9 @@ function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="ml-auto">
+        <SaveAgentButton />
+      </div>
     </header>
   )
 }
