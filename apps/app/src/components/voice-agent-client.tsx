@@ -5,11 +5,8 @@ import {
   useVoiceAssistant,
 } from "@livekit/components-react"
 import { ConnectionState, TokenSource } from "livekit-client"
+import { PhoneIcon, PhoneOffIcon } from "lucide-react"
 import { AgentAudioVisualizerRadial } from "@workspace/ui/components/agents-ui/agent-audio-visualizer-radial"
-import {
-  AgentControlBar,
-  type AgentControlBarControls,
-} from "@workspace/ui/components/agents-ui/agent-control-bar"
 import { Button } from "@workspace/ui/components/button"
 import { env } from "@/lib/env"
 
@@ -26,8 +23,16 @@ function AgentAudioVisualizer() {
   )
 }
 
-export function VoiceAgentClient() {
-  const session = useSession(tokenSource)
+type VoiceAgentClientProps = {
+  agentId: string
+}
+
+export function VoiceAgentClient({ agentId }: VoiceAgentClientProps) {
+  const session = useSession(tokenSource, {
+    participantAttributes: {
+      agent_id: agentId,
+    },
+  })
 
   async function handleConnect() {
     await session.start()
@@ -40,14 +45,6 @@ export function VoiceAgentClient() {
   const isConnected = session.isConnected
   const isConnecting = session.connectionState === ConnectionState.Connecting
 
-  const controls: AgentControlBarControls = {
-    leave: true,
-    microphone: true,
-    chat: false,
-    camera: false,
-    screenShare: false,
-  }
-
   return (
     <SessionProvider session={session}>
       <div className="flex flex-col gap-8">
@@ -55,11 +52,10 @@ export function VoiceAgentClient() {
           <>
             <RoomAudioRenderer />
             <AgentAudioVisualizer />
-            <AgentControlBar
-              controls={controls}
-              isConnected={isConnected}
-              onDisconnect={handleDisconnect}
-            />
+            <Button variant="destructive" onClick={handleDisconnect}>
+              <PhoneOffIcon />
+              End call
+            </Button>
           </>
         ) : (
           <>
@@ -67,12 +63,9 @@ export function VoiceAgentClient() {
               size="lg"
               state={isConnecting ? "connecting" : "disconnected"}
             />
-            <Button
-              onClick={handleConnect}
-              disabled={isConnecting}
-              className="my-3"
-            >
-              {isConnecting ? "Connecting..." : "Connect"}
+            <Button onClick={handleConnect} disabled={isConnecting}>
+              <PhoneIcon />
+              {isConnecting ? "Calling..." : "Call"}
             </Button>
           </>
         )}

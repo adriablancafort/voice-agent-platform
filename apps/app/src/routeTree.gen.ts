@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as sidebarLayoutRouteImport } from './routes/(sidebar)/layout'
 import { Route as sidebarPageRouteImport } from './routes/(sidebar)/page'
-import { Route as sidebarTestAgentPageRouteImport } from './routes/(sidebar)/test-agent/page'
 import { Route as sidebarAgentsPageRouteImport } from './routes/(sidebar)/agents/page'
 import { Route as sidebarAgentsAgentIdPageRouteImport } from './routes/(sidebar)/agents/$agentId/page'
 
@@ -22,11 +21,6 @@ const sidebarLayoutRoute = sidebarLayoutRouteImport.update({
 const sidebarPageRoute = sidebarPageRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => sidebarLayoutRoute,
-} as any)
-const sidebarTestAgentPageRoute = sidebarTestAgentPageRouteImport.update({
-  id: '/test-agent/',
-  path: '/test-agent/',
   getParentRoute: () => sidebarLayoutRoute,
 } as any)
 const sidebarAgentsPageRoute = sidebarAgentsPageRouteImport.update({
@@ -44,13 +38,11 @@ const sidebarAgentsAgentIdPageRoute =
 export interface FileRoutesByFullPath {
   '/': typeof sidebarPageRoute
   '/agents/': typeof sidebarAgentsPageRoute
-  '/test-agent/': typeof sidebarTestAgentPageRoute
   '/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof sidebarPageRoute
   '/agents': typeof sidebarAgentsPageRoute
-  '/test-agent': typeof sidebarTestAgentPageRoute
   '/agents/$agentId': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesById {
@@ -58,20 +50,18 @@ export interface FileRoutesById {
   '/(sidebar)': typeof sidebarLayoutRouteWithChildren
   '/(sidebar)/': typeof sidebarPageRoute
   '/(sidebar)/agents/': typeof sidebarAgentsPageRoute
-  '/(sidebar)/test-agent/': typeof sidebarTestAgentPageRoute
   '/(sidebar)/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agents/' | '/test-agent/' | '/agents/$agentId/'
+  fullPaths: '/' | '/agents/' | '/agents/$agentId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agents' | '/test-agent' | '/agents/$agentId'
+  to: '/' | '/agents' | '/agents/$agentId'
   id:
     | '__root__'
     | '/(sidebar)'
     | '/(sidebar)/'
     | '/(sidebar)/agents/'
-    | '/(sidebar)/test-agent/'
     | '/(sidebar)/agents/$agentId/'
   fileRoutesById: FileRoutesById
 }
@@ -95,13 +85,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof sidebarPageRouteImport
       parentRoute: typeof sidebarLayoutRoute
     }
-    '/(sidebar)/test-agent/': {
-      id: '/(sidebar)/test-agent/'
-      path: '/test-agent'
-      fullPath: '/test-agent/'
-      preLoaderRoute: typeof sidebarTestAgentPageRouteImport
-      parentRoute: typeof sidebarLayoutRoute
-    }
     '/(sidebar)/agents/': {
       id: '/(sidebar)/agents/'
       path: '/agents'
@@ -122,14 +105,12 @@ declare module '@tanstack/react-router' {
 interface sidebarLayoutRouteChildren {
   sidebarPageRoute: typeof sidebarPageRoute
   sidebarAgentsPageRoute: typeof sidebarAgentsPageRoute
-  sidebarTestAgentPageRoute: typeof sidebarTestAgentPageRoute
   sidebarAgentsAgentIdPageRoute: typeof sidebarAgentsAgentIdPageRoute
 }
 
 const sidebarLayoutRouteChildren: sidebarLayoutRouteChildren = {
   sidebarPageRoute: sidebarPageRoute,
   sidebarAgentsPageRoute: sidebarAgentsPageRoute,
-  sidebarTestAgentPageRoute: sidebarTestAgentPageRoute,
   sidebarAgentsAgentIdPageRoute: sidebarAgentsAgentIdPageRoute,
 }
 

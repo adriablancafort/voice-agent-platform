@@ -14,6 +14,7 @@ import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { SaveAgentButton } from "@/components/agents/save-agent-button"
+import { TestAgentPanel } from "@/components/agents/test-agent-panel"
 import Canvas from "@/components/flow/canvas"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
@@ -54,8 +55,9 @@ function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto space-x-3">
+      <div className="ml-auto flex space-x-3">
         <SaveAgentButton />
+        <TestAgentPanel />
         <PublishAgentForm />
       </div>
     </header>
