@@ -90,7 +90,7 @@ export function CreateAgentForm() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-lg">Create agent</DialogTitle>
+          <DialogTitle>Create agent</DialogTitle>
           <DialogDescription>Create a new agent</DialogDescription>
         </DialogHeader>
 

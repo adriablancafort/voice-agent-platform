@@ -93,9 +93,7 @@ export function PublishAgentForm() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-lg">
-            Publish V{nextVersionNumber}
-          </DialogTitle>
+          <DialogTitle>Publish V{nextVersionNumber}</DialogTitle>
           <DialogDescription>Publish a new agent version</DialogDescription>
         </DialogHeader>
 
