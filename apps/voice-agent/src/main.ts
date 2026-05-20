@@ -9,6 +9,7 @@ import * as livekit from "@livekit/agents-plugin-livekit"
 import * as silero from "@livekit/agents-plugin-silero"
 import { audioEnhancement } from "@livekit/plugins-ai-coustics"
 import { fileURLToPath } from "node:url"
+import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
 import type { AgentConfigInput } from "@workspace/shared/agents/types"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
@@ -17,6 +18,15 @@ import { env } from "@/lib/env"
 
 interface ProcessUserData {
   vad: silero.VAD
+}
+
+function createTurnDetection(config: TurnDetectionConfig) {
+  switch (config.model) {
+    case "multilingual":
+      return new livekit.turnDetector.MultilingualModel()
+    case "english":
+      return new livekit.turnDetector.EnglishModel()
+  }
 }
 
 export default defineAgent<ProcessUserData>({
@@ -40,22 +50,11 @@ export default defineAgent<ProcessUserData>({
     const flowGraph = buildFlowGraph(agentConfig)
 
     const session = new voice.AgentSession({
-      stt: new inference.STT({
-        model: "deepgram/nova-3",
-        language: "multi",
-      }),
-
-      llm: new inference.LLM({
-        model: "openai/gpt-4.1-mini",
-      }),
-
-      tts: new inference.TTS({
-        model: "cartesia/sonic-3",
-        voice: "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
-      }),
-
-      turnDetection: new livekit.turnDetector.MultilingualModel(),
+      stt: new inference.STT(agentConfig.stt),
+      llm: new inference.LLM(agentConfig.llm),
+      tts: new inference.TTS(agentConfig.tts),
       vad: ctx.proc.userData.vad,
+      turnDetection: createTurnDetection(agentConfig.turnDetection),
     })
 
     await session.start({

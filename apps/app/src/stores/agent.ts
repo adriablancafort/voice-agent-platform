@@ -7,6 +7,7 @@ import {
   type NodeChange,
 } from "@xyflow/react"
 import { create } from "zustand"
+import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
 import type {
   FlowEdgeConfig,
   FlowNodeConfig,
@@ -24,7 +25,7 @@ type AgentStore = AgentDetail & {
 const initialState: AgentDetail = {
   id: "",
   name: "",
-  draftConfig: { nodes: [], edges: [] },
+  draftConfig: createDefaultAgentConfig(),
   createdAt: new Date(),
   updatedAt: new Date(),
   versions: [],

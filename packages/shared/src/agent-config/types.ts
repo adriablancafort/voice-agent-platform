@@ -4,6 +4,7 @@ import type {
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
+  turnDetectionConfigSchema,
 } from "./schemas"
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
@@ -15,3 +16,4 @@ export type FlowConversationNode = Extract<
 >
 export type FlowEndNode = Extract<FlowNodeConfig, { type: "end" }>
 export type FlowEdgeConfig = z.infer<typeof flowEdgeConfigSchema>
+export type TurnDetectionConfig = z.infer<typeof turnDetectionConfigSchema>
