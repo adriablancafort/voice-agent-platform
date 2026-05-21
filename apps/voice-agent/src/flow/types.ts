@@ -24,6 +24,6 @@ export interface FlowEdge {
 }
 
 export interface FlowGraph {
-  globalPrompt?: string
+  globalPrompt: string
   startNode: FlowConversationNode
 }

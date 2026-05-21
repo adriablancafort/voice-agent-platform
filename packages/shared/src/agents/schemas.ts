@@ -4,7 +4,6 @@ import { agentConfigSchema } from "../agent-config/schemas"
 export const agentNameSchema = z
   .string()
   .trim()
-  .min(3, "Agent name must be at least 3 characters")
   .max(64, "Agent name must be at most 64 characters")
 
 export const agentIdParamsSchema = z.object({
@@ -31,13 +30,13 @@ export const updateAgentInputSchema = z.object({
 })
 
 export const publishAgentInputSchema = z.object({
-  name: agentNameSchema.optional(),
-  description: z.string().trim().min(1).optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
 })
 
 export const publishAgentFormSchema = z.object({
-  name: z.union([agentNameSchema, z.literal("")]).optional(),
-  description: z.string().trim().optional().or(z.literal("")),
+  name: z.string().optional(),
+  description: z.string().optional(),
 })
 
 export const agentConfigInputSchema = z.object({

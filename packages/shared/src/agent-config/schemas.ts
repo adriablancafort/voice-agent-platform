@@ -74,7 +74,7 @@ export const agentConfigSchema = z
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
     turnDetection: turnDetectionConfigSchema,
-    globalPrompt: z.string().trim().min(1).optional(),
+    globalPrompt: z.string(),
     nodes: z.array(flowNodeConfigSchema).min(1),
     edges: z.array(flowEdgeConfigSchema),
   })
