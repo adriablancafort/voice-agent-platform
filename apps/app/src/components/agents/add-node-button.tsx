@@ -1,4 +1,3 @@
-import { Panel } from "@xyflow/react"
 import { Phone, PhoneOff, Play, Plus } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@workspace/ui/components/button"
@@ -59,15 +58,15 @@ export function AddNodeButton() {
   }
 
   return (
-    <Panel position="top-left">
-      <Collapsible open={open} onOpenChange={setOpen} className="w-48">
+    <Collapsible open={open} onOpenChange={setOpen} className="w-48">
+      <div className="relative">
         <CollapsibleTrigger>
-          <Button variant="outline">
+          <Button>
             <Plus />
             Add node
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent className="mt-2 rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
+        <CollapsibleContent className="absolute top-full left-0 z-20 mt-2 w-full rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
           <button
             onClick={() => handleAdd("start")}
             className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
@@ -96,7 +95,7 @@ export function AddNodeButton() {
             End
           </button>
         </CollapsibleContent>
-      </Collapsible>
-    </Panel>
+      </div>
+    </Collapsible>
   )
 }

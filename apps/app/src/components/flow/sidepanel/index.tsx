@@ -1,6 +1,8 @@
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 import { EdgePanel } from "./edges/condition"
+import { GlobalPromptPanel } from "./global-prompt"
+import { ModelsConfigPanel } from "./models-config"
 import { ConversationNodePanel } from "./nodes/conversation"
 import { EndNodePanel } from "./nodes/end"
 import { TestPanel } from "./test"
@@ -20,6 +22,16 @@ export function FlowSidePanel() {
   if (sidePanel.kind === "test") {
     title = "Test agent"
     content = <TestPanel agentId={agentId} />
+  }
+
+  if (sidePanel.kind === "global-prompt") {
+    title = "Global prompt"
+    content = <GlobalPromptPanel />
+  }
+
+  if (sidePanel.kind === "models-config") {
+    title = "Models"
+    content = <ModelsConfigPanel />
   }
 
   if (sidePanel.kind === "node") {

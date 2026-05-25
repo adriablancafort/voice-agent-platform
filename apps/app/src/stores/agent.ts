@@ -17,16 +17,25 @@ import type { AgentDetail } from "@workspace/shared/agents/types"
 export type FlowSidePanelState =
   | { kind: "closed" }
   | { kind: "test" }
+  | { kind: "global-prompt" }
+  | { kind: "models-config" }
   | { kind: "node"; nodeId: string }
   | { kind: "edge"; edgeId: string }
 
 type AgentStore = AgentDetail & {
   sidePanel: FlowSidePanelState
   openTestPanel: () => void
+  openGlobalPromptPanel: () => void
+  openModelsConfigPanel: () => void
   openNodePanel: (nodeId: string) => void
   openEdgePanel: (edgeId: string) => void
   closeSidePanel: () => void
   setName: (name: string) => void
+  setGlobalPrompt: (prompt: string) => void
+  setSttModel: (model: string) => void
+  setLlmModel: (model: string) => void
+  setTtsModel: (model: string) => void
+  setTtsVoice: (voice: string) => void
   setAgent: (agent: AgentDetail) => void
   updateNode: (
     nodeId: string,
@@ -61,7 +70,10 @@ function resolveSidePanelState(
 }
 
 function createEdgeId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID()
   }
 
@@ -84,6 +96,14 @@ export const useAgentStore = create<AgentStore>((set) => ({
     set({
       sidePanel: { kind: "test" },
     }),
+  openGlobalPromptPanel: () =>
+    set({
+      sidePanel: { kind: "global-prompt" },
+    }),
+  openModelsConfigPanel: () =>
+    set({
+      sidePanel: { kind: "models-config" },
+    }),
   openNodePanel: (nodeId) =>
     set({
       sidePanel: { kind: "node", nodeId },
@@ -100,6 +120,53 @@ export const useAgentStore = create<AgentStore>((set) => ({
     set({
       name,
     }),
+  setGlobalPrompt: (globalPrompt) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        globalPrompt,
+      },
+    })),
+  setSttModel: (model) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        stt: {
+          ...state.draftConfig.stt,
+          model,
+        },
+      },
+    })),
+  setLlmModel: (model) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        llm: {
+          ...state.draftConfig.llm,
+          model,
+        },
+      },
+    })),
+  setTtsModel: (model) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        tts: {
+          ...state.draftConfig.tts,
+          model,
+        },
+      },
+    })),
+  setTtsVoice: (voice) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        tts: {
+          ...state.draftConfig.tts,
+          voice,
+        },
+      },
+    })),
   setAgent: (agent) =>
     set((state) => {
       const isSameAgent = state.id === agent.id
