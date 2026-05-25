@@ -20,6 +20,7 @@ type AgentStore = AgentDetail & {
   onNodesChange: (changes: NodeChange<FlowNodeConfig>[]) => void
   onEdgesChange: (changes: EdgeChange<FlowEdgeConfig>[]) => void
   onConnect: (connection: Connection) => void
+  addNode: (node: FlowNodeConfig) => void
 }
 
 const initialState: AgentDetail = {
@@ -64,7 +65,22 @@ export const useAgentStore = create<AgentStore>((set) => ({
     set((state) => ({
       draftConfig: {
         ...state.draftConfig,
-        edges: addEdge(connection, state.draftConfig.edges),
+        edges: addEdge(
+          {
+            ...connection,
+            data: {
+              condition: "Transition condition",
+            },
+          },
+          state.draftConfig.edges
+        ),
+      },
+    })),
+  addNode: (node) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        nodes: [...state.draftConfig.nodes, node],
       },
     })),
 }))

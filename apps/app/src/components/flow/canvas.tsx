@@ -1,6 +1,7 @@
 import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
 import { useShallow } from "zustand/react/shallow"
+import { AddNodeButton } from "@/components/agents/add-node-button"
 import { useAgentStore } from "@/stores/agent"
 import { ConditionEdge } from "./edges/condition"
 import { ConversationNode } from "./nodes/conversation"
@@ -38,6 +39,7 @@ export default function Canvas() {
       fitView
       proOptions={{ hideAttribution: true }}
     >
+      <AddNodeButton />
       <Background color="#d4d4d4" />
       <Controls position="bottom-left" />
       <MiniMap zoomable pannable />
