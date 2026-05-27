@@ -15,7 +15,9 @@ api.use(
   })
 )
 
-api.use(logger())
+if (env.NODE_ENV !== "production") {
+  api.use(logger())
+}
 
 api.route("/agents", agentRoutes)
 api.route("/token", tokenRoutes)
