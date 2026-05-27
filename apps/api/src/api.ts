@@ -19,7 +19,7 @@ if (env.NODE_ENV !== "production") {
   api.use(logger())
 }
 
-api.route("/agents", agentRoutes)
-api.route("/token", tokenRoutes)
+api.route("/api/agents", agentRoutes)
+api.route("/api/token", tokenRoutes)
 
 export default api

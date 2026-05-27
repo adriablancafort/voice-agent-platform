@@ -15,7 +15,7 @@ async function request<TResponse, TBody = never>(
     headers.set("Content-Type", "application/json")
   }
 
-  const response = await fetch(`${env.API_URL}${path}`, {
+  const response = await fetch(`${env.API_URL}/api${path}`, {
     ...options,
     method,
     headers,

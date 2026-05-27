@@ -10,7 +10,7 @@ import { AgentAudioVisualizerRadial } from "@workspace/ui/components/agents-ui/a
 import { Button } from "@workspace/ui/components/button"
 import { env } from "@/lib/env"
 
-const tokenSource = TokenSource.endpoint(`${env.API_URL}/token`)
+const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`)
 
 function AgentAudioVisualizer() {
   const { state, audioTrack } = useVoiceAssistant()
