@@ -6,6 +6,7 @@ import {
 import { cva, type VariantProps } from "class-variance-authority"
 import { type LocalAudioTrack, type RemoteAudioTrack } from "livekit-client"
 import { type ComponentProps, type CSSProperties, useMemo } from "react"
+
 import { useAgentAudioVisualizerRadialAnimator } from "@workspace/ui/hooks/agents-ui/use-agent-audio-visualizer-radial"
 import { cn } from "@workspace/ui/lib/utils"
 

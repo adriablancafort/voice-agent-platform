@@ -1,4 +1,5 @@
 import { XIcon } from "lucide-react"
+
 import { Button } from "@workspace/ui/components/button"
 
 type FlowSidePanelBaseProps = {

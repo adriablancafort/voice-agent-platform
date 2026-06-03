@@ -1,8 +1,9 @@
 import { useChat } from "@livekit/components-react"
 import { Track } from "livekit-client"
 import { Loader, MessageSquareTextIcon, SendHorizontal } from "lucide-react"
-import { motion, type MotionProps } from "motion/react"
+import { type MotionProps, motion } from "motion/react"
 import { type ComponentProps, useEffect, useRef, useState } from "react"
+
 import { AgentDisconnectButton } from "@workspace/ui/components/agents-ui/agent-disconnect-button"
 import { AgentTrackControl } from "@workspace/ui/components/agents-ui/agent-track-control"
 import {
@@ -12,8 +13,8 @@ import {
 import { Button } from "@workspace/ui/components/button"
 import { Toggle } from "@workspace/ui/components/toggle"
 import {
-  useInputControls,
   type UseInputControlsProps,
+  useInputControls,
   usePublishPermissions,
 } from "@workspace/ui/hooks/agents-ui/use-agent-control-bar"
 import { cn } from "@workspace/ui/lib/utils"

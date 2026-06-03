@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url"
 import {
   cli,
   defineAgent,
@@ -8,7 +9,7 @@ import {
 import * as livekit from "@livekit/agents-plugin-livekit"
 import * as silero from "@livekit/agents-plugin-silero"
 import { audioEnhancement } from "@livekit/plugins-ai-coustics"
-import { fileURLToPath } from "node:url"
+
 import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
 import type { AgentConfigInput } from "@workspace/shared/agents/types"
 import { FlowAgent } from "@/flow/agent"

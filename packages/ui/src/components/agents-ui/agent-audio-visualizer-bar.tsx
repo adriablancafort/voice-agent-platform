@@ -7,13 +7,14 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { type LocalAudioTrack, type RemoteAudioTrack } from "livekit-client"
 import React, {
   Children,
-  cloneElement,
   type ComponentProps,
   type CSSProperties,
+  cloneElement,
   isValidElement,
   type ReactNode,
   useMemo,
 } from "react"
+
 import { useAgentAudioVisualizerBarAnimator } from "@workspace/ui/hooks/agents-ui/use-agent-audio-visualizer-bar"
 import { cn } from "@workspace/ui/lib/utils"
 

@@ -1,5 +1,6 @@
 import { Handle, Position } from "@xyflow/react"
 import { PhoneOff } from "lucide-react"
+
 import type { FlowEndNode } from "@workspace/shared/agent-config/types"
 
 type EndNodeProps = {

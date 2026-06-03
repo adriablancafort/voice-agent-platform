@@ -1,5 +1,6 @@
 import { Handle, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
+
 import type { FlowConversationNode } from "@workspace/shared/agent-config/types"
 
 type ConversationNodeProps = {

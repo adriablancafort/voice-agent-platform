@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { useState } from "react"
+
 import type { AgentListItem } from "@workspace/shared/agents/types"
 import { Input } from "@workspace/ui/components/input"
 import {

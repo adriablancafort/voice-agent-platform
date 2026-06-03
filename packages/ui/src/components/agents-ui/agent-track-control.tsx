@@ -6,6 +6,7 @@ import {
 import { cva, type VariantProps } from "class-variance-authority"
 import { LocalAudioTrack, LocalVideoTrack } from "livekit-client"
 import { useEffect, useMemo, useState } from "react"
+
 import { AgentAudioVisualizerBar } from "@workspace/ui/components/agents-ui/agent-audio-visualizer-bar"
 import { AgentTrackToggle } from "@workspace/ui/components/agents-ui/agent-track-toggle"
 import {

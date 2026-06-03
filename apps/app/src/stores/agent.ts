@@ -7,6 +7,7 @@ import {
   type NodeChange,
 } from "@xyflow/react"
 import { create } from "zustand"
+
 import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
 import type {
   FlowEdgeConfig,

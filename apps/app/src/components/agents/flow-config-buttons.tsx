@@ -1,5 +1,6 @@
 import { Panel } from "@xyflow/react"
 import { MicIcon, PencilLineIcon } from "lucide-react"
+
 import { Button } from "@workspace/ui/components/button"
 import { AddNodeButton } from "@/components/agents/add-node-button"
 import { useAgentStore } from "@/stores/agent"

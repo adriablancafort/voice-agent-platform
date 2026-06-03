@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
+
 import type { AgentListItem } from "@workspace/shared/agents/types"
 import {
   Breadcrumb,

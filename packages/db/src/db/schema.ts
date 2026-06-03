@@ -9,6 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core"
+
 import type { AgentConfig } from "@workspace/shared/agent-config/types"
 
 export const agentsTable = pgTable("agents", {

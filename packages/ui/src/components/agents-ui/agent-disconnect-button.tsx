@@ -2,6 +2,7 @@ import { useSessionContext } from "@livekit/components-react"
 import { type VariantProps } from "class-variance-authority"
 import { PhoneOffIcon } from "lucide-react"
 import { type ComponentProps } from "react"
+
 import { Button, buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -9,7 +10,8 @@ import { cn } from "@workspace/ui/lib/utils"
  * Props for the AgentDisconnectButton component.
  */
 export interface AgentDisconnectButtonProps
-  extends ComponentProps<"button">, VariantProps<typeof buttonVariants> {
+  extends ComponentProps<"button">,
+    VariantProps<typeof buttonVariants> {
   /**
    * Custom icon to display. Defaults to PhoneOffIcon.
    */

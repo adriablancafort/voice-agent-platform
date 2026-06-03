@@ -2,6 +2,7 @@ import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
 import { useRef } from "react"
 import { useShallow } from "zustand/react/shallow"
+
 import { FlowConfigButtons } from "@/components/agents/flow-config-buttons"
 import { useAgentStore } from "@/stores/agent"
 import { ConditionEdge } from "./edges/condition"

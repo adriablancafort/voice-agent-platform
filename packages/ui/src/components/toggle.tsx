@@ -1,5 +1,6 @@
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle"
 import { cva, type VariantProps } from "class-variance-authority"
+
 import { cn } from "@workspace/ui/lib/utils"
 
 const toggleVariants = cva(

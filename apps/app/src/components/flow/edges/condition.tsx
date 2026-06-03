@@ -5,6 +5,7 @@ import {
   type EdgeProps,
   getSmoothStepPath,
 } from "@xyflow/react"
+
 import type { FlowEdgeConfig } from "@workspace/shared/agent-config/types"
 
 type ConditionEdgeType = Edge<FlowEdgeConfig["data"]>
