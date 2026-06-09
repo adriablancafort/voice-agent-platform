@@ -1,3 +1,5 @@
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
 import {
   BadgeCheckIcon,
   BellIcon,
@@ -27,17 +29,44 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { toast } from "@workspace/ui/components/sonner"
+import { signOut } from "@/lib/auth/client"
+import { sessionQueryOptions } from "@/lib/auth/session"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { isMobile } = useSidebar()
+  const { data: session } = useSuspenseQuery(sessionQueryOptions())
+
+  if (!session) {
+    return null
+  }
+
+  const user = {
+    name: session.user.name,
+    email: session.user.email,
+    avatar: session.user.image ?? "",
+    initials: session.user.name?.[0]?.toUpperCase(),
+  }
+
+  async function handleSignOut() {
+    await signOut({
+      fetchOptions: {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ["session"],
+            refetchType: "all",
+          })
+          navigate({ to: "/signin" })
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message)
+        },
+      },
+    })
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -49,7 +78,7 @@ export function NavUser({
           >
             <Avatar>
               <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>{user.initials}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
@@ -68,9 +97,9 @@ export function NavUser({
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar>
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>{user.initials}</AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="grid flex-1 text-left text-sm leading-tight text-foreground">
                     <span className="truncate font-medium">{user.name}</span>
                     <span className="truncate text-xs">{user.email}</span>
                   </div>
@@ -100,9 +129,9 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
-              Log out
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
