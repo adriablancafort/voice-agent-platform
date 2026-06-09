@@ -14,6 +14,8 @@ import { Route as authorizedLayoutRouteImport } from './routes/(authorized)/layo
 import { Route as authorizedsidebarLayoutRouteImport } from './routes/(authorized)/(sidebar)/layout'
 import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
 import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
+import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
+import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
 import { Route as authorizedsidebarPageRouteImport } from './routes/(authorized)/(sidebar)/page'
 import { Route as authorizedsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(sidebar)/phone-numbers/page'
 import { Route as authorizedsidebarAgentsPageRouteImport } from './routes/(authorized)/(sidebar)/agents/page'
@@ -41,6 +43,18 @@ const unauthorizedSigninPageRoute = unauthorizedSigninPageRouteImport.update({
   path: '/signin/',
   getParentRoute: () => unauthorizedLayoutRoute,
 } as any)
+const unauthorizedSetNewPasswordPageRoute =
+  unauthorizedSetNewPasswordPageRouteImport.update({
+    id: '/set-new-password/',
+    path: '/set-new-password/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
+const unauthorizedResetPasswordPageRoute =
+  unauthorizedResetPasswordPageRouteImport.update({
+    id: '/reset-password/',
+    path: '/reset-password/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
 const authorizedsidebarPageRoute = authorizedsidebarPageRouteImport.update({
   id: '/',
   path: '/',
@@ -67,6 +81,8 @@ const authorizedsidebarAgentsAgentIdPageRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof authorizedsidebarPageRoute
+  '/reset-password/': typeof unauthorizedResetPasswordPageRoute
+  '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/signin/': typeof unauthorizedSigninPageRoute
   '/signup/': typeof unauthorizedSignupPageRoute
   '/agents/': typeof authorizedsidebarAgentsPageRoute
@@ -75,6 +91,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof authorizedsidebarPageRoute
+  '/reset-password': typeof unauthorizedResetPasswordPageRoute
+  '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
   '/agents': typeof authorizedsidebarAgentsPageRoute
@@ -87,6 +105,8 @@ export interface FileRoutesById {
   '/(unauthorized)': typeof unauthorizedLayoutRouteWithChildren
   '/(authorized)/(sidebar)': typeof authorizedsidebarLayoutRouteWithChildren
   '/(authorized)/(sidebar)/': typeof authorizedsidebarPageRoute
+  '/(unauthorized)/reset-password/': typeof unauthorizedResetPasswordPageRoute
+  '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
   '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
   '/(authorized)/(sidebar)/agents/': typeof authorizedsidebarAgentsPageRoute
@@ -97,6 +117,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/reset-password/'
+    | '/set-new-password/'
     | '/signin/'
     | '/signup/'
     | '/agents/'
@@ -105,6 +127,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/reset-password'
+    | '/set-new-password'
     | '/signin'
     | '/signup'
     | '/agents'
@@ -116,6 +140,8 @@ export interface FileRouteTypes {
     | '/(unauthorized)'
     | '/(authorized)/(sidebar)'
     | '/(authorized)/(sidebar)/'
+    | '/(unauthorized)/reset-password/'
+    | '/(unauthorized)/set-new-password/'
     | '/(unauthorized)/signin/'
     | '/(unauthorized)/signup/'
     | '/(authorized)/(sidebar)/agents/'
@@ -163,6 +189,20 @@ declare module '@tanstack/react-router' {
       path: '/signin'
       fullPath: '/signin/'
       preLoaderRoute: typeof unauthorizedSigninPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/set-new-password/': {
+      id: '/(unauthorized)/set-new-password/'
+      path: '/set-new-password'
+      fullPath: '/set-new-password/'
+      preLoaderRoute: typeof unauthorizedSetNewPasswordPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/reset-password/': {
+      id: '/(unauthorized)/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof unauthorizedResetPasswordPageRouteImport
       parentRoute: typeof unauthorizedLayoutRoute
     }
     '/(authorized)/(sidebar)/': {
@@ -230,11 +270,15 @@ const authorizedLayoutRouteWithChildren =
   authorizedLayoutRoute._addFileChildren(authorizedLayoutRouteChildren)
 
 interface unauthorizedLayoutRouteChildren {
+  unauthorizedResetPasswordPageRoute: typeof unauthorizedResetPasswordPageRoute
+  unauthorizedSetNewPasswordPageRoute: typeof unauthorizedSetNewPasswordPageRoute
   unauthorizedSigninPageRoute: typeof unauthorizedSigninPageRoute
   unauthorizedSignupPageRoute: typeof unauthorizedSignupPageRoute
 }
 
 const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
+  unauthorizedResetPasswordPageRoute: unauthorizedResetPasswordPageRoute,
+  unauthorizedSetNewPasswordPageRoute: unauthorizedSetNewPasswordPageRoute,
   unauthorizedSigninPageRoute: unauthorizedSigninPageRoute,
   unauthorizedSignupPageRoute: unauthorizedSignupPageRoute,
 }
