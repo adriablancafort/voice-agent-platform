@@ -19,6 +19,7 @@ import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(una
 import { Route as authorizedsidebarPageRouteImport } from './routes/(authorized)/(sidebar)/page'
 import { Route as authorizedsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(sidebar)/phone-numbers/page'
 import { Route as authorizedsidebarAgentsPageRouteImport } from './routes/(authorized)/(sidebar)/agents/page'
+import { Route as authorizedsidebarSplatPageRouteImport } from './routes/(authorized)/(sidebar)/$/page'
 import { Route as authorizedsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(sidebar)/agents/$agentId/page'
 
 const unauthorizedLayoutRoute = unauthorizedLayoutRouteImport.update({
@@ -72,6 +73,12 @@ const authorizedsidebarAgentsPageRoute =
     path: '/agents/',
     getParentRoute: () => authorizedsidebarLayoutRoute,
   } as any)
+const authorizedsidebarSplatPageRoute =
+  authorizedsidebarSplatPageRouteImport.update({
+    id: '/$/',
+    path: '/$/',
+    getParentRoute: () => authorizedsidebarLayoutRoute,
+  } as any)
 const authorizedsidebarAgentsAgentIdPageRoute =
   authorizedsidebarAgentsAgentIdPageRouteImport.update({
     id: '/agents/$agentId/',
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/signin/': typeof unauthorizedSigninPageRoute
   '/signup/': typeof unauthorizedSignupPageRoute
+  '/$/': typeof authorizedsidebarSplatPageRoute
   '/agents/': typeof authorizedsidebarAgentsPageRoute
   '/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
   '/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
@@ -95,6 +103,7 @@ export interface FileRoutesByTo {
   '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
+  '/$': typeof authorizedsidebarSplatPageRoute
   '/agents': typeof authorizedsidebarAgentsPageRoute
   '/phone-numbers': typeof authorizedsidebarPhoneNumbersPageRoute
   '/agents/$agentId': typeof authorizedsidebarAgentsAgentIdPageRoute
@@ -109,6 +118,7 @@ export interface FileRoutesById {
   '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
   '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
+  '/(authorized)/(sidebar)/$/': typeof authorizedsidebarSplatPageRoute
   '/(authorized)/(sidebar)/agents/': typeof authorizedsidebarAgentsPageRoute
   '/(authorized)/(sidebar)/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
   '/(authorized)/(sidebar)/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/set-new-password/'
     | '/signin/'
     | '/signup/'
+    | '/$/'
     | '/agents/'
     | '/phone-numbers/'
     | '/agents/$agentId/'
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/set-new-password'
     | '/signin'
     | '/signup'
+    | '/$'
     | '/agents'
     | '/phone-numbers'
     | '/agents/$agentId'
@@ -144,6 +156,7 @@ export interface FileRouteTypes {
     | '/(unauthorized)/set-new-password/'
     | '/(unauthorized)/signin/'
     | '/(unauthorized)/signup/'
+    | '/(authorized)/(sidebar)/$/'
     | '/(authorized)/(sidebar)/agents/'
     | '/(authorized)/(sidebar)/phone-numbers/'
     | '/(authorized)/(sidebar)/agents/$agentId/'
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedsidebarAgentsPageRouteImport
       parentRoute: typeof authorizedsidebarLayoutRoute
     }
+    '/(authorized)/(sidebar)/$/': {
+      id: '/(authorized)/(sidebar)/$/'
+      path: '/$'
+      fullPath: '/$/'
+      preLoaderRoute: typeof authorizedsidebarSplatPageRouteImport
+      parentRoute: typeof authorizedsidebarLayoutRoute
+    }
     '/(authorized)/(sidebar)/agents/$agentId/': {
       id: '/(authorized)/(sidebar)/agents/$agentId/'
       path: '/agents/$agentId'
@@ -238,6 +258,7 @@ declare module '@tanstack/react-router' {
 
 interface authorizedsidebarLayoutRouteChildren {
   authorizedsidebarPageRoute: typeof authorizedsidebarPageRoute
+  authorizedsidebarSplatPageRoute: typeof authorizedsidebarSplatPageRoute
   authorizedsidebarAgentsPageRoute: typeof authorizedsidebarAgentsPageRoute
   authorizedsidebarPhoneNumbersPageRoute: typeof authorizedsidebarPhoneNumbersPageRoute
   authorizedsidebarAgentsAgentIdPageRoute: typeof authorizedsidebarAgentsAgentIdPageRoute
@@ -246,6 +267,7 @@ interface authorizedsidebarLayoutRouteChildren {
 const authorizedsidebarLayoutRouteChildren: authorizedsidebarLayoutRouteChildren =
   {
     authorizedsidebarPageRoute: authorizedsidebarPageRoute,
+    authorizedsidebarSplatPageRoute: authorizedsidebarSplatPageRoute,
     authorizedsidebarAgentsPageRoute: authorizedsidebarAgentsPageRoute,
     authorizedsidebarPhoneNumbersPageRoute:
       authorizedsidebarPhoneNumbersPageRoute,
