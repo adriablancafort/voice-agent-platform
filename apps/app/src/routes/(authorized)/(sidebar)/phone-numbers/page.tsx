@@ -21,7 +21,7 @@ function queryOptions() {
   }
 }
 
-export const Route = createFileRoute("/(sidebar)/phone-numbers/")({
+export const Route = createFileRoute("/(authorized)/(sidebar)/phone-numbers/")({
   loader: async ({ context }) =>
     context.queryClient.ensureQueryData(queryOptions()),
   component: Page,

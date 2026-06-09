@@ -21,7 +21,7 @@ function queryOptions() {
   }
 }
 
-export const Route = createFileRoute("/(sidebar)/agents/")({
+export const Route = createFileRoute("/(authorized)/(sidebar)/agents/")({
   loader: async ({ context }) =>
     context.queryClient.ensureQueryData(queryOptions()),
   component: Page,

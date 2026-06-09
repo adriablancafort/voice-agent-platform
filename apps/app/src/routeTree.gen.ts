@@ -9,136 +9,242 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as sidebarLayoutRouteImport } from './routes/(sidebar)/layout'
-import { Route as sidebarPageRouteImport } from './routes/(sidebar)/page'
-import { Route as sidebarPhoneNumbersPageRouteImport } from './routes/(sidebar)/phone-numbers/page'
-import { Route as sidebarAgentsPageRouteImport } from './routes/(sidebar)/agents/page'
-import { Route as sidebarAgentsAgentIdPageRouteImport } from './routes/(sidebar)/agents/$agentId/page'
+import { Route as unauthorizedLayoutRouteImport } from './routes/(unauthorized)/layout'
+import { Route as authorizedLayoutRouteImport } from './routes/(authorized)/layout'
+import { Route as authorizedsidebarLayoutRouteImport } from './routes/(authorized)/(sidebar)/layout'
+import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
+import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
+import { Route as authorizedsidebarPageRouteImport } from './routes/(authorized)/(sidebar)/page'
+import { Route as authorizedsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(sidebar)/phone-numbers/page'
+import { Route as authorizedsidebarAgentsPageRouteImport } from './routes/(authorized)/(sidebar)/agents/page'
+import { Route as authorizedsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(sidebar)/agents/$agentId/page'
 
-const sidebarLayoutRoute = sidebarLayoutRouteImport.update({
-  id: '/(sidebar)',
+const unauthorizedLayoutRoute = unauthorizedLayoutRouteImport.update({
+  id: '/(unauthorized)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const sidebarPageRoute = sidebarPageRouteImport.update({
+const authorizedLayoutRoute = authorizedLayoutRouteImport.update({
+  id: '/(authorized)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authorizedsidebarLayoutRoute = authorizedsidebarLayoutRouteImport.update({
+  id: '/(sidebar)',
+  getParentRoute: () => authorizedLayoutRoute,
+} as any)
+const unauthorizedSignupPageRoute = unauthorizedSignupPageRouteImport.update({
+  id: '/signup/',
+  path: '/signup/',
+  getParentRoute: () => unauthorizedLayoutRoute,
+} as any)
+const unauthorizedSigninPageRoute = unauthorizedSigninPageRouteImport.update({
+  id: '/signin/',
+  path: '/signin/',
+  getParentRoute: () => unauthorizedLayoutRoute,
+} as any)
+const authorizedsidebarPageRoute = authorizedsidebarPageRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => sidebarLayoutRoute,
+  getParentRoute: () => authorizedsidebarLayoutRoute,
 } as any)
-const sidebarPhoneNumbersPageRoute = sidebarPhoneNumbersPageRouteImport.update({
-  id: '/phone-numbers/',
-  path: '/phone-numbers/',
-  getParentRoute: () => sidebarLayoutRoute,
-} as any)
-const sidebarAgentsPageRoute = sidebarAgentsPageRouteImport.update({
-  id: '/agents/',
-  path: '/agents/',
-  getParentRoute: () => sidebarLayoutRoute,
-} as any)
-const sidebarAgentsAgentIdPageRoute =
-  sidebarAgentsAgentIdPageRouteImport.update({
+const authorizedsidebarPhoneNumbersPageRoute =
+  authorizedsidebarPhoneNumbersPageRouteImport.update({
+    id: '/phone-numbers/',
+    path: '/phone-numbers/',
+    getParentRoute: () => authorizedsidebarLayoutRoute,
+  } as any)
+const authorizedsidebarAgentsPageRoute =
+  authorizedsidebarAgentsPageRouteImport.update({
+    id: '/agents/',
+    path: '/agents/',
+    getParentRoute: () => authorizedsidebarLayoutRoute,
+  } as any)
+const authorizedsidebarAgentsAgentIdPageRoute =
+  authorizedsidebarAgentsAgentIdPageRouteImport.update({
     id: '/agents/$agentId/',
     path: '/agents/$agentId/',
-    getParentRoute: () => sidebarLayoutRoute,
+    getParentRoute: () => authorizedsidebarLayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof sidebarPageRoute
-  '/agents/': typeof sidebarAgentsPageRoute
-  '/phone-numbers/': typeof sidebarPhoneNumbersPageRoute
-  '/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
+  '/': typeof authorizedsidebarPageRoute
+  '/signin/': typeof unauthorizedSigninPageRoute
+  '/signup/': typeof unauthorizedSignupPageRoute
+  '/agents/': typeof authorizedsidebarAgentsPageRoute
+  '/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
+  '/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof sidebarPageRoute
-  '/agents': typeof sidebarAgentsPageRoute
-  '/phone-numbers': typeof sidebarPhoneNumbersPageRoute
-  '/agents/$agentId': typeof sidebarAgentsAgentIdPageRoute
+  '/': typeof authorizedsidebarPageRoute
+  '/signin': typeof unauthorizedSigninPageRoute
+  '/signup': typeof unauthorizedSignupPageRoute
+  '/agents': typeof authorizedsidebarAgentsPageRoute
+  '/phone-numbers': typeof authorizedsidebarPhoneNumbersPageRoute
+  '/agents/$agentId': typeof authorizedsidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/(sidebar)': typeof sidebarLayoutRouteWithChildren
-  '/(sidebar)/': typeof sidebarPageRoute
-  '/(sidebar)/agents/': typeof sidebarAgentsPageRoute
-  '/(sidebar)/phone-numbers/': typeof sidebarPhoneNumbersPageRoute
-  '/(sidebar)/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
+  '/(authorized)': typeof authorizedLayoutRouteWithChildren
+  '/(unauthorized)': typeof unauthorizedLayoutRouteWithChildren
+  '/(authorized)/(sidebar)': typeof authorizedsidebarLayoutRouteWithChildren
+  '/(authorized)/(sidebar)/': typeof authorizedsidebarPageRoute
+  '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
+  '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
+  '/(authorized)/(sidebar)/agents/': typeof authorizedsidebarAgentsPageRoute
+  '/(authorized)/(sidebar)/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
+  '/(authorized)/(sidebar)/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agents/' | '/phone-numbers/' | '/agents/$agentId/'
+  fullPaths:
+    | '/'
+    | '/signin/'
+    | '/signup/'
+    | '/agents/'
+    | '/phone-numbers/'
+    | '/agents/$agentId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agents' | '/phone-numbers' | '/agents/$agentId'
+  to:
+    | '/'
+    | '/signin'
+    | '/signup'
+    | '/agents'
+    | '/phone-numbers'
+    | '/agents/$agentId'
   id:
     | '__root__'
-    | '/(sidebar)'
-    | '/(sidebar)/'
-    | '/(sidebar)/agents/'
-    | '/(sidebar)/phone-numbers/'
-    | '/(sidebar)/agents/$agentId/'
+    | '/(authorized)'
+    | '/(unauthorized)'
+    | '/(authorized)/(sidebar)'
+    | '/(authorized)/(sidebar)/'
+    | '/(unauthorized)/signin/'
+    | '/(unauthorized)/signup/'
+    | '/(authorized)/(sidebar)/agents/'
+    | '/(authorized)/(sidebar)/phone-numbers/'
+    | '/(authorized)/(sidebar)/agents/$agentId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  sidebarLayoutRoute: typeof sidebarLayoutRouteWithChildren
+  authorizedLayoutRoute: typeof authorizedLayoutRouteWithChildren
+  unauthorizedLayoutRoute: typeof unauthorizedLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(sidebar)': {
-      id: '/(sidebar)'
+    '/(unauthorized)': {
+      id: '/(unauthorized)'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof sidebarLayoutRouteImport
+      preLoaderRoute: typeof unauthorizedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(sidebar)/': {
-      id: '/(sidebar)/'
+    '/(authorized)': {
+      id: '/(authorized)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authorizedLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(authorized)/(sidebar)': {
+      id: '/(authorized)/(sidebar)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authorizedsidebarLayoutRouteImport
+      parentRoute: typeof authorizedLayoutRoute
+    }
+    '/(unauthorized)/signup/': {
+      id: '/(unauthorized)/signup/'
+      path: '/signup'
+      fullPath: '/signup/'
+      preLoaderRoute: typeof unauthorizedSignupPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/signin/': {
+      id: '/(unauthorized)/signin/'
+      path: '/signin'
+      fullPath: '/signin/'
+      preLoaderRoute: typeof unauthorizedSigninPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(authorized)/(sidebar)/': {
+      id: '/(authorized)/(sidebar)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof sidebarPageRouteImport
-      parentRoute: typeof sidebarLayoutRoute
+      preLoaderRoute: typeof authorizedsidebarPageRouteImport
+      parentRoute: typeof authorizedsidebarLayoutRoute
     }
-    '/(sidebar)/phone-numbers/': {
-      id: '/(sidebar)/phone-numbers/'
+    '/(authorized)/(sidebar)/phone-numbers/': {
+      id: '/(authorized)/(sidebar)/phone-numbers/'
       path: '/phone-numbers'
       fullPath: '/phone-numbers/'
-      preLoaderRoute: typeof sidebarPhoneNumbersPageRouteImport
-      parentRoute: typeof sidebarLayoutRoute
+      preLoaderRoute: typeof authorizedsidebarPhoneNumbersPageRouteImport
+      parentRoute: typeof authorizedsidebarLayoutRoute
     }
-    '/(sidebar)/agents/': {
-      id: '/(sidebar)/agents/'
+    '/(authorized)/(sidebar)/agents/': {
+      id: '/(authorized)/(sidebar)/agents/'
       path: '/agents'
       fullPath: '/agents/'
-      preLoaderRoute: typeof sidebarAgentsPageRouteImport
-      parentRoute: typeof sidebarLayoutRoute
+      preLoaderRoute: typeof authorizedsidebarAgentsPageRouteImport
+      parentRoute: typeof authorizedsidebarLayoutRoute
     }
-    '/(sidebar)/agents/$agentId/': {
-      id: '/(sidebar)/agents/$agentId/'
+    '/(authorized)/(sidebar)/agents/$agentId/': {
+      id: '/(authorized)/(sidebar)/agents/$agentId/'
       path: '/agents/$agentId'
       fullPath: '/agents/$agentId/'
-      preLoaderRoute: typeof sidebarAgentsAgentIdPageRouteImport
-      parentRoute: typeof sidebarLayoutRoute
+      preLoaderRoute: typeof authorizedsidebarAgentsAgentIdPageRouteImport
+      parentRoute: typeof authorizedsidebarLayoutRoute
     }
   }
 }
 
-interface sidebarLayoutRouteChildren {
-  sidebarPageRoute: typeof sidebarPageRoute
-  sidebarAgentsPageRoute: typeof sidebarAgentsPageRoute
-  sidebarPhoneNumbersPageRoute: typeof sidebarPhoneNumbersPageRoute
-  sidebarAgentsAgentIdPageRoute: typeof sidebarAgentsAgentIdPageRoute
+interface authorizedsidebarLayoutRouteChildren {
+  authorizedsidebarPageRoute: typeof authorizedsidebarPageRoute
+  authorizedsidebarAgentsPageRoute: typeof authorizedsidebarAgentsPageRoute
+  authorizedsidebarPhoneNumbersPageRoute: typeof authorizedsidebarPhoneNumbersPageRoute
+  authorizedsidebarAgentsAgentIdPageRoute: typeof authorizedsidebarAgentsAgentIdPageRoute
 }
 
-const sidebarLayoutRouteChildren: sidebarLayoutRouteChildren = {
-  sidebarPageRoute: sidebarPageRoute,
-  sidebarAgentsPageRoute: sidebarAgentsPageRoute,
-  sidebarPhoneNumbersPageRoute: sidebarPhoneNumbersPageRoute,
-  sidebarAgentsAgentIdPageRoute: sidebarAgentsAgentIdPageRoute,
+const authorizedsidebarLayoutRouteChildren: authorizedsidebarLayoutRouteChildren =
+  {
+    authorizedsidebarPageRoute: authorizedsidebarPageRoute,
+    authorizedsidebarAgentsPageRoute: authorizedsidebarAgentsPageRoute,
+    authorizedsidebarPhoneNumbersPageRoute:
+      authorizedsidebarPhoneNumbersPageRoute,
+    authorizedsidebarAgentsAgentIdPageRoute:
+      authorizedsidebarAgentsAgentIdPageRoute,
+  }
+
+const authorizedsidebarLayoutRouteWithChildren =
+  authorizedsidebarLayoutRoute._addFileChildren(
+    authorizedsidebarLayoutRouteChildren,
+  )
+
+interface authorizedLayoutRouteChildren {
+  authorizedsidebarLayoutRoute: typeof authorizedsidebarLayoutRouteWithChildren
 }
 
-const sidebarLayoutRouteWithChildren = sidebarLayoutRoute._addFileChildren(
-  sidebarLayoutRouteChildren,
-)
+const authorizedLayoutRouteChildren: authorizedLayoutRouteChildren = {
+  authorizedsidebarLayoutRoute: authorizedsidebarLayoutRouteWithChildren,
+}
+
+const authorizedLayoutRouteWithChildren =
+  authorizedLayoutRoute._addFileChildren(authorizedLayoutRouteChildren)
+
+interface unauthorizedLayoutRouteChildren {
+  unauthorizedSigninPageRoute: typeof unauthorizedSigninPageRoute
+  unauthorizedSignupPageRoute: typeof unauthorizedSignupPageRoute
+}
+
+const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
+  unauthorizedSigninPageRoute: unauthorizedSigninPageRoute,
+  unauthorizedSignupPageRoute: unauthorizedSignupPageRoute,
+}
+
+const unauthorizedLayoutRouteWithChildren =
+  unauthorizedLayoutRoute._addFileChildren(unauthorizedLayoutRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  sidebarLayoutRoute: sidebarLayoutRouteWithChildren,
+  authorizedLayoutRoute: authorizedLayoutRouteWithChildren,
+  unauthorizedLayoutRoute: unauthorizedLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

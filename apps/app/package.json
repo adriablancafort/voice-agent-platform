@@ -19,6 +19,7 @@
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.10.2",
+    "better-auth": "catalog:",
     "livekit-client": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
