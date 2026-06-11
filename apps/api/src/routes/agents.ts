@@ -22,6 +22,7 @@ import type {
   AgentVersionsList,
 } from "@workspace/shared/agents/types"
 import { requireOrganization } from "@/lib/auth/organization"
+import { requireAuthToken } from "@/lib/auth/token"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
@@ -84,6 +85,7 @@ agentRoutes.post(
 
 agentRoutes.post(
   "/config/webrtc",
+  requireAuthToken,
   validator("json", webrtcAgentConfigInputSchema),
   async (c) => {
     try {
@@ -129,6 +131,7 @@ agentRoutes.post(
 
 agentRoutes.post(
   "/config/sip-inbound",
+  requireAuthToken,
   validator("json", sipInboundAgentConfigInputSchema),
   async (c) => {
     try {

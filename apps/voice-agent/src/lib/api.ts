@@ -11,6 +11,7 @@ async function request<TResponse, TBody = never>(
   options?: RequestOptions<TBody>
 ): Promise<TResponse> {
   const headers = new Headers(options?.headers)
+  headers.set("Authorization", `Bearer ${env.API_TOKEN}`)
   if (options?.body !== undefined) {
     headers.set("Content-Type", "application/json")
   }
