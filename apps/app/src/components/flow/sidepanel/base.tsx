@@ -12,13 +12,13 @@ export function FlowSidePanelBase({ title, children }: FlowSidePanelBaseProps) {
   const closeSidePanel = useAgentStore((state) => state.closeSidePanel)
 
   return (
-    <aside className="fixed top-18 right-3 bottom-3 z-40 flex w-95 max-w-full flex-col rounded-lg border bg-popover text-popover-foreground shadow-lg">
+    <aside className="fixed top-21 right-3 bottom-3 z-40 flex w-95 max-w-full flex-col rounded-lg border bg-popover text-popover-foreground shadow-lg">
       <div className="flex flex-col gap-1.5 p-4">
         <h2 className="font-heading text-lg font-medium text-foreground">
           {title}
         </h2>
       </div>
-      <div className="flex-1 overflow-y-auto rounded-b-lg border-t p-4">
+      <div className="flex-1 overflow-y-auto rounded-b-lg border-t border-border p-4">
         {children}
       </div>
       <Button

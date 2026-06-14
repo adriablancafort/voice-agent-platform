@@ -1,12 +1,13 @@
 import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
-import "@xyflow/react/dist/style.css"
 import { useShallow } from "zustand/react/shallow"
 
 import { FlowConfigButtons } from "@/components/agents/flow-config-buttons"
+import { useTheme } from "@/components/theme-provider"
 import { useAgentStore } from "@/stores/agent"
 import { ConditionEdge } from "./edges/condition"
 import { ConversationNode } from "./nodes/conversation"
 import { EndNode } from "./nodes/end"
+import "./canvas.css"
 
 const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
   nodes: state.draftConfig.nodes,
@@ -31,6 +32,8 @@ export default function Canvas() {
     closeSidePanel,
   } = useAgentStore(useShallow(selector))
 
+  const { theme } = useTheme()
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -52,10 +55,12 @@ export default function Canvas() {
         animated: true,
       }}
       fitView
+      colorMode={theme}
+      selectNodesOnDrag={false}
       proOptions={{ hideAttribution: true }}
     >
       <FlowConfigButtons />
-      <Background color="#d4d4d4" />
+      <Background />
       <Controls position="bottom-left" />
       <MiniMap zoomable pannable />
     </ReactFlow>

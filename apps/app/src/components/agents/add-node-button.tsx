@@ -67,30 +67,30 @@ export function AddNodeButton() {
             Add node
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent className="absolute top-full left-0 z-20 mt-2 w-full rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
+        <CollapsibleContent className="absolute top-full left-0 z-20 mt-2 w-full rounded-md border border-border bg-popover text-popover-foreground text-sm font-medium py-1 shadow-lg">
           <button
             onClick={() => handleAdd("start")}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+            className="flex w-full items-center gap-2 px-3 py-2 hover:bg-muted"
           >
-            <span className="flex h-6 w-6 items-center justify-center rounded border border-neutral-300">
+            <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
               <Play className="h-4 w-4 text-green-600" />
             </span>
             Start
           </button>
           <button
             onClick={() => handleAdd("conversation")}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+            className="flex w-full items-center gap-2 px-3 py-2 hover:bg-muted"
           >
-            <span className="flex h-6 w-6 items-center justify-center rounded border border-neutral-300">
+            <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
               <Phone className="h-4 w-4 text-blue-600" />
             </span>
             Conversation
           </button>
           <button
             onClick={() => handleAdd("end")}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+            className="flex w-full items-center gap-2 px-3 py-2 hover:bg-muted"
           >
-            <span className="flex h-6 w-6 items-center justify-center rounded border border-neutral-300">
+            <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
               <PhoneOff className="h-4 w-4 text-red-600" />
             </span>
             End

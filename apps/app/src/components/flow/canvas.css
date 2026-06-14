@@ -1,0 +1,5 @@
+@import "@xyflow/react/dist/style.css";
+
+.react-flow {
+  --xy-edge-stroke-width-default: 1.4;
+}
