@@ -17,7 +17,7 @@ const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
   onConnect: state.onConnect,
   selectNode: state.selectNode,
   selectEdge: state.selectEdge,
-  closeSidePanel: state.closeSidePanel,
+  setSidePanel: state.setSidePanel,
 })
 
 export default function Canvas() {
@@ -29,7 +29,7 @@ export default function Canvas() {
     onConnect,
     selectNode,
     selectEdge,
-    closeSidePanel,
+    setSidePanel,
   } = useAgentStore(useShallow(selector))
 
   const { theme } = useTheme()
@@ -41,9 +41,9 @@ export default function Canvas() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      onNodeClick={(_, node) => selectNode(node.id)}
-      onEdgeClick={(_, edge) => selectEdge(edge.id)}
-      onPaneClick={closeSidePanel}
+      onNodeClick={(_, node) => selectNode(node)}
+      onEdgeClick={(_, edge) => selectEdge(edge)}
+      onPaneClick={() => setSidePanel({ kind: "closed" })}
       nodeTypes={{
         conversation: ConversationNode,
         end: EndNode,

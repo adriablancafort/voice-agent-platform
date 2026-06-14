@@ -1,34 +1,15 @@
-import { type FlowSidePanelState, useAgentStore } from "@/stores/agent"
+import { useAgentStore } from "@/stores/agent"
 import { EdgePanel } from "./edges/condition"
 import { GlobalPromptPanel } from "./global-prompt"
 import { ModelsConfigPanel } from "./models-config"
-import { NodePanel } from "./nodes"
+import { ConversationNodePanel } from "./nodes/conversation"
+import { EndNodePanel } from "./nodes/end"
 import { TestPanel } from "./test"
 
-const closedPanel: FlowSidePanelState = { kind: "closed" }
-
 export function FlowSidePanel() {
-  const panel = useAgentStore((state) => {
-    const { sidePanel, draftConfig } = state
+  const sidePanel = useAgentStore((state) => state.sidePanel)
 
-    if (
-      sidePanel.kind === "node" &&
-      !draftConfig.nodes.some((node) => node.id === sidePanel.nodeId)
-    ) {
-      return closedPanel
-    }
-
-    if (
-      sidePanel.kind === "edge" &&
-      !draftConfig.edges.some((edge) => edge.id === sidePanel.edgeId)
-    ) {
-      return closedPanel
-    }
-
-    return sidePanel
-  })
-
-  switch (panel.kind) {
+  switch (sidePanel.kind) {
     case "closed":
       return null
     case "test":
@@ -38,8 +19,18 @@ export function FlowSidePanel() {
     case "models-config":
       return <ModelsConfigPanel />
     case "node":
-      return <NodePanel key={panel.nodeId} nodeId={panel.nodeId} />
+      switch (sidePanel.node.type) {
+        case "conversation":
+          return (
+            <ConversationNodePanel
+              key={sidePanel.node.id}
+              node={sidePanel.node}
+            />
+          )
+        case "end":
+          return <EndNodePanel key={sidePanel.node.id} node={sidePanel.node} />
+      }
     case "edge":
-      return <EdgePanel key={panel.edgeId} edgeId={panel.edgeId} />
+      return <EdgePanel key={sidePanel.edge.id} edge={sidePanel.edge} />
   }
 }

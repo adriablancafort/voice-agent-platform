@@ -1,21 +1,15 @@
+import type { FlowEdgeConfig } from "@workspace/shared/agent-config/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
 type EdgePanelProps = {
-  edgeId: string
+  edge: FlowEdgeConfig
 }
 
-export function EdgePanel({ edgeId }: EdgePanelProps) {
-  const edge = useAgentStore((state) =>
-    state.draftConfig.edges.find((entry) => entry.id === edgeId)
-  )
+export function EdgePanel({ edge }: EdgePanelProps) {
   const setEdge = useAgentStore((state) => state.setEdge)
-
-  if (!edge) {
-    return null
-  }
 
   return (
     <FlowSidePanelBase title="Edge">

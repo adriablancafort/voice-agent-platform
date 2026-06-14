@@ -80,10 +80,11 @@ function Page() {
   const { agentId } = Route.useParams()
   const { data: agent } = useSuspenseQuery(queryOptions(agentId))
   const name = useAgentStore((state) => state.name)
+  const setAgent = useAgentStore((state) => state.setAgent)
 
   useEffect(() => {
-    useAgentStore.setState(agent)
-  }, [agent])
+    setAgent(agent)
+  }, [agent.id, agent.updatedAt, agent.versions, setAgent])
 
   return (
     <>

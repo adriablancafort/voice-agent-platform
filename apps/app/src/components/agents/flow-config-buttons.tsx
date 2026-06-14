@@ -6,7 +6,7 @@ import { AddNodeButton } from "@/components/agents/add-node-button"
 import { useAgentStore } from "@/stores/agent"
 
 export function FlowConfigButtons() {
-  const openSidePanel = useAgentStore((state) => state.openSidePanel)
+  const setSidePanel = useAgentStore((state) => state.setSidePanel)
 
   return (
     <Panel position="top-left" className="flex flex-col gap-3">
@@ -15,7 +15,7 @@ export function FlowConfigButtons() {
       <div>
         <Button
           variant="outline"
-          onClick={() => openSidePanel({ kind: "global-prompt" })}
+          onClick={() => setSidePanel({ kind: "global-prompt" })}
         >
           <PencilLineIcon />
           Global prompt
@@ -25,7 +25,7 @@ export function FlowConfigButtons() {
       <div>
         <Button
           variant="outline"
-          onClick={() => openSidePanel({ kind: "models-config" })}
+          onClick={() => setSidePanel({ kind: "models-config" })}
         >
           <MicIcon />
           Models

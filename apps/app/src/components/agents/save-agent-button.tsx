@@ -7,6 +7,7 @@ import type {
 } from "@workspace/shared/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import { toast } from "@workspace/ui/components/sonner"
+import { toServerDraftConfig } from "@/components/flow/draft-config"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
@@ -19,7 +20,7 @@ export function SaveAgentButton() {
   const saveMutation = useMutation({
     mutationFn: () =>
       api.patch<AgentDraft, UpdateAgentInput>(`/agents/${id}`, {
-        body: { name, draftConfig },
+        body: { name, draftConfig: toServerDraftConfig(draftConfig) },
       }),
     onSuccess: () => {
       toast.success("Agent saved")

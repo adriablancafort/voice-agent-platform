@@ -9,7 +9,7 @@ type FlowSidePanelBaseProps = {
 }
 
 export function FlowSidePanelBase({ title, children }: FlowSidePanelBaseProps) {
-  const closeSidePanel = useAgentStore((state) => state.closeSidePanel)
+  const setSidePanel = useAgentStore((state) => state.setSidePanel)
 
   return (
     <aside className="fixed top-21 right-3 bottom-3 z-40 flex w-95 max-w-full flex-col rounded-lg border bg-popover text-popover-foreground shadow-lg">
@@ -25,7 +25,7 @@ export function FlowSidePanelBase({ title, children }: FlowSidePanelBaseProps) {
         variant="ghost"
         size="icon-sm"
         className="absolute top-3.5 right-3.5"
-        onClick={closeSidePanel}
+        onClick={() => setSidePanel({ kind: "closed" })}
       >
         <XIcon />
         <span className="sr-only">Close side panel</span>

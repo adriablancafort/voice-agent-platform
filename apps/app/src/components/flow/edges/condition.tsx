@@ -14,6 +14,8 @@ type ConditionEdgeType = Edge<FlowEdgeConfig["data"]>
 
 export function ConditionEdge({
   id,
+  source,
+  target,
   sourceX,
   sourceY,
   targetX,
@@ -44,7 +46,7 @@ export function ConditionEdge({
             "nopan nodrag max-w-48 min-h-6 min-w-16 cursor-pointer truncate rounded border border-border bg-popover px-2 py-1 text-xs font-medium text-muted-foreground",
             selected && "border-ring ring-2 ring-ring/50"
           )}
-          onClick={() => selectEdge(id)}
+          onClick={() => selectEdge({ id, source, target, data: data! })}
         >
           {data?.condition}
         </div>
