@@ -1,12 +1,12 @@
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import {
-  BadgeCheckIcon,
-  BellIcon,
+  CheckIcon,
   ChevronsUpDownIcon,
-  CreditCardIcon,
   LogOutIcon,
-  SparklesIcon,
+  MonitorIcon,
+  MoonIcon,
+  SunIcon,
 } from "lucide-react"
 
 import {
@@ -20,7 +20,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 import {
@@ -30,6 +34,7 @@ import {
   useSidebar,
 } from "@workspace/ui/components/sidebar"
 import { toast } from "@workspace/ui/components/sonner"
+import { useTheme } from "@/components/theme-provider"
 import { signOut } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
@@ -37,6 +42,7 @@ export function NavUser() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { isMobile } = useSidebar()
+  const { theme, setTheme } = useTheme()
   const { data: session } = useSuspenseQuery(sessionQueryOptions())
 
   if (!session) {
@@ -104,27 +110,33 @@ export function NavUser() {
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheckIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                {theme === "light" && <SunIcon />}
+                {theme === "dark" && <MoonIcon />}
+                {theme === "system" && <MonitorIcon />}
+                Theme
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent className="w-30">
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    <SunIcon />
+                    Light
+                    {theme === "light" && <CheckIcon className="ml-auto" />}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    <MoonIcon />
+                    Dark
+                    {theme === "dark" && <CheckIcon className="ml-auto" />}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                    <MonitorIcon />
+                    System
+                    {theme === "system" && <CheckIcon className="ml-auto" />}
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
