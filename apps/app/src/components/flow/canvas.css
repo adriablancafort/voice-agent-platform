@@ -2,4 +2,9 @@
 
 .react-flow {
   --xy-edge-stroke-width-default: 1.4;
+  --xy-background-color: #f8f8f8;
+}
+
+.react-flow.dark {
+  --xy-background-color: #191919;
 }
