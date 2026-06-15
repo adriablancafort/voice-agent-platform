@@ -17,11 +17,13 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSeparator,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { signIn } from "@/lib/auth/client"
+import { env } from "@/lib/env"
 
 export const Route = createFileRoute("/(unauthorized)/signin/")({
   component: Page,
@@ -64,6 +66,20 @@ function Page() {
       toast.error(error.message)
     },
   })
+
+  async function handleGoogleSignIn() {
+    await signIn.social(
+      {
+        provider: "google",
+        callbackURL: env.FRONTEND_URL,
+      },
+      {
+        onError: (ctx) => {
+          toast.error(ctx.error.message)
+        },
+      }
+    )
+  }
 
   return (
     <>
@@ -137,6 +153,21 @@ function Page() {
 
                 <Button type="submit" disabled={signInMutation.isPending}>
                   {signInMutation.isPending ? <Spinner /> : "Sign in"}
+                </Button>
+
+                <FieldSeparator>Or continue with</FieldSeparator>
+
+                <Button
+                  variant="outline"
+                  disabled={signInMutation.isPending}
+                  onClick={handleGoogleSignIn}
+                >
+                  <img
+                    src="/logos/google.svg"
+                    alt="Google logo"
+                    className="size-5"
+                  />
+                  Sign in with Google
                 </Button>
 
                 <div className="text-center text-sm">
