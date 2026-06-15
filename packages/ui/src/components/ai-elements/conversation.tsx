@@ -1,4 +1,3 @@
-import type { UIMessage } from "ai"
 import { ArrowDownIcon, DownloadIcon } from "lucide-react"
 import type { ComponentProps } from "react"
 import { useCallback } from "react"
@@ -99,7 +98,12 @@ export const ConversationScrollButton = ({
   )
 }
 
-const getMessageText = (message: UIMessage): string =>
+export type TextChatMessage = {
+  role: "user" | "assistant" | "system"
+  parts: Array<{ type: "text"; text: string }>
+}
+
+const getMessageText = (message: TextChatMessage): string =>
   message.parts
     .filter((part) => part.type === "text")
     .map((part) => part.text)
@@ -109,20 +113,20 @@ export type ConversationDownloadProps = Omit<
   ComponentProps<typeof Button>,
   "onClick"
 > & {
-  messages: UIMessage[]
+  messages: TextChatMessage[]
   filename?: string
-  formatMessage?: (message: UIMessage, index: number) => string
+  formatMessage?: (message: TextChatMessage, index: number) => string
 }
 
-const defaultFormatMessage = (message: UIMessage): string => {
+const defaultFormatMessage = (message: TextChatMessage): string => {
   const roleLabel = message.role.charAt(0).toUpperCase() + message.role.slice(1)
   return `**${roleLabel}:** ${getMessageText(message)}`
 }
 
 export const messagesToMarkdown = (
-  messages: UIMessage[],
+  messages: TextChatMessage[],
   formatMessage: (
-    message: UIMessage,
+    message: TextChatMessage,
     index: number
   ) => string = defaultFormatMessage
 ): string => messages.map((msg, i) => formatMessage(msg, i)).join("\n\n")
