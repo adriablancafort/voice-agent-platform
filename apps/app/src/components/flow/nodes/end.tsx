@@ -2,18 +2,13 @@ import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { PhoneOff } from "lucide-react"
 
 import type { FlowEndNode } from "@workspace/shared/agent-config/types"
-import { cn } from "@workspace/ui/lib/utils"
+import { FlowNodeBase } from "./base"
 
 type EndNodeType = Node<FlowEndNode["data"], "end">
 
-export function EndNode({ data, selected }: NodeProps<EndNodeType>) {
+export function EndNode({ id, data, selected }: NodeProps<EndNodeType>) {
   return (
-    <div
-      className={cn(
-        "w-64 rounded-lg border border-border bg-popover",
-        selected && "border-ring ring-2 ring-ring/50"
-      )}
-    >
+    <FlowNodeBase id={id} selected={selected}>
       <Handle
         type="target"
         position={Position.Top}
@@ -25,6 +20,6 @@ export function EndNode({ data, selected }: NodeProps<EndNodeType>) {
         </span>
         <span className="text-sm font-medium text-foreground">{data.name}</span>
       </div>
-    </div>
+    </FlowNodeBase>
   )
 }

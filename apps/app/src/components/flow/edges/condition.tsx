@@ -9,6 +9,7 @@ import {
 import type { FlowEdgeConfig } from "@workspace/shared/agent-config/types"
 import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
+import { FlowEdgeActions } from "./actions"
 
 type ConditionEdgeType = Edge<FlowEdgeConfig["data"]>
 
@@ -42,13 +43,17 @@ export function ConditionEdge({
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: "all",
           }}
-          className={cn(
-            "nopan nodrag max-w-48 min-h-6 min-w-16 cursor-pointer truncate rounded border border-border bg-popover px-2 py-1 text-xs font-medium text-muted-foreground",
-            selected && "border-ring ring-2 ring-ring/50"
-          )}
-          onClick={() => selectEdge({ id, source, target, data: data! })}
         >
-          {data?.condition}
+          <div
+            className={cn(
+              "nopan nodrag max-w-48 min-h-6 min-w-16 cursor-pointer truncate rounded border border-border bg-popover px-2 py-1 text-xs font-medium text-muted-foreground",
+              selected && "border-ring ring-2 ring-ring/50"
+            )}
+            onClick={() => selectEdge({ id, source, target, data: data! })}
+          >
+            {data?.condition}
+          </div>
+          {selected && <FlowEdgeActions id={id} />}
         </div>
       </EdgeLabelRenderer>
     </>

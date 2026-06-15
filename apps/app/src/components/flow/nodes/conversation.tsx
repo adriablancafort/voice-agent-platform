@@ -2,23 +2,19 @@ import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
 
 import type { FlowConversationNode } from "@workspace/shared/agent-config/types"
-import { cn } from "@workspace/ui/lib/utils"
+import { FlowNodeBase } from "./base"
 
 type ConversationNodeType = Node<FlowConversationNode["data"], "conversation">
 
 export function ConversationNode({
+  id,
   data,
   selected,
 }: NodeProps<ConversationNodeType>) {
   const isStart = data.isStart
 
   return (
-    <div
-      className={cn(
-        "w-64 rounded-lg border border-border bg-popover",
-        selected && "border-ring ring-2 ring-ring/50"
-      )}
-    >
+    <FlowNodeBase id={id} selected={selected}>
       {!isStart && (
         <Handle
           type="target"
@@ -48,6 +44,6 @@ export function ConversationNode({
         position={Position.Bottom}
         className="size-2! rounded-full! border-2! border-muted-foreground! bg-popover!"
       />
-    </div>
+    </FlowNodeBase>
   )
 }
