@@ -30,6 +30,27 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
             }
           />
         </Field>
+        {node.data.isStart ? (
+          <Field>
+            <FieldLabel>First speaker</FieldLabel>
+            <Tabs
+              value={node.data.startSpeaker ?? "agent"}
+              onValueChange={(value) => {
+                if (value === "agent" || value === "user") {
+                  setNode({
+                    ...node,
+                    data: { ...node.data, startSpeaker: value },
+                  })
+                }
+              }}
+            >
+              <TabsList>
+                <TabsTrigger value="agent">Agent</TabsTrigger>
+                <TabsTrigger value="user">User</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </Field>
+        ) : null}
         <Field>
           <Tabs
             value={node.data.instructions.type}
