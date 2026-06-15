@@ -2,36 +2,26 @@ import {
   RoomAudioRenderer,
   SessionProvider,
   useSession,
-  useVoiceAssistant,
 } from "@livekit/components-react"
 import { ConnectionState, TokenSource } from "livekit-client"
 import { PhoneIcon, PhoneOffIcon } from "lucide-react"
+import type { ReactNode } from "react"
 
-import { AgentAudioVisualizerRadial } from "@workspace/ui/components/agents-ui/agent-audio-visualizer-radial"
 import { Button } from "@workspace/ui/components/button"
 import { env } from "@/lib/env"
 
 const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`)
 
-function AgentAudioVisualizer() {
-  const { state, audioTrack } = useVoiceAssistant()
-  return (
-    <AgentAudioVisualizerRadial
-      size="lg"
-      state={state}
-      audioTrack={audioTrack}
-    />
-  )
-}
-
 type VoiceAgentClientProps = {
   agentId: string
   agentVersionId?: string
+  children: ReactNode
 }
 
 export function VoiceAgentClient({
   agentId,
   agentVersionId,
+  children,
 }: VoiceAgentClientProps) {
   const session = useSession(tokenSource, {
     participantAttributes: {
@@ -54,29 +44,25 @@ export function VoiceAgentClient({
 
   return (
     <SessionProvider session={session}>
-      <div className="flex flex-col gap-8">
-        {isConnected ? (
-          <>
-            <RoomAudioRenderer />
-            <AgentAudioVisualizer />
+      {isConnected ? (
+        <div className="flex h-full flex-col">
+          <RoomAudioRenderer />
+          {children}
+          <div className="pb-8 pt-4 mx-auto">
             <Button variant="destructive" onClick={handleDisconnect}>
               <PhoneOffIcon />
               End call
             </Button>
-          </>
-        ) : (
-          <>
-            <AgentAudioVisualizerRadial
-              size="lg"
-              state={isConnecting ? "connecting" : "disconnected"}
-            />
-            <Button onClick={handleConnect} disabled={isConnecting}>
-              <PhoneIcon />
-              {isConnecting ? "Calling..." : "Call"}
-            </Button>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-full items-center justify-center p-4">
+          <Button onClick={handleConnect} disabled={isConnecting}>
+            <PhoneIcon />
+            {isConnecting ? "Calling..." : "Start call"}
+          </Button>
+        </div>
+      )}
     </SessionProvider>
   )
 }

@@ -1,14 +1,20 @@
 import { XIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
+import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
 
 type FlowSidePanelBaseProps = {
   title: string
   children: React.ReactNode
+  contentClassName?: string
 }
 
-export function FlowSidePanelBase({ title, children }: FlowSidePanelBaseProps) {
+export function FlowSidePanelBase({
+  title,
+  children,
+  contentClassName,
+}: FlowSidePanelBaseProps) {
   const setSidePanel = useAgentStore((state) => state.setSidePanel)
 
   return (
@@ -18,7 +24,12 @@ export function FlowSidePanelBase({ title, children }: FlowSidePanelBaseProps) {
           {title}
         </h2>
       </div>
-      <div className="flex-1 overflow-y-auto rounded-b-lg border-t border-border p-4">
+      <div
+        className={cn(
+          "flex-1 overflow-y-auto rounded-b-lg border-t border-border p-4",
+          contentClassName
+        )}
+      >
         {children}
       </div>
       <Button
