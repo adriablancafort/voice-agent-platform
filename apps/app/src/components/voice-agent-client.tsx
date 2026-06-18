@@ -17,12 +17,16 @@ const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`, {
 type VoiceAgentClientProps = {
   agentId: string
   agentVersionId?: string
+  variableValues?: Record<string, string>
+  preCallContent?: ReactNode
   children: ReactNode
 }
 
 export function VoiceAgentClient({
   agentId,
   agentVersionId,
+  variableValues = {},
+  preCallContent,
   children,
 }: VoiceAgentClientProps) {
   const session = useSession(tokenSource, {
@@ -30,6 +34,7 @@ export function VoiceAgentClient({
       channel: "webrtc",
       agent_id: agentId,
       agent_version_id: agentVersionId ?? "",
+      variable_values: JSON.stringify(variableValues),
     },
   })
 
@@ -58,11 +63,14 @@ export function VoiceAgentClient({
           </div>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center p-4">
-          <Button onClick={handleConnect} disabled={isConnecting}>
-            <PhoneIcon />
-            {isConnecting ? "Calling..." : "Start call"}
-          </Button>
+        <div className="flex h-full flex-col p-4">
+          {preCallContent}
+          <div className="flex flex-1 items-center justify-center">
+            <Button onClick={handleConnect} disabled={isConnecting}>
+              <PhoneIcon />
+              {isConnecting ? "Calling..." : "Start call"}
+            </Button>
+          </div>
         </div>
       )}
     </SessionProvider>

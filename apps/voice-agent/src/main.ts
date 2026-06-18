@@ -14,6 +14,7 @@ import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { loadAgentConfig } from "@/flow/loader"
+import { createVariables } from "@/flow/variables"
 import { env } from "@/lib/env"
 
 interface ProcessUserData {
@@ -38,6 +39,7 @@ export default defineAgent<ProcessUserData>({
     const participant = await ctx.waitForParticipant()
     const agentConfig = await loadAgentConfig(participant.attributes)
     const flowGraph = buildFlowGraph(agentConfig)
+    const variables = createVariables(participant.attributes)
 
     const session = new voice.AgentSession({
       stt: new inference.STT(agentConfig.stt),
@@ -48,7 +50,7 @@ export default defineAgent<ProcessUserData>({
     })
 
     await session.start({
-      agent: new FlowAgent(flowGraph),
+      agent: new FlowAgent(flowGraph, variables),
       room: ctx.room,
       inputOptions: {
         noiseCancellation: audioEnhancement({ model: "quailVfS" }),

@@ -2,19 +2,24 @@ import { llm, voice } from "@livekit/agents"
 
 import { FLOW_INSTRUCTIONS } from "@/flow/prompts"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
+import type { Variables } from "@/flow/variables"
 import { endCall } from "@/lib/end-call"
 
-function buildNodeInstructions(graph: FlowGraph, node: FlowConversationNode) {
+function buildNodeInstructions(
+  graph: FlowGraph,
+  node: FlowConversationNode,
+  variables: Variables
+) {
   let nodeInstructions = ""
 
   if (graph.globalPrompt) {
-    nodeInstructions += graph.globalPrompt + "\n\n"
+    nodeInstructions += variables.replace(graph.globalPrompt) + "\n\n"
   }
 
   nodeInstructions += FLOW_INSTRUCTIONS
 
   if (node.instructions.type === "prompt") {
-    nodeInstructions += "\n\n" + node.instructions.text
+    nodeInstructions += "\n\n" + variables.replace(node.instructions.text)
   }
 
   return nodeInstructions
@@ -22,13 +27,15 @@ function buildNodeInstructions(graph: FlowGraph, node: FlowConversationNode) {
 
 export class FlowAgent extends voice.Agent {
   private readonly graph: FlowGraph
+  private readonly variables: Variables
 
-  constructor(graph: FlowGraph) {
+  constructor(graph: FlowGraph, variables: Variables) {
     super({
-      instructions: buildNodeInstructions(graph, graph.startNode),
+      instructions: buildNodeInstructions(graph, graph.startNode, variables),
     })
 
     this.graph = graph
+    this.variables = variables
     this._tools = this._buildNodeTools(graph.startNode)
   }
 
@@ -37,7 +44,7 @@ export class FlowAgent extends voice.Agent {
       node.outgoingEdges.map((edge) => [
         edge.transitionToolName,
         llm.tool({
-          description: `Transition to "${edge.targetNode.name}" when: ${edge.condition}`,
+          description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition)}`,
           execute: async () => {
             await this._transitionTo(edge.targetNode)
             return `Transitioned to "${edge.targetNode.name}"`
@@ -49,11 +56,15 @@ export class FlowAgent extends voice.Agent {
 
   private async _transitionTo(node: FlowNode) {
     if (node.type === "conversation") {
-      this._instructions = buildNodeInstructions(this.graph, node)
+      this._instructions = buildNodeInstructions(
+        this.graph,
+        node,
+        this.variables
+      )
       await this.updateTools(this._buildNodeTools(node))
 
       if (node.instructions.type === "say") {
-        await this.session.say(node.instructions.text)
+        await this.session.say(this.variables.replace(node.instructions.text))
       }
     } else if (node.type === "end") {
       await endCall()
@@ -66,7 +77,9 @@ export class FlowAgent extends voice.Agent {
 
     if (startNode.startSpeaker === "agent") {
       if (startNode.instructions.type === "say") {
-        await this.session.say(startNode.instructions.text)
+        await this.session.say(
+          this.variables.replace(startNode.instructions.text)
+        )
       } else {
         await this.session.generateReply()
       }
