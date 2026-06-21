@@ -4,9 +4,7 @@ import type { AgentConfig } from "../agent-config/types"
 import type {
   createAgentInputSchema,
   publishAgentInputSchema,
-  sipInboundAgentConfigInputSchema,
   updateAgentInputSchema,
-  webrtcAgentConfigInputSchema,
 } from "./schemas"
 
 export type AgentListItem = {
@@ -55,9 +53,3 @@ export type DeleteAgentResponse = {
 export type CreateAgentInput = z.infer<typeof createAgentInputSchema>
 export type UpdateAgentInput = z.infer<typeof updateAgentInputSchema>
 export type PublishAgentInput = z.infer<typeof publishAgentInputSchema>
-export type WebRtcAgentConfigInput = z.infer<
-  typeof webrtcAgentConfigInputSchema
->
-export type SipInboundAgentConfigInput = z.infer<
-  typeof sipInboundAgentConfigInputSchema
->

@@ -3,15 +3,12 @@ import { Hono } from "hono"
 
 import { db } from "@workspace/db/client"
 import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
-import type { AgentConfig } from "@workspace/shared/agent-config/types"
 import {
   agentIdParamsSchema,
   agentVersionParamsSchema,
   createAgentInputSchema,
   publishAgentInputSchema,
-  sipInboundAgentConfigInputSchema,
   updateAgentInputSchema,
-  webrtcAgentConfigInputSchema,
 } from "@workspace/shared/agents/schemas"
 import type {
   AgentDetail,
@@ -22,7 +19,6 @@ import type {
   AgentVersionsList,
 } from "@workspace/shared/agents/types"
 import { requireOrganization } from "@/lib/auth/organization"
-import { requireAuthToken } from "@/lib/auth/token"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
@@ -79,116 +75,6 @@ agentRoutes.post(
       return c.json(agent satisfies AgentDraft, 201)
     } catch {
       return c.json({ error: "Failed to create agent" }, 500)
-    }
-  }
-)
-
-agentRoutes.post(
-  "/config/webrtc",
-  requireAuthToken,
-  validator("json", webrtcAgentConfigInputSchema),
-  async (c) => {
-    try {
-      const payload = c.req.valid("json")
-
-      if (payload.agentVersionId) {
-        const version = await db.query.agentVersionsTable.findFirst({
-          where: {
-            id: payload.agentVersionId,
-            agentId: payload.agentId,
-          },
-          columns: {
-            config: true,
-          },
-        })
-
-        if (!version) {
-          return c.json({ error: "Agent version not found" }, 404)
-        }
-
-        return c.json(version.config satisfies AgentConfig)
-      }
-
-      const agent = await db.query.agentsTable.findFirst({
-        where: {
-          id: payload.agentId,
-        },
-        columns: {
-          draftConfig: true,
-        },
-      })
-
-      if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
-      }
-
-      return c.json(agent.draftConfig satisfies AgentConfig)
-    } catch {
-      return c.json({ error: "Failed to resolve agent config" }, 500)
-    }
-  }
-)
-
-agentRoutes.post(
-  "/config/sip-inbound",
-  requireAuthToken,
-  validator("json", sipInboundAgentConfigInputSchema),
-  async (c) => {
-    try {
-      const payload = c.req.valid("json")
-
-      const phoneNumber = await db.query.phoneNumbersTable.findFirst({
-        where: {
-          number: payload.number,
-        },
-        columns: {
-          agentId: true,
-          agentVersionId: true,
-        },
-      })
-
-      if (!phoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
-      }
-
-      if (!phoneNumber.agentId) {
-        return c.json({ error: "Phone number has no agent assigned" }, 404)
-      }
-
-      if (phoneNumber.agentVersionId) {
-        const version = await db.query.agentVersionsTable.findFirst({
-          where: {
-            id: phoneNumber.agentVersionId,
-            agentId: phoneNumber.agentId,
-          },
-          columns: {
-            config: true,
-          },
-        })
-
-        if (!version) {
-          return c.json({ error: "Agent version not found" }, 404)
-        }
-
-        return c.json(version.config satisfies AgentConfig)
-      }
-
-      const agent = await db.query.agentsTable.findFirst({
-        where: {
-          id: phoneNumber.agentId,
-        },
-        columns: {
-          draftConfig: true,
-        },
-      })
-
-      if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
-      }
-
-      return c.json(agent.draftConfig satisfies AgentConfig)
-    } catch {
-      return c.json({ error: "Failed to resolve agent config" }, 500)
     }
   }
 )

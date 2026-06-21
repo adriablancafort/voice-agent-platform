@@ -13,8 +13,8 @@ import { audioEnhancement } from "@livekit/plugins-ai-coustics"
 import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
-import { loadAgentConfig } from "@/flow/loader"
 import { createVariables } from "@/flow/variables"
+import { completeCall, startCall } from "@/lib/calls"
 import { env } from "@/lib/env"
 
 interface ProcessUserData {
@@ -37,16 +37,28 @@ export default defineAgent<ProcessUserData>({
   entry: async (ctx) => {
     await ctx.connect()
     const participant = await ctx.waitForParticipant()
-    const agentConfig = await loadAgentConfig(participant.attributes)
-    const flowGraph = buildFlowGraph(agentConfig)
+    const livekitRoomName = ctx.room.name ?? ""
+
+    const { callId, config } = await startCall(
+      participant.attributes,
+      livekitRoomName
+    )
+
+    const flowGraph = buildFlowGraph(config)
     const variables = createVariables(participant.attributes)
 
     const session = new voice.AgentSession({
-      stt: new inference.STT(agentConfig.stt),
-      llm: new inference.LLM(agentConfig.llm),
-      tts: new inference.TTS(agentConfig.tts),
+      stt: new inference.STT(config.stt),
+      llm: new inference.LLM(config.llm),
+      tts: new inference.TTS(config.tts),
       vad: ctx.proc.userData.vad,
-      turnDetection: createTurnDetection(agentConfig.turnDetection),
+      turnDetection: createTurnDetection(config.turnDetection),
+    })
+
+    ctx.room.on("participantDisconnected", (remoteParticipant) => {
+      if (remoteParticipant.identity === participant.identity) {
+        completeCall(callId)
+      }
     })
 
     await session.start({

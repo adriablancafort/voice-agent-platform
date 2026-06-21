@@ -31,7 +31,7 @@ export function VoiceAgentClient({
 }: VoiceAgentClientProps) {
   const session = useSession(tokenSource, {
     participantAttributes: {
-      channel: "webrtc",
+      channel: "web_call",
       agent_id: agentId,
       agent_version_id: agentVersionId ?? "",
       variable_values: JSON.stringify(variableValues),
