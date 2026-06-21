@@ -9,12 +9,14 @@ import {
   session,
   user,
 } from "@workspace/db/schema/auth"
+import { callsTable } from "@workspace/db/schema/calls"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
 export const relations = defineRelations(
   {
     agentsTable,
     agentVersionsTable,
+    callsTable,
     phoneNumbersTable,
     user,
     session,
@@ -37,6 +39,10 @@ export const relations = defineRelations(
         from: r.agentsTable.id,
         to: r.phoneNumbersTable.agentId,
       }),
+      calls: r.many.callsTable({
+        from: r.agentsTable.id,
+        to: r.callsTable.agentId,
+      }),
     },
     agentVersionsTable: {
       agent: r.one.agentsTable({
@@ -46,6 +52,24 @@ export const relations = defineRelations(
       phoneNumbers: r.many.phoneNumbersTable({
         from: r.agentVersionsTable.id,
         to: r.phoneNumbersTable.agentVersionId,
+      }),
+      calls: r.many.callsTable({
+        from: r.agentVersionsTable.id,
+        to: r.callsTable.agentVersionId,
+      }),
+    },
+    callsTable: {
+      organization: r.one.organization({
+        from: r.callsTable.organizationId,
+        to: r.organization.id,
+      }),
+      agent: r.one.agentsTable({
+        from: r.callsTable.agentId,
+        to: r.agentsTable.id,
+      }),
+      agentVersion: r.one.agentVersionsTable({
+        from: r.callsTable.agentVersionId,
+        to: r.agentVersionsTable.id,
       }),
     },
     phoneNumbersTable: {
@@ -104,6 +128,10 @@ export const relations = defineRelations(
       phoneNumbers: r.many.phoneNumbersTable({
         from: r.organization.id,
         to: r.phoneNumbersTable.organizationId,
+      }),
+      calls: r.many.callsTable({
+        from: r.organization.id,
+        to: r.callsTable.organizationId,
       }),
     },
     member: {
