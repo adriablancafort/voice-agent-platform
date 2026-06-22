@@ -12,7 +12,7 @@ import type {
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/agent-config/types"
-import type { AgentDetail } from "@workspace/shared/agents/types"
+import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
   applySelection,
   type ClientDraftConfig,
@@ -29,13 +29,13 @@ export type FlowSidePanelState =
   | { kind: "node"; node: FlowNodeConfig }
   | { kind: "edge"; edge: FlowEdgeConfig }
 
-type AgentStoreState = Omit<AgentDetail, "draftConfig"> & {
+type AgentStoreState = Omit<AgentDetailResponse, "draftConfig"> & {
   draftConfig: ClientDraftConfig
   sidePanel: FlowSidePanelState
 }
 
 type AgentStore = AgentStoreState & {
-  setAgent: (agent: AgentDetail) => void
+  setAgent: (agent: AgentDetailResponse) => void
   setName: (name: string) => void
   setConfig: (draftConfig: ClientDraftConfig) => void
   setNode: (node: FlowNodeConfig) => void

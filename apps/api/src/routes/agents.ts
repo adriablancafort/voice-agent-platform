@@ -6,18 +6,18 @@ import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
 import {
   agentIdParamsSchema,
   agentVersionParamsSchema,
-  createAgentInputSchema,
-  publishAgentInputSchema,
-  updateAgentInputSchema,
-} from "@workspace/shared/agents/schemas"
+  createAgentRequestSchema,
+  publishAgentRequestSchema,
+  updateAgentRequestSchema,
+} from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentDetail,
-  AgentDraft,
-  AgentListItem,
-  AgentVersionDetail,
-  AgentVersionSummary,
-  AgentVersionsList,
-} from "@workspace/shared/agents/types"
+  AgentDetailResponse,
+  AgentDraftResponse,
+  AgentListResponse,
+  AgentVersionDetailResponse,
+  AgentVersionSummaryResponse,
+  AgentVersionsListResponse,
+} from "@workspace/shared/api/agents/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { validator } from "@/lib/validator"
 
@@ -46,7 +46,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(agents satisfies AgentListItem[])
+    return c.json(agents satisfies AgentListResponse)
   } catch {
     return c.json({ error: "Failed to load agents" }, 500)
   }
@@ -55,7 +55,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
 agentRoutes.post(
   "/",
   requireOrganization,
-  validator("json", createAgentInputSchema),
+  validator("json", createAgentRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
 
@@ -72,7 +72,7 @@ agentRoutes.post(
         })
         .returning()
 
-      return c.json(agent satisfies AgentDraft, 201)
+      return c.json(agent satisfies AgentDraftResponse, 201)
     } catch {
       return c.json({ error: "Failed to create agent" }, 500)
     }
@@ -109,7 +109,7 @@ agentRoutes.post(
         })
         .returning()
 
-      return c.json(duplicatedAgent satisfies AgentDraft, 201)
+      return c.json(duplicatedAgent satisfies AgentDraftResponse, 201)
     } catch {
       return c.json({ error: "Failed to duplicate agent" }, 500)
     }
@@ -147,7 +147,7 @@ agentRoutes.get(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(agent satisfies AgentDetail)
+      return c.json(agent satisfies AgentDetailResponse)
     } catch {
       return c.json({ error: "Failed to load agent" }, 500)
     }
@@ -158,7 +158,7 @@ agentRoutes.patch(
   "/:id",
   requireOrganization,
   validator("param", agentIdParamsSchema),
-  validator("json", updateAgentInputSchema),
+  validator("json", updateAgentRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
@@ -185,7 +185,7 @@ agentRoutes.patch(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(agent satisfies AgentDraft)
+      return c.json(agent satisfies AgentDraftResponse)
     } catch {
       return c.json({ error: "Failed to update agent" }, 500)
     }
@@ -258,7 +258,7 @@ agentRoutes.get(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(agent.versions satisfies AgentVersionsList)
+      return c.json(agent.versions satisfies AgentVersionsListResponse)
     } catch {
       return c.json({ error: "Failed to load agent versions" }, 500)
     }
@@ -291,7 +291,7 @@ agentRoutes.get(
         return c.json({ error: "Agent version not found" }, 404)
       }
 
-      return c.json(version satisfies AgentVersionDetail)
+      return c.json(version satisfies AgentVersionDetailResponse)
     } catch {
       return c.json({ error: "Failed to load agent version" }, 500)
     }
@@ -302,7 +302,7 @@ agentRoutes.post(
   "/:id/publish",
   requireOrganization,
   validator("param", agentIdParamsSchema),
-  validator("json", publishAgentInputSchema),
+  validator("json", publishAgentRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
@@ -362,7 +362,7 @@ agentRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(publishedVersion satisfies AgentVersionSummary, 201)
+      return c.json(publishedVersion satisfies AgentVersionSummaryResponse, 201)
     } catch {
       return c.json({ error: "Failed to publish agent version" }, 500)
     }

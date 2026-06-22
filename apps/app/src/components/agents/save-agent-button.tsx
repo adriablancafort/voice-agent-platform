@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { SaveIcon } from "lucide-react"
 
 import type {
-  AgentDraft,
-  UpdateAgentInput,
-} from "@workspace/shared/agents/types"
+  AgentDraftResponse,
+  UpdateAgentRequest,
+} from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import { toast } from "@workspace/ui/components/sonner"
 import { toServerDraftConfig } from "@/components/flow/draft-config"
@@ -19,7 +19,7 @@ export function SaveAgentButton() {
 
   const saveMutation = useMutation({
     mutationFn: () =>
-      api.patch<AgentDraft, UpdateAgentInput>(`/agents/${id}`, {
+      api.patch<AgentDraftResponse, UpdateAgentRequest>(`/agents/${id}`, {
         body: { name, draftConfig: toServerDraftConfig(draftConfig) },
       }),
     onSuccess: () => {

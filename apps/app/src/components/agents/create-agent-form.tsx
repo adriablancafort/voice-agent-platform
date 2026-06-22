@@ -6,11 +6,11 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
 import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
-import { createAgentInputSchema } from "@workspace/shared/agents/schemas"
+import { createAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentDraft,
-  CreateAgentInput,
-} from "@workspace/shared/agents/types"
+  AgentDraftResponse,
+  CreateAgentRequest,
+} from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
@@ -38,8 +38,8 @@ export function CreateAgentForm() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const form = useForm<CreateAgentInput>({
-    resolver: zodResolver(createAgentInputSchema),
+  const form = useForm<CreateAgentRequest>({
+    resolver: zodResolver(createAgentRequestSchema),
     defaultValues: {
       name: "",
       draftConfig: createDefaultAgentConfig(),
@@ -47,8 +47,8 @@ export function CreateAgentForm() {
   })
 
   const createAgentMutation = useMutation({
-    mutationFn: (values: CreateAgentInput) =>
-      api.post<AgentDraft, CreateAgentInput>("/agents", {
+    mutationFn: (values: CreateAgentRequest) =>
+      api.post<AgentDraftResponse, CreateAgentRequest>("/agents", {
         body: values,
       }),
     onSuccess: (agent) => {

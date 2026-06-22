@@ -3,15 +3,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 
 import type {
-  AgentListItem,
-  AgentVersionsList,
-} from "@workspace/shared/agents/types"
-import { updatePhoneNumberInputSchema } from "@workspace/shared/phone-numbers/schemas"
+  AgentListResponse,
+  AgentVersionsListResponse,
+} from "@workspace/shared/api/agents/types"
+import { updatePhoneNumberRequestSchema } from "@workspace/shared/api/phone-numbers/schemas"
 import type {
-  PhoneNumber,
-  PhoneNumberListItem,
-  UpdatePhoneNumberInput,
-} from "@workspace/shared/phone-numbers/types"
+  PhoneNumberListResponse,
+  PhoneNumberResponse,
+  UpdatePhoneNumberRequest,
+} from "@workspace/shared/api/phone-numbers/types"
 import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
@@ -41,7 +41,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
 
 type EditPhoneNumberFormProps = {
-  phoneNumber: PhoneNumberListItem
+  phoneNumber: PhoneNumberListResponse[number]
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -53,8 +53,8 @@ export function EditPhoneNumberForm({
 }: EditPhoneNumberFormProps) {
   const queryClient = useQueryClient()
 
-  const form = useForm<UpdatePhoneNumberInput>({
-    resolver: zodResolver(updatePhoneNumberInputSchema),
+  const form = useForm<UpdatePhoneNumberRequest>({
+    resolver: zodResolver(updatePhoneNumberRequestSchema),
     defaultValues: {
       number: phoneNumber.number,
       agentId: phoneNumber.agentId,
@@ -66,20 +66,20 @@ export function EditPhoneNumberForm({
 
   const { data: agents = [] } = useQuery({
     queryKey: ["agents"],
-    queryFn: () => api.get<AgentListItem[]>("/agents"),
+    queryFn: () => api.get<AgentListResponse>("/agents"),
     enabled: open,
   })
 
   const { data: agentVersions = [] } = useQuery({
     queryKey: ["agents", selectedAgentId, "versions"],
     queryFn: () =>
-      api.get<AgentVersionsList>(`/agents/${selectedAgentId}/versions`),
+      api.get<AgentVersionsListResponse>(`/agents/${selectedAgentId}/versions`),
     enabled: open && Boolean(selectedAgentId),
   })
 
   const saveMutation = useMutation({
-    mutationFn: (values: UpdatePhoneNumberInput) =>
-      api.patch<PhoneNumber, UpdatePhoneNumberInput>(
+    mutationFn: (values: UpdatePhoneNumberRequest) =>
+      api.patch<PhoneNumberResponse, UpdatePhoneNumberRequest>(
         `/phone-numbers/${phoneNumber.id}`,
         { body: values }
       ),

@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table"
 import { useState } from "react"
 
-import type { PhoneNumberListItem } from "@workspace/shared/phone-numbers/types"
+import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
 import { Input } from "@workspace/ui/components/input"
 import {
   Table,
@@ -25,7 +25,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   timeStyle: "short",
 })
 
-const columns: ColumnDef<PhoneNumberListItem>[] = [
+const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
   {
     accessorKey: "number",
     header: "Number",
@@ -66,7 +66,7 @@ const columns: ColumnDef<PhoneNumberListItem>[] = [
 export function PhoneNumbersDataTable({
   data,
 }: {
-  data: PhoneNumberListItem[]
+  data: PhoneNumberListResponse
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 

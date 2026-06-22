@@ -4,15 +4,15 @@ import { Hono } from "hono"
 import { db } from "@workspace/db/client"
 import { callsTable } from "@workspace/db/schema/calls"
 import {
-  completeCallInputSchema,
-  startPhoneCallInputSchema,
-  startWebCallInputSchema,
-} from "@workspace/shared/calls/schemas"
+  completeCallRequestSchema,
+  startPhoneCallRequestSchema,
+  startWebCallRequestSchema,
+} from "@workspace/shared/api/calls/schemas"
 import type {
-  CallListItem,
+  CallListResponse,
   CompleteCallResponse,
   StartCallResponse,
-} from "@workspace/shared/calls/types"
+} from "@workspace/shared/api/calls/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
@@ -23,7 +23,7 @@ export const callRoutes = new Hono()
 callRoutes.post(
   "/start/web",
   requireAuthToken,
-  validator("json", startWebCallInputSchema),
+  validator("json", startWebCallRequestSchema),
   async (c) => {
     try {
       const payload = c.req.valid("json")
@@ -97,7 +97,7 @@ callRoutes.post(
 callRoutes.post(
   "/start/phone",
   requireAuthToken,
-  validator("json", startPhoneCallInputSchema),
+  validator("json", startPhoneCallRequestSchema),
   async (c) => {
     try {
       const payload = c.req.valid("json")
@@ -188,7 +188,7 @@ callRoutes.post(
 callRoutes.post(
   "/complete",
   requireAuthToken,
-  validator("json", completeCallInputSchema),
+  validator("json", completeCallRequestSchema),
   async (c) => {
     try {
       const payload = c.req.valid("json")
@@ -273,7 +273,7 @@ callRoutes.get("/", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(calls satisfies CallListItem[])
+    return c.json(calls satisfies CallListResponse)
   } catch {
     return c.json({ error: "Failed to load calls" }, 500)
   }

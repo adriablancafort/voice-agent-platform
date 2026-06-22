@@ -1,3 +1,5 @@
+import type { CallVariableValues } from "@workspace/shared/api/calls/types"
+
 const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
 
 function formatDate(date: Date) {
@@ -33,7 +35,7 @@ function parseCallValues(raw: string | undefined) {
       return {}
     }
 
-    const values: Record<string, string> = {}
+    const values: CallVariableValues = {}
     for (const [key, value] of Object.entries(parsed)) {
       if (/^[a-z0-9_]+$/.test(key) && typeof value === "string") {
         values[key] = value
@@ -45,12 +47,8 @@ function parseCallValues(raw: string | undefined) {
   }
 }
 
-export function createVariables(
-  attributes: Record<string, string | undefined>
-) {
-  const values: Record<string, string> = {
-    ...parseCallValues(attributes.variable_values),
-  }
+export function createVariables(attributes: CallVariableValues) {
+  const values = parseCallValues(attributes.variable_values)
 
   const phoneNumber = attributes["sip.phoneNumber"]
   if (phoneNumber) {

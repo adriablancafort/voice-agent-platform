@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table"
 import { useState } from "react"
 
-import type { AgentListItem } from "@workspace/shared/agents/types"
+import type { AgentListResponse } from "@workspace/shared/api/agents/types"
 import { Input } from "@workspace/ui/components/input"
 import {
   Table,
@@ -26,7 +26,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   timeStyle: "short",
 })
 
-const columns: ColumnDef<AgentListItem>[] = [
+const columns: ColumnDef<AgentListResponse[number]>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -50,7 +50,7 @@ const columns: ColumnDef<AgentListItem>[] = [
   },
 ]
 
-export function AgentsDataTable({ data }: { data: AgentListItem[] }) {
+export function AgentsDataTable({ data }: { data: AgentListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const navigate = useNavigate()
 

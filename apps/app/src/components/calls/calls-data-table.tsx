@@ -9,7 +9,7 @@ import {
 import { CircleHelpIcon } from "lucide-react"
 import { useState } from "react"
 
-import type { CallListItem } from "@workspace/shared/calls/types"
+import type { CallListResponse } from "@workspace/shared/api/calls/types"
 import { Badge } from "@workspace/ui/components/badge"
 import {
   HoverCard,
@@ -47,7 +47,7 @@ function parseCost(value: string | null) {
   return value === null ? null : Number(value)
 }
 
-function CostCell({ call }: { call: CallListItem }) {
+function CostCell({ call }: { call: CallListResponse[number] }) {
   const totalCost = parseCost(call.totalCost)
 
   if (totalCost === null) {
@@ -90,7 +90,7 @@ function CostCell({ call }: { call: CallListItem }) {
   )
 }
 
-const columns: ColumnDef<CallListItem>[] = [
+const columns: ColumnDef<CallListResponse[number]>[] = [
   {
     accessorKey: "startedAt",
     header: "Started",
@@ -149,7 +149,7 @@ const columns: ColumnDef<CallListItem>[] = [
   },
 ]
 
-export function CallsDataTable({ data }: { data: CallListItem[] }) {
+export function CallsDataTable({ data }: { data: CallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({

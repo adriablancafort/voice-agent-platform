@@ -1,4 +1,4 @@
-import type { CallChannel } from "@workspace/shared/calls/types"
+import type { CallChannel } from "@workspace/shared/api/calls/types"
 import { getModelPricePerMinute } from "@workspace/shared/models/helpers"
 import {
   PLATFORM_USD_PER_MINUTE,

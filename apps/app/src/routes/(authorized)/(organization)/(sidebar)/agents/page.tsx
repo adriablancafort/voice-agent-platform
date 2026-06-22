@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
-import type { AgentListItem } from "@workspace/shared/agents/types"
+import type { AgentListResponse } from "@workspace/shared/api/agents/types"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,7 +17,7 @@ import { api } from "@/lib/api"
 function queryOptions() {
   return {
     queryKey: ["agents"],
-    queryFn: () => api.get<AgentListItem[]>("/agents"),
+    queryFn: () => api.get<AgentListResponse>("/agents"),
   }
 }
 

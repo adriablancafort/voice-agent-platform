@@ -5,14 +5,14 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
 import type {
-  AgentListItem,
-  AgentVersionsList,
-} from "@workspace/shared/agents/types"
-import { createPhoneNumberInputSchema } from "@workspace/shared/phone-numbers/schemas"
+  AgentListResponse,
+  AgentVersionsListResponse,
+} from "@workspace/shared/api/agents/types"
+import { createPhoneNumberRequestSchema } from "@workspace/shared/api/phone-numbers/schemas"
 import type {
-  CreatePhoneNumberInput,
-  PhoneNumber,
-} from "@workspace/shared/phone-numbers/types"
+  CreatePhoneNumberRequest,
+  PhoneNumberResponse,
+} from "@workspace/shared/api/phone-numbers/types"
 import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
@@ -46,8 +46,8 @@ export function AddPhoneNumberForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
 
-  const form = useForm<CreatePhoneNumberInput>({
-    resolver: zodResolver(createPhoneNumberInputSchema),
+  const form = useForm<CreatePhoneNumberRequest>({
+    resolver: zodResolver(createPhoneNumberRequestSchema),
     defaultValues: {
       number: "",
       agentId: null,
@@ -59,22 +59,25 @@ export function AddPhoneNumberForm() {
 
   const { data: agents = [] } = useQuery({
     queryKey: ["agents"],
-    queryFn: () => api.get<AgentListItem[]>("/agents"),
+    queryFn: () => api.get<AgentListResponse>("/agents"),
     enabled: open,
   })
 
   const { data: agentVersions = [] } = useQuery({
     queryKey: ["agents", selectedAgentId, "versions"],
     queryFn: () =>
-      api.get<AgentVersionsList>(`/agents/${selectedAgentId}/versions`),
+      api.get<AgentVersionsListResponse>(`/agents/${selectedAgentId}/versions`),
     enabled: open && Boolean(selectedAgentId),
   })
 
   const saveMutation = useMutation({
-    mutationFn: (values: CreatePhoneNumberInput) =>
-      api.post<PhoneNumber, CreatePhoneNumberInput>("/phone-numbers", {
-        body: values,
-      }),
+    mutationFn: (values: CreatePhoneNumberRequest) =>
+      api.post<PhoneNumberResponse, CreatePhoneNumberRequest>(
+        "/phone-numbers",
+        {
+          body: values,
+        }
+      ),
     onSuccess: () => {
       setOpen(false)
       form.reset()

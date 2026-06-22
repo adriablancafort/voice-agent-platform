@@ -4,14 +4,14 @@ import { Hono } from "hono"
 import { db } from "@workspace/db/client"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 import {
-  createPhoneNumberInputSchema,
+  createPhoneNumberRequestSchema,
   phoneNumberIdParamsSchema,
-  updatePhoneNumberInputSchema,
-} from "@workspace/shared/phone-numbers/schemas"
+  updatePhoneNumberRequestSchema,
+} from "@workspace/shared/api/phone-numbers/schemas"
 import type {
-  PhoneNumber,
-  PhoneNumberListItem,
-} from "@workspace/shared/phone-numbers/types"
+  PhoneNumberListResponse,
+  PhoneNumberResponse,
+} from "@workspace/shared/api/phone-numbers/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { validator } from "@/lib/validator"
 
@@ -42,7 +42,7 @@ phoneNumberRoutes.get("/", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(phoneNumbers satisfies PhoneNumberListItem[])
+    return c.json(phoneNumbers satisfies PhoneNumberListResponse)
   } catch {
     return c.json({ error: "Failed to load phone numbers" }, 500)
   }
@@ -51,7 +51,7 @@ phoneNumberRoutes.get("/", requireOrganization, async (c) => {
 phoneNumberRoutes.post(
   "/",
   requireOrganization,
-  validator("json", createPhoneNumberInputSchema),
+  validator("json", createPhoneNumberRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
 
@@ -83,7 +83,7 @@ phoneNumberRoutes.post(
         })
         .returning()
 
-      return c.json(phoneNumber satisfies PhoneNumber, 201)
+      return c.json(phoneNumber satisfies PhoneNumberResponse, 201)
     } catch {
       return c.json({ error: "Failed to create phone number" }, 500)
     }
@@ -94,7 +94,7 @@ phoneNumberRoutes.patch(
   "/:id",
   requireOrganization,
   validator("param", phoneNumberIdParamsSchema),
-  validator("json", updatePhoneNumberInputSchema),
+  validator("json", updatePhoneNumberRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
     const { id } = c.req.valid("param")
@@ -138,7 +138,7 @@ phoneNumberRoutes.patch(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
-      return c.json(phoneNumber satisfies PhoneNumber)
+      return c.json(phoneNumber satisfies PhoneNumberResponse)
     } catch {
       return c.json({ error: "Failed to update phone number" }, 500)
     }
@@ -168,7 +168,7 @@ phoneNumberRoutes.delete(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
-      return c.json(deletedPhoneNumber satisfies PhoneNumber)
+      return c.json(deletedPhoneNumber satisfies PhoneNumberResponse)
     } catch {
       return c.json({ error: "Failed to delete phone number" }, 404)
     }

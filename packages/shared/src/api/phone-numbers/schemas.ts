@@ -4,7 +4,7 @@ export const phoneNumberIdParamsSchema = z.object({
   id: z.uuid(),
 })
 
-export const createPhoneNumberInputSchema = z
+export const createPhoneNumberRequestSchema = z
   .object({
     number: z.e164(),
     agentId: z.uuid().nullable().optional(),
@@ -15,7 +15,7 @@ export const createPhoneNumberInputSchema = z
     path: ["agentId"],
   })
 
-export const updatePhoneNumberInputSchema = z
+export const updatePhoneNumberRequestSchema = z
   .object({
     number: z.e164().optional(),
     agentId: z.uuid().nullable().optional(),

@@ -1,17 +1,19 @@
 import type { z } from "zod"
 
-import type { AgentConfig } from "../agent-config/types"
+import type { AgentConfig } from "@workspace/shared/agent-config/types"
 import type {
-  completeCallInputSchema,
-  startPhoneCallInputSchema,
-  startWebCallInputSchema,
+  completeCallRequestSchema,
+  startPhoneCallRequestSchema,
+  startWebCallRequestSchema,
 } from "./schemas"
 
 export type CallChannel = "web_call" | "phone_call"
 
-export type StartWebCallInput = z.infer<typeof startWebCallInputSchema>
-export type StartPhoneCallInput = z.infer<typeof startPhoneCallInputSchema>
-export type CompleteCallInput = z.infer<typeof completeCallInputSchema>
+export type CallVariableValues = Record<string, string>
+
+export type StartWebCallRequest = z.infer<typeof startWebCallRequestSchema>
+export type StartPhoneCallRequest = z.infer<typeof startPhoneCallRequestSchema>
+export type CompleteCallRequest = z.infer<typeof completeCallRequestSchema>
 
 export type StartCallResponse = {
   callId: string
@@ -23,7 +25,7 @@ export type CompleteCallResponse = {
   durationMs: number
 }
 
-export type CallListItem = {
+export type CallListResponse = {
   id: string
   organizationId: string
   agentId: string
@@ -48,4 +50,4 @@ export type CallListItem = {
   updatedAt: Date
   agent: { name: string } | null
   agentVersion: { number: number } | null
-}
+}[]

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react"
 import { useState } from "react"
 
-import type { PhoneNumberListItem } from "@workspace/shared/phone-numbers/types"
+import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +26,7 @@ import { EditPhoneNumberForm } from "@/components/phone-numbers/edit-phone-numbe
 import { api } from "@/lib/api"
 
 type PhoneNumberRowActionsProps = {
-  phoneNumber: PhoneNumberListItem
+  phoneNumber: PhoneNumberListResponse[number]
 }
 
 export function PhoneNumberRowActions({

@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const startWebCallInputSchema = z
+export const startWebCallRequestSchema = z
   .object({
     agentId: z.uuid(),
     agentVersionId: z.uuid().nullable(),
@@ -9,7 +9,7 @@ export const startWebCallInputSchema = z
   })
   .strict()
 
-export const startPhoneCallInputSchema = z
+export const startPhoneCallRequestSchema = z
   .object({
     toNumber: z.e164(),
     fromNumber: z.string().trim().min(1).optional(),
@@ -18,7 +18,7 @@ export const startPhoneCallInputSchema = z
   })
   .strict()
 
-export const completeCallInputSchema = z
+export const completeCallRequestSchema = z
   .object({
     callId: z.uuid(),
     endedAt: z.iso.datetime(),

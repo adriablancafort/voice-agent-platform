@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
-import type { CallListItem } from "@workspace/shared/calls/types"
+import type { CallListResponse } from "@workspace/shared/api/calls/types"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,7 +16,7 @@ import { api } from "@/lib/api"
 function queryOptions() {
   return {
     queryKey: ["calls"],
-    queryFn: () => api.get<CallListItem[]>("/calls"),
+    queryFn: () => api.get<CallListResponse>("/calls"),
   }
 }
 

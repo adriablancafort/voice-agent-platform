@@ -4,11 +4,11 @@ import { UploadIcon } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { publishAgentInputSchema } from "@workspace/shared/agents/schemas"
+import { publishAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentVersionSummary,
-  PublishAgentInput,
-} from "@workspace/shared/agents/types"
+  AgentVersionSummaryResponse,
+  PublishAgentRequest,
+} from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
@@ -41,8 +41,8 @@ export function PublishAgentForm() {
   const nextVersionNumber =
     versions.length > 0 ? Math.max(...versions.map((v) => v.number)) + 1 : 1
 
-  const form = useForm<PublishAgentInput>({
-    resolver: zodResolver(publishAgentInputSchema),
+  const form = useForm<PublishAgentRequest>({
+    resolver: zodResolver(publishAgentRequestSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -50,8 +50,8 @@ export function PublishAgentForm() {
   })
 
   const publishAgentMutation = useMutation({
-    mutationFn: (values: PublishAgentInput) =>
-      api.post<AgentVersionSummary, PublishAgentInput>(
+    mutationFn: (values: PublishAgentRequest) =>
+      api.post<AgentVersionSummaryResponse, PublishAgentRequest>(
         `/agents/${id}/publish`,
         {
           body: values,

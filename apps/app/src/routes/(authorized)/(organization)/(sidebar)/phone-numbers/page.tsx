@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
-import type { PhoneNumberListItem } from "@workspace/shared/phone-numbers/types"
+import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,7 +17,7 @@ import { api } from "@/lib/api"
 function queryOptions() {
   return {
     queryKey: ["phone-numbers"],
-    queryFn: () => api.get<PhoneNumberListItem[]>("/phone-numbers"),
+    queryFn: () => api.get<PhoneNumberListResponse>("/phone-numbers"),
   }
 }
 

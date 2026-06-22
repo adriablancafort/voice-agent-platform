@@ -1,14 +1,15 @@
 import type {
-  CompleteCallInput,
+  CallVariableValues,
+  CompleteCallRequest,
   CompleteCallResponse,
   StartCallResponse,
-  StartPhoneCallInput,
-  StartWebCallInput,
-} from "@workspace/shared/calls/types"
+  StartPhoneCallRequest,
+  StartWebCallRequest,
+} from "@workspace/shared/api/calls/types"
 import { api } from "@/lib/api"
 
 export function startCall(
-  attributes: Record<string, string | undefined>,
+  attributes: CallVariableValues,
   livekitRoomName: string
 ) {
   const startedAt = new Date().toISOString()
@@ -20,14 +21,17 @@ export function startCall(
       throw new Error("agent_id is required for web_call sessions")
     }
 
-    return api.post<StartCallResponse, StartWebCallInput>("/calls/start/web", {
-      body: {
-        agentId,
-        agentVersionId: attributes.agent_version_id || null,
-        livekitRoomName,
-        startedAt,
-      },
-    })
+    return api.post<StartCallResponse, StartWebCallRequest>(
+      "/calls/start/web",
+      {
+        body: {
+          agentId,
+          agentVersionId: attributes.agent_version_id || null,
+          livekitRoomName,
+          startedAt,
+        },
+      }
+    )
   }
 
   const toNumber = attributes["sip.trunkPhoneNumber"]
@@ -36,7 +40,7 @@ export function startCall(
     throw new Error("sip.trunkPhoneNumber is required for phone_call sessions")
   }
 
-  return api.post<StartCallResponse, StartPhoneCallInput>(
+  return api.post<StartCallResponse, StartPhoneCallRequest>(
     "/calls/start/phone",
     {
       body: {
@@ -52,10 +56,13 @@ export function startCall(
 export function completeCall(callId: string) {
   const endedAt = new Date().toISOString()
 
-  return api.post<CompleteCallResponse, CompleteCallInput>("/calls/complete", {
-    body: {
-      callId,
-      endedAt,
-    },
-  })
+  return api.post<CompleteCallResponse, CompleteCallRequest>(
+    "/calls/complete",
+    {
+      body: {
+        callId,
+        endedAt,
+      },
+    }
+  )
 }

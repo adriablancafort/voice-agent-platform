@@ -3,10 +3,10 @@ import { CopyIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react"
 import { useState } from "react"
 
 import type {
-  AgentListItem,
+  AgentListResponse,
   DeleteAgentResponse,
   DuplicateAgentResponse,
-} from "@workspace/shared/agents/types"
+} from "@workspace/shared/api/agents/types"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,11 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { api } from "@/lib/api"
 
-export function AgentRowActions({ agent }: { agent: AgentListItem }) {
+export function AgentRowActions({
+  agent,
+}: {
+  agent: AgentListResponse[number]
+}) {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
 

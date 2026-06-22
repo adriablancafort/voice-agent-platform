@@ -7,6 +7,7 @@ import { ConnectionState, TokenSource } from "livekit-client"
 import { PhoneIcon, PhoneOffIcon } from "lucide-react"
 import type { ReactNode } from "react"
 
+import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { Button } from "@workspace/ui/components/button"
 import { env } from "@/lib/env"
 
@@ -17,7 +18,7 @@ const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`, {
 type VoiceAgentClientProps = {
   agentId: string
   agentVersionId?: string
-  variableValues?: Record<string, string>
+  variableValues?: CallVariableValues
   preCallContent?: ReactNode
   children: ReactNode
 }

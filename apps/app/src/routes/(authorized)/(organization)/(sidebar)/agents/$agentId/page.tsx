@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useEffect } from "react"
 
-import type { AgentDetail } from "@workspace/shared/agents/types"
+import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,7 +25,7 @@ import { useAgentStore } from "@/stores/agent"
 function queryOptions(agentId: string) {
   return {
     queryKey: ["agents", agentId],
-    queryFn: () => api.get<AgentDetail>(`/agents/${agentId}`),
+    queryFn: () => api.get<AgentDetailResponse>(`/agents/${agentId}`),
   }
 }
 
