@@ -42,7 +42,7 @@ export function PhoneNumberRowActions({
       toast.success(`${phoneNumber.number} deleted`)
       setDeleteOpen(false)
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })
-      queryClient.invalidateQueries({ queryKey: ["agents"] })
+      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)

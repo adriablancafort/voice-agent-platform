@@ -2,29 +2,31 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { SaveIcon } from "lucide-react"
 
 import type {
-  AgentResponse,
-  UpdateAgentRequest,
+  AgentConfigResponse,
+  UpdateAgentConfigRequest,
 } from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import { toast } from "@workspace/ui/components/sonner"
-import { toServerConfig } from "@/components/flow/agent-config"
+import { toServerAgentConfig } from "@/components/flow/agent-config"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
 export function SaveAgentButton() {
   const queryClient = useQueryClient()
-  const id = useAgentStore((state) => state.id)
-  const name = useAgentStore((state) => state.name)
+  const agent = useAgentStore((state) => state.agent)
   const config = useAgentStore((state) => state.config)
 
   const saveMutation = useMutation({
     mutationFn: () =>
-      api.patch<AgentResponse, UpdateAgentRequest>(`/agents/${id}`, {
-        body: { name, config: toServerConfig(config) },
-      }),
+      api.patch<AgentConfigResponse, UpdateAgentConfigRequest>(
+        `/agents/${agent.id}/config`,
+        { body: { config: toServerAgentConfig(config) } }
+      ),
     onSuccess: () => {
       toast.success("Agent saved")
-      queryClient.invalidateQueries({ queryKey: ["agents", id] })
+      queryClient.invalidateQueries({
+        queryKey: ["agents", "detail", agent.id],
+      })
     },
     onError: (error) => {
       toast.error(error.message)

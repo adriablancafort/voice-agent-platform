@@ -2,7 +2,6 @@ import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 
 export function createDefaultAgentConfig(): AgentConfig {
   return {
-    name: "Untitled Agent",
     stt: {
       model: "deepgram/nova-3",
       language: "multi",

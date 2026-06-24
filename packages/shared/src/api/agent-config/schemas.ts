@@ -69,7 +69,6 @@ export const flowEdgeConfigSchema = z.object({
 
 export const agentConfigSchema = z
   .object({
-    name: z.string().trim().min(1),
     stt: sttConfigSchema,
     llm: llmConfigSchema,
     tts: ttsConfigSchema,

@@ -22,8 +22,11 @@ export const createAgentRequestSchema = z.object({
   config: agentConfigSchema,
 })
 
-export const updateAgentRequestSchema = z.object({
+export const updateAgentNameRequestSchema = z.object({
   name: agentNameSchema,
+})
+
+export const updateAgentConfigRequestSchema = z.object({
   config: agentConfigSchema,
 })
 

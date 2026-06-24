@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
 import type {
-  AgentListResponse,
+  AgentsListResponse,
   AgentVersionsListResponse,
 } from "@workspace/shared/api/agents/types"
 import { createPhoneNumberRequestSchema } from "@workspace/shared/api/phone-numbers/schemas"
@@ -58,13 +58,13 @@ export function AddPhoneNumberForm() {
   const selectedAgentId = form.watch("agentId") ?? undefined
 
   const { data: agents = [] } = useQuery({
-    queryKey: ["agents"],
-    queryFn: () => api.get<AgentListResponse>("/agents"),
+    queryKey: ["agents", "list"],
+    queryFn: () => api.get<AgentsListResponse>("/agents"),
     enabled: open,
   })
 
   const { data: agentVersions = [] } = useQuery({
-    queryKey: ["agents", selectedAgentId, "versions"],
+    queryKey: ["agents", "versions", selectedAgentId],
     queryFn: () =>
       api.get<AgentVersionsListResponse>(`/agents/${selectedAgentId}/versions`),
     enabled: open && Boolean(selectedAgentId),
@@ -74,15 +74,13 @@ export function AddPhoneNumberForm() {
     mutationFn: (values: CreatePhoneNumberRequest) =>
       api.post<PhoneNumberResponse, CreatePhoneNumberRequest>(
         "/phone-numbers",
-        {
-          body: values,
-        }
+        { body: values }
       ),
     onSuccess: () => {
       setOpen(false)
       form.reset()
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })
-      queryClient.invalidateQueries({ queryKey: ["agents"] })
+      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)

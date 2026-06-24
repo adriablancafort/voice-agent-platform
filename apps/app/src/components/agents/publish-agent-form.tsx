@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form"
 
 import { publishAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentVersionSummaryResponse,
+  AgentVersionResponse,
   PublishAgentRequest,
 } from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
@@ -18,7 +18,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@workspace/ui/components/dialog"
 import {
   Field,
@@ -36,10 +35,12 @@ import { useAgentStore } from "@/stores/agent"
 export function PublishAgentForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
-  const id = useAgentStore((state) => state.id)
-  const versions = useAgentStore((state) => state.versions)
+  const agent = useAgentStore((state) => state.agent)
+  const versions = agent.versions
   const nextVersionNumber =
-    versions.length > 0 ? Math.max(...versions.map((v) => v.number)) + 1 : 1
+    versions.length > 0
+      ? Math.max(...versions.map((version) => version.number)) + 1
+      : 1
 
   const form = useForm<PublishAgentRequest>({
     resolver: zodResolver(publishAgentRequestSchema),
@@ -51,17 +52,20 @@ export function PublishAgentForm() {
 
   const publishAgentMutation = useMutation({
     mutationFn: (values: PublishAgentRequest) =>
-      api.post<AgentVersionSummaryResponse, PublishAgentRequest>(
-        `/agents/${id}/publish`,
-        {
-          body: values,
-        }
+      api.post<AgentVersionResponse, PublishAgentRequest>(
+        `/agents/${agent.id}/publish`,
+        { body: values }
       ),
     onSuccess: (publishedVersion) => {
       setOpen(false)
       form.reset()
       toast.success(`V${publishedVersion.number} published`)
-      queryClient.invalidateQueries({ queryKey: ["agents", id] })
+      queryClient.invalidateQueries({
+        queryKey: ["agents", "detail", agent.id],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["agents", "versions", agent.id],
+      })
     },
     onError: (error) => {
       toast.error(error.message)
@@ -76,12 +80,10 @@ export function PublishAgentForm() {
         publishAgentMutation.reset()
       }}
     >
-      <DialogTrigger>
-        <Button disabled={!id}>
-          <UploadIcon />
-          Publish
-        </Button>
-      </DialogTrigger>
+      <Button onClick={() => setOpen(true)}>
+        <UploadIcon />
+        Publish
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Publish V{nextVersionNumber}</DialogTitle>

@@ -8,15 +8,20 @@ import {
   agentVersionParamsSchema,
   createAgentRequestSchema,
   publishAgentRequestSchema,
-  updateAgentRequestSchema,
+  updateAgentConfigRequestSchema,
+  updateAgentNameRequestSchema,
 } from "@workspace/shared/api/agents/schemas"
 import type {
+  AgentConfigResponse,
   AgentDetailResponse,
-  AgentListResponse,
-  AgentResponse,
-  AgentVersionDetailResponse,
-  AgentVersionSummaryResponse,
+  AgentsListResponse,
+  AgentVersionConfigResponse,
+  AgentVersionResponse,
   AgentVersionsListResponse,
+  CreateAgentResponse,
+  DeleteAgentResponse,
+  DuplicateAgentResponse,
+  UpdateAgentNameResponse,
 } from "@workspace/shared/api/agents/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { validator } from "@/lib/validator"
@@ -46,7 +51,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(agents satisfies AgentListResponse)
+    return c.json(agents satisfies AgentsListResponse)
   } catch {
     return c.json({ error: "Failed to load agents" }, 500)
   }
@@ -70,9 +75,14 @@ agentRoutes.post(
           name: payload.name,
           config: payload.config,
         })
-        .returning()
+        .returning({
+          id: agentsTable.id,
+          name: agentsTable.name,
+          createdAt: agentsTable.createdAt,
+          updatedAt: agentsTable.updatedAt,
+        })
 
-      return c.json(agent satisfies AgentResponse, 201)
+      return c.json(agent satisfies CreateAgentResponse, 201)
     } catch {
       return c.json({ error: "Failed to create agent" }, 500)
     }
@@ -107,9 +117,14 @@ agentRoutes.post(
           name: `${sourceAgent.name} (copy)`.slice(0, 255),
           config: sourceAgent.config,
         })
-        .returning()
+        .returning({
+          id: agentsTable.id,
+          name: agentsTable.name,
+          createdAt: agentsTable.createdAt,
+          updatedAt: agentsTable.updatedAt,
+        })
 
-      return c.json(duplicatedAgent satisfies AgentResponse, 201)
+      return c.json(duplicatedAgent satisfies DuplicateAgentResponse, 201)
     } catch {
       return c.json({ error: "Failed to duplicate agent" }, 500)
     }
@@ -129,6 +144,9 @@ agentRoutes.get(
         where: {
           id: agentId,
           organizationId,
+        },
+        columns: {
+          config: false,
         },
         with: {
           versions: {
@@ -154,11 +172,41 @@ agentRoutes.get(
   }
 )
 
-agentRoutes.patch(
-  "/:id",
+agentRoutes.get(
+  "/:id/config",
   requireOrganization,
   validator("param", agentIdParamsSchema),
-  validator("json", updateAgentRequestSchema),
+  async (c) => {
+    const organizationId = c.get("organizationId")
+    const { id: agentId } = c.req.valid("param")
+
+    try {
+      const agent = await db.query.agentsTable.findFirst({
+        where: {
+          id: agentId,
+          organizationId,
+        },
+        columns: {
+          config: true,
+        },
+      })
+
+      if (!agent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      return c.json(agent.config satisfies AgentConfigResponse)
+    } catch {
+      return c.json({ error: "Failed to load agent config" }, 500)
+    }
+  }
+)
+
+agentRoutes.patch(
+  "/:id/name",
+  requireOrganization,
+  validator("param", agentIdParamsSchema),
+  validator("json", updateAgentNameRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
@@ -171,6 +219,47 @@ agentRoutes.patch(
         .set({
           updatedAt: new Date(),
           name: payload.name,
+        })
+        .where(
+          and(
+            eq(agentsTable.id, agentId),
+            eq(agentsTable.organizationId, organizationId)
+          )
+        )
+        .returning({
+          id: agentsTable.id,
+          name: agentsTable.name,
+          createdAt: agentsTable.createdAt,
+          updatedAt: agentsTable.updatedAt,
+        })
+
+      if (!agent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      return c.json(agent satisfies UpdateAgentNameResponse)
+    } catch {
+      return c.json({ error: "Failed to update agent name" }, 500)
+    }
+  }
+)
+
+agentRoutes.patch(
+  "/:id/config",
+  requireOrganization,
+  validator("param", agentIdParamsSchema),
+  validator("json", updateAgentConfigRequestSchema),
+  async (c) => {
+    const organizationId = c.get("organizationId")
+    const { id: agentId } = c.req.valid("param")
+
+    try {
+      const payload = c.req.valid("json")
+
+      const [agent] = await db
+        .update(agentsTable)
+        .set({
+          updatedAt: new Date(),
           config: payload.config,
         })
         .where(
@@ -179,15 +268,17 @@ agentRoutes.patch(
             eq(agentsTable.organizationId, organizationId)
           )
         )
-        .returning()
+        .returning({
+          config: agentsTable.config,
+        })
 
       if (!agent) {
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(agent satisfies AgentResponse)
+      return c.json(agent.config satisfies AgentConfigResponse)
     } catch {
-      return c.json({ error: "Failed to update agent" }, 500)
+      return c.json({ error: "Failed to update agent config" }, 500)
     }
   }
 )
@@ -217,7 +308,7 @@ agentRoutes.delete(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(deletedAgent)
+      return c.json(deletedAgent satisfies DeleteAgentResponse)
     } catch {
       return c.json({ error: "Failed to delete agent" }, 500)
     }
@@ -260,13 +351,13 @@ agentRoutes.get(
 
       return c.json(agent.versions satisfies AgentVersionsListResponse)
     } catch {
-      return c.json({ error: "Failed to load agent versions" }, 500)
+      return c.json({ error: "Failed to load agent versions" }, 404)
     }
   }
 )
 
 agentRoutes.get(
-  "/:id/versions/:number",
+  "/:id/versions/:number/config",
   requireOrganization,
   validator("param", agentVersionParamsSchema),
   async (c) => {
@@ -276,7 +367,7 @@ agentRoutes.get(
     try {
       const version = await db.query.agentVersionsTable.findFirst({
         columns: {
-          agentId: false,
+          config: true,
         },
         where: {
           agentId,
@@ -291,9 +382,9 @@ agentRoutes.get(
         return c.json({ error: "Agent version not found" }, 404)
       }
 
-      return c.json(version satisfies AgentVersionDetailResponse)
+      return c.json(version.config satisfies AgentVersionConfigResponse)
     } catch {
-      return c.json({ error: "Failed to load agent version" }, 500)
+      return c.json({ error: "Failed to load agent version config" }, 500)
     }
   }
 )
@@ -362,7 +453,7 @@ agentRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(publishedVersion satisfies AgentVersionSummaryResponse, 201)
+      return c.json(publishedVersion satisfies AgentVersionResponse, 201)
     } catch {
       return c.json({ error: "Failed to publish agent version" }, 500)
     }

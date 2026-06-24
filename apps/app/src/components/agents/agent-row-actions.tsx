@@ -3,7 +3,7 @@ import { CopyIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react"
 import { useState } from "react"
 
 import type {
-  AgentListResponse,
+  AgentsListItem,
   DeleteAgentResponse,
   DuplicateAgentResponse,
 } from "@workspace/shared/api/agents/types"
@@ -28,11 +28,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { api } from "@/lib/api"
 
-export function AgentRowActions({
-  agent,
-}: {
-  agent: AgentListResponse[number]
-}) {
+export function AgentRowActions({ agent }: { agent: AgentsListItem }) {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
 
@@ -44,7 +40,7 @@ export function AgentRowActions({
       ),
     onSuccess: () => {
       toast.success("Agent duplicated")
-      queryClient.invalidateQueries({ queryKey: ["agents"] })
+      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)
@@ -56,7 +52,7 @@ export function AgentRowActions({
     onSuccess: () => {
       toast.success(`${agent.name} deleted`)
       setOpen(false)
-      queryClient.invalidateQueries({ queryKey: ["agents"] })
+      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)

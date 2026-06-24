@@ -8,8 +8,8 @@ import { Controller, useForm } from "react-hook-form"
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import { createAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentResponse,
   CreateAgentRequest,
+  CreateAgentResponse,
 } from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -48,7 +48,7 @@ export function CreateAgentForm() {
 
   const createAgentMutation = useMutation({
     mutationFn: (values: CreateAgentRequest) =>
-      api.post<AgentResponse, CreateAgentRequest>("/agents", {
+      api.post<CreateAgentResponse, CreateAgentRequest>("/agents", {
         body: values,
       }),
     onSuccess: (agent) => {
@@ -58,7 +58,7 @@ export function CreateAgentForm() {
         to: "/agents/$agentId",
         params: { agentId: agent.id },
       })
-      queryClient.invalidateQueries({ queryKey: ["agents"] })
+      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)

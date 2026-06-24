@@ -9,16 +9,16 @@ import { create } from "zustand"
 
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import type {
+  AgentConfig,
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/api/agent-config/types"
 import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
-  applySelection,
-  type ClientConfig,
+  type ClientAgentConfig,
   type ClientFlowEdge,
   type ClientFlowNode,
-  toClientConfig,
+  toClientAgentConfig,
 } from "@/components/flow/agent-config"
 
 export type FlowSidePanelState =
@@ -29,15 +29,18 @@ export type FlowSidePanelState =
   | { kind: "node"; node: FlowNodeConfig }
   | { kind: "edge"; edge: FlowEdgeConfig }
 
-type AgentStoreState = Omit<AgentDetailResponse, "config"> & {
-  config: ClientConfig
+type FlowSelection = { nodeId?: string; edgeId?: string }
+
+type AgentEditorState = {
+  agent: AgentDetailResponse
+  config: ClientAgentConfig
   sidePanel: FlowSidePanelState
 }
 
-type AgentStore = AgentStoreState & {
+type AgentEditorStore = AgentEditorState & {
   setAgent: (agent: AgentDetailResponse) => void
-  setName: (name: string) => void
-  setConfig: (config: ClientConfig) => void
+  setConfig: (config: ClientAgentConfig) => void
+  loadAgentConfig: (config: AgentConfig) => void
   setNode: (node: FlowNodeConfig) => void
   setEdge: (edge: FlowEdgeConfig) => void
   addNode: (node: FlowNodeConfig) => void
@@ -51,50 +54,64 @@ type AgentStore = AgentStoreState & {
 
 const closedSidePanel: FlowSidePanelState = { kind: "closed" }
 
-function panelSelection(panel: FlowSidePanelState) {
-  if (panel.kind === "node") {
-    return { nodeId: panel.node.id }
-  }
-  if (panel.kind === "edge") {
-    return { edgeId: panel.edge.id }
-  }
-  return undefined
-}
-
 let lastConnectAt = 0
 const CONNECT_GUARD_MS = 200
 
-const initialState: AgentStoreState = {
+export const emptyAgent: AgentDetailResponse = {
   id: "",
   name: "",
-  config: toClientConfig(createDefaultAgentConfig()),
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date(0),
+  updatedAt: new Date(0),
   versions: [],
+}
+
+function selectionFromSidePanel(
+  sidePanel: FlowSidePanelState
+): FlowSelection | undefined {
+  if (sidePanel.kind === "node") {
+    return { nodeId: sidePanel.node.id }
+  }
+  if (sidePanel.kind === "edge") {
+    return { edgeId: sidePanel.edge.id }
+  }
+}
+
+function applySelection(
+  config: ClientAgentConfig,
+  selection?: FlowSelection
+): ClientAgentConfig {
+  const selectedNodeId = selection?.nodeId
+  const selectedEdgeId = selection?.edgeId
+
+  return {
+    ...config,
+    nodes: config.nodes.map((node) => ({
+      ...node,
+      selected: node.id === selectedNodeId,
+    })),
+    edges: config.edges.map((edge) => ({
+      ...edge,
+      selected: edge.id === selectedEdgeId,
+    })),
+  }
+}
+
+const initialState: AgentEditorState = {
+  agent: emptyAgent,
+  config: toClientAgentConfig(createDefaultAgentConfig()),
   sidePanel: closedSidePanel,
 }
 
-export const useAgentStore = create<AgentStore>((set) => ({
+export const useAgentStore = create<AgentEditorStore>((set) => ({
   ...initialState,
-  setAgent: (agent) =>
-    set((current) => {
-      if (current.id !== agent.id) {
-        return {
-          ...agent,
-          config: toClientConfig(agent.config),
-          sidePanel: closedSidePanel,
-        }
-      }
-
-      return {
-        ...current,
-        versions: agent.versions,
-        createdAt: agent.createdAt,
-        updatedAt: agent.updatedAt,
-      }
-    }),
-  setName: (name) => set({ name }),
+  setAgent: (agent) => set({ agent }),
   setConfig: (config) => set({ config }),
+  loadAgentConfig: (config) =>
+    set((state) => ({
+      config: toClientAgentConfig(config),
+      sidePanel: closedSidePanel,
+      agent: state.agent,
+    })),
   setNode: (node) =>
     set((state) => ({
       sidePanel: { kind: "node", node },
@@ -137,18 +154,18 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
     set((state) => {
       const nodes = applyNodeChanges(filtered, state.config.nodes)
-      const current = state.sidePanel
-      const panel =
-        current.kind === "node" &&
-        !nodes.some((node) => node.id === current.node.id)
+      const panel = state.sidePanel
+      const sidePanel =
+        panel.kind === "node" &&
+        !nodes.some((node) => node.id === panel.node.id)
           ? closedSidePanel
-          : current
+          : panel
 
       return {
-        sidePanel: panel,
+        sidePanel,
         config: applySelection(
           { ...state.config, nodes },
-          panelSelection(panel)
+          selectionFromSidePanel(sidePanel)
         ),
       }
     })
@@ -163,18 +180,18 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
     set((state) => {
       const edges = applyEdgeChanges(filtered, state.config.edges)
-      const current = state.sidePanel
-      const panel =
-        current.kind === "edge" &&
-        !edges.some((edge) => edge.id === current.edge.id)
+      const panel = state.sidePanel
+      const sidePanel =
+        panel.kind === "edge" &&
+        !edges.some((edge) => edge.id === panel.edge.id)
           ? closedSidePanel
-          : current
+          : panel
 
       return {
-        sidePanel: panel,
+        sidePanel,
         config: applySelection(
           { ...state.config, edges },
-          panelSelection(panel)
+          selectionFromSidePanel(sidePanel)
         ),
       }
     })
@@ -205,18 +222,17 @@ export const useAgentStore = create<AgentStore>((set) => ({
       sidePanel: { kind: "edge", edge },
       config: applySelection(state.config, { edgeId: edge.id }),
     })),
-  setSidePanel: (sidePanel) =>
-    set((state) => {
-      if (
-        sidePanel.kind === "closed" &&
-        Date.now() - lastConnectAt < CONNECT_GUARD_MS
-      ) {
-        return state
-      }
+  setSidePanel: (sidePanel) => {
+    if (
+      sidePanel.kind === "closed" &&
+      Date.now() - lastConnectAt < CONNECT_GUARD_MS
+    ) {
+      return
+    }
 
-      return {
-        sidePanel,
-        config: applySelection(state.config, panelSelection(sidePanel)),
-      }
-    }),
+    set((state) => ({
+      sidePanel,
+      config: applySelection(state.config, selectionFromSidePanel(sidePanel)),
+    }))
+  },
 }))

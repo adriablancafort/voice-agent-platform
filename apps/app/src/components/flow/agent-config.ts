@@ -7,40 +7,23 @@ import type {
 export type ClientFlowNode = FlowNodeConfig & { selected?: boolean }
 export type ClientFlowEdge = FlowEdgeConfig & { selected?: boolean }
 
-export type ClientConfig = Omit<AgentConfig, "nodes" | "edges"> & {
+export type ClientAgentConfig = Omit<AgentConfig, "nodes" | "edges"> & {
   nodes: ClientFlowNode[]
   edges: ClientFlowEdge[]
 }
 
-export function toClientConfig(server: AgentConfig): ClientConfig {
+export function toClientAgentConfig(server: AgentConfig): ClientAgentConfig {
   return {
     ...server,
-    nodes: server.nodes.map((node) => ({ ...node, selected: false })),
-    edges: server.edges.map((edge) => ({ ...edge, selected: false })),
+    nodes: server.nodes.map((node) => ({ ...node })),
+    edges: server.edges.map((edge) => ({ ...edge })),
   }
 }
 
-export function toServerConfig(config: ClientConfig): AgentConfig {
+export function toServerAgentConfig(config: ClientAgentConfig): AgentConfig {
   return {
     ...config,
     nodes: config.nodes.map(({ selected: _, ...node }) => node),
     edges: config.edges.map(({ selected: _, ...edge }) => edge),
-  }
-}
-
-export function applySelection(
-  config: ClientConfig,
-  selected?: { nodeId?: string; edgeId?: string }
-): ClientConfig {
-  return {
-    ...config,
-    nodes: config.nodes.map((node) => ({
-      ...node,
-      selected: node.id === selected?.nodeId,
-    })),
-    edges: config.edges.map((edge) => ({
-      ...edge,
-      selected: edge.id === selected?.edgeId,
-    })),
   }
 }
