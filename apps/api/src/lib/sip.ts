@@ -1,4 +1,8 @@
-import { SipClient } from "livekit-server-sdk"
+import {
+  RoomAgentDispatch,
+  RoomConfiguration,
+  SipClient,
+} from "livekit-server-sdk"
 
 import { env } from "@/lib/env"
 
@@ -29,7 +33,13 @@ export async function provisionInbound(phoneNumber: SipPhoneNumber) {
 
   await sip.createSipDispatchRule(
     { type: "individual", roomPrefix: ROOM_PREFIX },
-    { name: phoneNumber.number, trunkIds: [trunk.sipTrunkId] }
+    {
+      name: phoneNumber.number,
+      trunkIds: [trunk.sipTrunkId],
+      roomConfig: new RoomConfiguration({
+        agents: [new RoomAgentDispatch({ agentName: env.LIVEKIT_AGENT_NAME })],
+      }),
+    }
   )
 }
 

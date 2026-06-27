@@ -74,6 +74,7 @@ export default defineAgent<ProcessUserData>({
 cli.runApp(
   new ServerOptions({
     agent: fileURLToPath(import.meta.url),
+    agentName: env.LIVEKIT_AGENT_NAME,
     apiKey: env.LIVEKIT_API_KEY,
     apiSecret: env.LIVEKIT_API_SECRET,
     wsURL: env.LIVEKIT_URL,

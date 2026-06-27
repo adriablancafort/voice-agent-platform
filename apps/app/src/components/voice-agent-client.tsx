@@ -31,6 +31,7 @@ export function VoiceAgentClient({
   children,
 }: VoiceAgentClientProps) {
   const session = useSession(tokenSource, {
+    agentName: env.LIVEKIT_AGENT_NAME,
     participantAttributes: {
       channel: "web_call",
       agent_id: agentId,
