@@ -14,7 +14,7 @@ import type { TurnDetectionConfig } from "@workspace/shared/api/agent-config/typ
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"
-import { completeCall, startCall } from "@/lib/calls"
+import { completeCall, parseDispatchMetadata, startCall } from "@/lib/calls"
 import { env } from "@/lib/env"
 
 interface ProcessUserData {
@@ -36,11 +36,14 @@ export default defineAgent<ProcessUserData>({
   },
   entry: async (ctx) => {
     await ctx.connect()
+
+    const metadata = parseDispatchMetadata(ctx.job.metadata)
     const participant = await ctx.waitForParticipant()
     const livekitRoomName = ctx.room.name ?? ""
 
     const { callId, config } = await startCall(
       participant.attributes,
+      metadata,
       livekitRoomName
     )
 
@@ -57,7 +60,7 @@ export default defineAgent<ProcessUserData>({
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
       if (remoteParticipant.identity === participant.identity) {
-        completeCall(callId)
+        completeCall(callId, "completed")
       }
     })
 

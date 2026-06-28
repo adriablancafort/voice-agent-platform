@@ -3,22 +3,79 @@ import { Hono } from "hono"
 
 import { db } from "@workspace/db/client"
 import { callsTable } from "@workspace/db/schema/calls"
+import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
   completeCallRequestSchema,
-  startPhoneCallRequestSchema,
+  startInboundCallRequestSchema,
+  startOutboundCallRequestSchema,
   startWebCallRequestSchema,
 } from "@workspace/shared/api/calls/schemas"
 import type {
   CallListResponse,
   CompleteCallResponse,
   StartCallResponse,
+  TriggerOutboundCallResponse,
 } from "@workspace/shared/api/calls/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
+import { placeOutboundCall } from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
+
+type ResolvedAgentConfig = {
+  organizationId: string
+  agentVersionId: string | null
+  config: AgentConfig
+}
+
+async function resolveAgentConfig(
+  agentId: string,
+  agentVersionId: string | null
+): Promise<ResolvedAgentConfig | null> {
+  const agent = await db.query.agentsTable.findFirst({
+    where: {
+      id: agentId,
+    },
+    columns: {
+      organizationId: true,
+      config: true,
+    },
+  })
+
+  if (!agent) {
+    return null
+  }
+
+  if (agentVersionId) {
+    const version = await db.query.agentVersionsTable.findFirst({
+      where: {
+        id: agentVersionId,
+        agentId,
+      },
+      columns: {
+        config: true,
+      },
+    })
+
+    if (!version) {
+      return null
+    }
+
+    return {
+      organizationId: agent.organizationId,
+      agentVersionId,
+      config: version.config,
+    }
+  }
+
+  return {
+    organizationId: agent.organizationId,
+    agentVersionId: null,
+    config: agent.config,
+  }
+}
 
 callRoutes.post(
   "/start/web",
@@ -28,54 +85,28 @@ callRoutes.post(
     try {
       const payload = c.req.valid("json")
 
-      const agent = await db.query.agentsTable.findFirst({
-        where: {
-          id: payload.agentId,
-        },
-        columns: {
-          id: true,
-          organizationId: true,
-          config: true,
-        },
-      })
+      const resolved = await resolveAgentConfig(
+        payload.agentId,
+        payload.agentVersionId
+      )
 
-      if (!agent) {
+      if (!resolved) {
         return c.json({ error: "Agent not found" }, 404)
-      }
-
-      let config = agent.config
-      let agentVersionId: string | null = null
-
-      if (payload.agentVersionId) {
-        const version = await db.query.agentVersionsTable.findFirst({
-          where: {
-            id: payload.agentVersionId,
-            agentId: payload.agentId,
-          },
-          columns: {
-            config: true,
-          },
-        })
-
-        if (!version) {
-          return c.json({ error: "Agent not found" }, 404)
-        }
-
-        config = version.config
-        agentVersionId = payload.agentVersionId
       }
 
       const [call] = await db
         .insert(callsTable)
         .values({
           id: crypto.randomUUID(),
-          organizationId: agent.organizationId,
-          agentId: agent.id,
-          agentVersionId,
+          organizationId: resolved.organizationId,
+          agentId: payload.agentId,
+          agentVersionId: resolved.agentVersionId,
           channel: "web_call",
-          sttModel: config.stt.model,
-          llmModel: config.llm.model,
-          ttsModel: config.tts.model,
+          direction: "inbound",
+          status: "in_progress",
+          sttModel: resolved.config.stt.model,
+          llmModel: resolved.config.llm.model,
+          ttsModel: resolved.config.tts.model,
           livekitRoomName: payload.livekitRoomName,
           startedAt: new Date(payload.startedAt),
         })
@@ -84,7 +115,7 @@ callRoutes.post(
       return c.json(
         {
           callId: call.id,
-          config,
+          config: resolved.config,
         } satisfies StartCallResponse,
         201
       )
@@ -95,9 +126,9 @@ callRoutes.post(
 )
 
 callRoutes.post(
-  "/start/phone",
+  "/start/inbound",
   requireAuthToken,
-  validator("json", startPhoneCallRequestSchema),
+  validator("json", startInboundCallRequestSchema),
   async (c) => {
     try {
       const payload = c.req.valid("json")
@@ -117,41 +148,13 @@ callRoutes.post(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
-      let config = null
-      let agentVersionId: string | null = null
+      const resolved = await resolveAgentConfig(
+        phoneNumber.agentId,
+        phoneNumber.agentVersionId
+      )
 
-      if (phoneNumber.agentVersionId) {
-        const version = await db.query.agentVersionsTable.findFirst({
-          where: {
-            id: phoneNumber.agentVersionId,
-            agentId: phoneNumber.agentId,
-          },
-          columns: {
-            config: true,
-          },
-        })
-
-        if (!version) {
-          return c.json({ error: "Phone number not found" }, 404)
-        }
-
-        config = version.config
-        agentVersionId = phoneNumber.agentVersionId
-      } else {
-        const agent = await db.query.agentsTable.findFirst({
-          where: {
-            id: phoneNumber.agentId,
-          },
-          columns: {
-            config: true,
-          },
-        })
-
-        if (!agent) {
-          return c.json({ error: "Phone number not found" }, 404)
-        }
-
-        config = agent.config
+      if (!resolved) {
+        return c.json({ error: "Phone number not found" }, 404)
       }
 
       const [call] = await db
@@ -160,13 +163,15 @@ callRoutes.post(
           id: crypto.randomUUID(),
           organizationId: phoneNumber.organizationId,
           agentId: phoneNumber.agentId,
-          agentVersionId,
+          agentVersionId: resolved.agentVersionId,
           channel: "phone_call",
-          fromNumber: payload.fromNumber ?? null,
+          direction: "inbound",
+          status: "in_progress",
+          fromNumber: payload.fromNumber,
           toNumber: payload.toNumber,
-          sttModel: config.stt.model,
-          llmModel: config.llm.model,
-          ttsModel: config.tts.model,
+          sttModel: resolved.config.stt.model,
+          llmModel: resolved.config.llm.model,
+          ttsModel: resolved.config.tts.model,
           livekitRoomName: payload.livekitRoomName,
           startedAt: new Date(payload.startedAt),
         })
@@ -175,7 +180,57 @@ callRoutes.post(
       return c.json(
         {
           callId: call.id,
-          config,
+          config: resolved.config,
+        } satisfies StartCallResponse,
+        201
+      )
+    } catch {
+      return c.json({ error: "Failed to start call" }, 500)
+    }
+  }
+)
+
+callRoutes.post(
+  "/start/outbound",
+  requireAuthToken,
+  validator("json", startOutboundCallRequestSchema),
+  async (c) => {
+    try {
+      const payload = c.req.valid("json")
+
+      const resolved = await resolveAgentConfig(
+        payload.agentId,
+        payload.agentVersionId
+      )
+
+      if (!resolved) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      const [call] = await db
+        .insert(callsTable)
+        .values({
+          id: crypto.randomUUID(),
+          organizationId: resolved.organizationId,
+          agentId: payload.agentId,
+          agentVersionId: resolved.agentVersionId,
+          channel: "phone_call",
+          direction: "outbound",
+          status: "in_progress",
+          fromNumber: payload.fromNumber,
+          toNumber: payload.toNumber,
+          sttModel: resolved.config.stt.model,
+          llmModel: resolved.config.llm.model,
+          ttsModel: resolved.config.tts.model,
+          livekitRoomName: payload.livekitRoomName,
+          startedAt: new Date(payload.startedAt),
+        })
+        .returning({ id: callsTable.id })
+
+      return c.json(
+        {
+          callId: call.id,
+          config: resolved.config,
         } satisfies StartCallResponse,
         201
       )
@@ -225,6 +280,7 @@ callRoutes.post(
       const [updated] = await db
         .update(callsTable)
         .set({
+          status: payload.status,
           endedAt,
           durationMs,
           sttCost: costs.stt.toFixed(6),

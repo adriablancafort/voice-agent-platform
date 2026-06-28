@@ -13,7 +13,7 @@ import type {
   PhoneNumberResponse,
 } from "@workspace/shared/api/phone-numbers/types"
 import { requireOrganization } from "@/lib/auth/organization"
-import { deprovisionInbound, provisionInbound } from "@/lib/sip"
+import { deprovisionInbound, provisionInbound } from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 
 export const phoneNumberRoutes = new Hono()

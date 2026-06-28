@@ -3,16 +3,34 @@ import type { z } from "zod"
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import type {
   completeCallRequestSchema,
-  startPhoneCallRequestSchema,
+  startInboundCallRequestSchema,
+  startOutboundCallRequestSchema,
   startWebCallRequestSchema,
 } from "./schemas"
 
 export type CallChannel = "web_call" | "phone_call"
 
+export type CallDirection = "inbound" | "outbound"
+
+export type CallStatus = "in_progress" | "completed"
+
 export type CallVariableValues = Record<string, string>
 
+export type CallDispatchMetadata = {
+  direction?: CallDirection
+  agentId?: string
+  agentVersionId?: string | null
+  toNumber?: string
+  fromNumber?: string
+}
+
 export type StartWebCallRequest = z.infer<typeof startWebCallRequestSchema>
-export type StartPhoneCallRequest = z.infer<typeof startPhoneCallRequestSchema>
+export type StartInboundCallRequest = z.infer<
+  typeof startInboundCallRequestSchema
+>
+export type StartOutboundCallRequest = z.infer<
+  typeof startOutboundCallRequestSchema
+>
 export type CompleteCallRequest = z.infer<typeof completeCallRequestSchema>
 
 export type StartCallResponse = {
@@ -31,6 +49,8 @@ export type CallListResponse = {
   agentId: string
   agentVersionId: string | null
   channel: CallChannel
+  direction: CallDirection
+  status: CallStatus
   fromNumber: string | null
   toNumber: string | null
   sttModel: string

@@ -83,6 +83,9 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.8.0
         version: 0.8.0(hono@4.12.19)(zod@4.4.3)
+      '@livekit/protocol':
+        specifier: ^1.45.8
+        version: 1.45.8
       '@workspace/db':
         specifier: workspace:*
         version: link:../../packages/db

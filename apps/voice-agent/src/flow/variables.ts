@@ -1,4 +1,5 @@
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
+import { parseJsonObject } from "@/lib/json"
 
 const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
 
@@ -21,30 +22,16 @@ function formatTime(date: Date) {
 }
 
 function parseCallValues(raw: string | undefined) {
-  if (!raw) {
-    return {}
+  const values: CallVariableValues = {}
+
+  const parsed = parseJsonObject(raw)
+  for (const [key, value] of Object.entries(parsed)) {
+    if (/^[a-z0-9_]+$/.test(key) && typeof value === "string") {
+      values[key] = value
+    }
   }
 
-  try {
-    const parsed = JSON.parse(raw)
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      Array.isArray(parsed)
-    ) {
-      return {}
-    }
-
-    const values: CallVariableValues = {}
-    for (const [key, value] of Object.entries(parsed)) {
-      if (/^[a-z0-9_]+$/.test(key) && typeof value === "string") {
-        values[key] = value
-      }
-    }
-    return values
-  } catch {
-    return {}
-  }
+  return values
 }
 
 export function createVariables(attributes: CallVariableValues) {

@@ -13,6 +13,7 @@
   "dependencies": {
     "@hono/node-server": "^1.19.14",
     "@hono/zod-validator": "^0.8.0",
+    "@livekit/protocol": "^1.45.8",
     "@workspace/db": "workspace:*",
     "@workspace/shared": "workspace:*",
     "better-auth": "catalog:",
