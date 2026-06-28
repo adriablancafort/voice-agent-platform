@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 import { toast } from "@workspace/ui/components/sonner"
+import { Spinner } from "@workspace/ui/components/spinner"
 import { EditPhoneNumberForm } from "@/components/phone-numbers/edit-phone-number-form"
 import { api } from "@/lib/api"
 
@@ -102,7 +103,11 @@ export function PhoneNumberRowActions({
               disabled={deletePhoneNumberMutation.isPending}
               onClick={() => deletePhoneNumberMutation.mutate()}
             >
-              Delete
+              {deletePhoneNumberMutation.isPending ? (
+                <Spinner className="mx-3 size-4" />
+              ) : (
+                "Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

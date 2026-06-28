@@ -199,11 +199,7 @@ export function PhoneNumberSheet({
 
           <SheetFooter>
             <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? (
-                <Spinner className="size-4" />
-              ) : (
-                "Save changes"
-              )}
+              {saveMutation.isPending ? <Spinner className="size-4" /> : "Save"}
             </Button>
           </SheetFooter>
         </form>

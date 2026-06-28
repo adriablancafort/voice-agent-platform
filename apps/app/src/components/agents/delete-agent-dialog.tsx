@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog"
 import { toast } from "@workspace/ui/components/sonner"
+import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
 
 type DeleteAgentDialogProps = {
@@ -66,7 +67,11 @@ export function DeleteAgentDialog({
             disabled={deleteAgentMutation.isPending}
             onClick={() => deleteAgentMutation.mutate()}
           >
-            Delete
+            {deleteAgentMutation.isPending ? (
+              <Spinner className="mx-3 size-4" />
+            ) : (
+              "Delete"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

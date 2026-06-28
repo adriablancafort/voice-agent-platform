@@ -106,7 +106,7 @@ export function DownloadAgentDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Download agent</DialogTitle>
-          <DialogDescription>{agent.name}</DialogDescription>
+          <DialogDescription>Download "{agent.name}"</DialogDescription>
         </DialogHeader>
 
         <FieldGroup>
