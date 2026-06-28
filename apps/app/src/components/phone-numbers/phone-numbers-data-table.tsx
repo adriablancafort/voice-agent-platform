@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -58,7 +59,16 @@ const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
   {
     id: "agent",
     header: "Agent",
-    cell: ({ row }) => row.original.agent?.name ?? null,
+    cell: ({ row }) =>
+      row.original.agent && row.original.agentId ? (
+        <Link
+          to="/agents/$agentId"
+          params={{ agentId: row.original.agentId }}
+          className="hover:underline"
+        >
+          {row.original.agent.name}
+        </Link>
+      ) : null,
   },
   {
     id: "version",

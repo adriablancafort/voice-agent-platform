@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,11 +11,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import {
+  ArrowDownRight,
+  ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
   CircleHelpIcon,
+  Globe,
+  Phone,
   Search,
 } from "lucide-react"
 import { useState } from "react"
@@ -47,6 +52,11 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip"
 import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -137,7 +147,44 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   {
     accessorKey: "channel",
     header: "Channel",
-    cell: ({ row }) => (row.original.channel === "web_call" ? "Web" : "Phone"),
+    cell: ({ row }) => {
+      const isPhone = row.original.channel === "phone_call"
+      return (
+        <Tooltip>
+          <TooltipTrigger render={<div className="flex justify-center" />}>
+            {isPhone ? (
+              <Phone className="size-4" />
+            ) : (
+              <Globe className="size-4" />
+            )}
+          </TooltipTrigger>
+          <TooltipContent sideOffset={8}>
+            {isPhone ? "Phone" : "Web"}
+          </TooltipContent>
+        </Tooltip>
+      )
+    },
+  },
+  {
+    accessorKey: "direction",
+    header: "Direction",
+    cell: ({ row }) => {
+      const isInbound = row.original.direction === "inbound"
+      return (
+        <Tooltip>
+          <TooltipTrigger render={<div className="flex justify-center" />}>
+            {isInbound ? (
+              <ArrowDownRight className="size-4" />
+            ) : (
+              <ArrowUpRight className="size-4" />
+            )}
+          </TooltipTrigger>
+          <TooltipContent sideOffset={8}>
+            {isInbound ? "Inbound" : "Outbound"}
+          </TooltipContent>
+        </Tooltip>
+      )
+    },
   },
   {
     id: "from",
@@ -153,7 +200,16 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
     id: "agent",
     accessorFn: (row) => row.agent?.name ?? "",
     header: ({ column }) => <SortableHeader column={column} title="Agent" />,
-    cell: ({ row }) => row.original.agent?.name,
+    cell: ({ row }) =>
+      row.original.agent ? (
+        <Link
+          to="/agents/$agentId"
+          params={{ agentId: row.original.agentId }}
+          className="hover:underline"
+        >
+          {row.original.agent.name}
+        </Link>
+      ) : null,
   },
   {
     id: "version",
@@ -164,13 +220,14 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
         : "Latest",
   },
   {
-    id: "status",
+    accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <Badge variant={row.original.endedAt ? "secondary" : "outline"}>
-        {row.original.endedAt ? "completed" : "ongoing"}
-      </Badge>
-    ),
+    cell: ({ row }) =>
+      row.original.status === "in_progress" ? (
+        <Badge variant="outline">In progress</Badge>
+      ) : (
+        <Badge variant="secondary">Completed</Badge>
+      ),
   },
 ]
 
