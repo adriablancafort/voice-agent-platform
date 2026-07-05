@@ -7,7 +7,8 @@ import { Toaster } from "@workspace/ui/components/sonner"
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
 import "@workspace/ui/globals.css"
 
-import { ThemeProvider } from "@/components/theme-provider.tsx"
+import { RouteErrorBoundary } from "@/components/error-boundary"
+import { ThemeProvider } from "@/components/theme-provider"
 import { routeTree } from "./routeTree.gen"
 
 const queryClient = new QueryClient()
@@ -20,6 +21,7 @@ const router = createRouter({
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
+  defaultErrorComponent: RouteErrorBoundary,
 })
 
 declare module "@tanstack/react-router" {
