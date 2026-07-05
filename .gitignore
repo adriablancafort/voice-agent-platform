@@ -3,6 +3,8 @@ dist
 
 .tanstack
 
+.trigger
+
 coverage
 logs
 

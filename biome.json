@@ -51,7 +51,8 @@
       "!!**/node_modules",
       "!**/*.gen.ts",
       "!**/index.html",
-      "!**/drizzle/**"
+      "!**/drizzle/**",
+      "!**/.trigger/**"
     ]
   }
 }

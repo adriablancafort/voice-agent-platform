@@ -1,0 +1,20 @@
+{
+  "name": "trigger",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "trigger dev",
+    "trigger:deploy": "trigger deploy",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "format": "biome check --write --linter-enabled=false ."
+  },
+  "dependencies": {
+    "@trigger.dev/sdk": "catalog:",
+    "dotenv": "catalog:"
+  },
+  "devDependencies": {
+    "@trigger.dev/build": "catalog:",
+    "trigger.dev": "catalog:"
+  }
+}
