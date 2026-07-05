@@ -111,7 +111,7 @@ function Page() {
                         {...field}
                         id={field.name}
                         type="email"
-                        placeholder="mail@example.com"
+                        placeholder="name@example.com"
                         autoComplete="email"
                         aria-invalid={fieldState.invalid}
                         disabled={signInMutation.isPending}

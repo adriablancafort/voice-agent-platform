@@ -80,19 +80,26 @@ function Page() {
               Choose an organization to continue
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {organizations?.map((org) => (
-              <Button
-                key={org.id}
-                variant="outline"
-                className="justify-start"
-                disabled={setActiveMutation.isPending}
-                onClick={() => setActiveMutation.mutate(org.id)}
-              >
-                {org.name}
-              </Button>
-            ))}
-            <Button render={<Link to="/create-organization" />} variant="ghost">
+          <CardContent>
+            <div className="grid gap-2 mb-6">
+              {organizations?.map((org) => (
+                <Button
+                  key={org.id}
+                  variant="outline"
+                  className="justify-start"
+                  disabled={setActiveMutation.isPending}
+                  onClick={() => setActiveMutation.mutate(org.id)}
+                >
+                  {org.name}
+                </Button>
+              ))}
+            </div>
+
+            <Button
+              render={<Link to="/create-organization" />}
+              variant="ghost"
+              className="w-full"
+            >
               Create organization
             </Button>
           </CardContent>

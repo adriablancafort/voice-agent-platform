@@ -19,6 +19,7 @@ import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(una
 import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
 import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
 import { Route as authorizedorganizationsidebarLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/layout'
+import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
 import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
 import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
 import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
@@ -78,6 +79,12 @@ const authorizedorganizationsidebarLayoutRoute =
     id: '/(sidebar)',
     getParentRoute: () => authorizedorganizationLayoutRoute,
   } as any)
+const authorizedorganizationInviteMembersPageRoute =
+  authorizedorganizationInviteMembersPageRouteImport.update({
+    id: '/invite-members/',
+    path: '/invite-members/',
+    getParentRoute: () => authorizedorganizationLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarPageRoute =
   authorizedorganizationsidebarPageRouteImport.update({
     id: '/',
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/signin/': typeof unauthorizedSigninPageRoute
   '/signup/': typeof unauthorizedSignupPageRoute
   '/': typeof authorizedorganizationsidebarPageRoute
+  '/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
   '/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/calls/': typeof authorizedorganizationsidebarCallsPageRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
   '/': typeof authorizedorganizationsidebarPageRoute
+  '/invite-members': typeof authorizedorganizationInviteMembersPageRoute
   '/$': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents': typeof authorizedorganizationsidebarAgentsPageRoute
   '/calls': typeof authorizedorganizationsidebarCallsPageRoute
@@ -156,6 +165,7 @@ export interface FileRoutesById {
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
   '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
   '/(authorized)/(organization)/(sidebar)/': typeof authorizedorganizationsidebarPageRoute
+  '/(authorized)/(organization)/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
   '/(authorized)/(organization)/(sidebar)/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/(authorized)/(organization)/(sidebar)/calls/': typeof authorizedorganizationsidebarCallsPageRoute
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/signin/'
     | '/signup/'
     | '/'
+    | '/invite-members/'
     | '/$/'
     | '/agents/'
     | '/calls/'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/'
+    | '/invite-members'
     | '/$'
     | '/agents'
     | '/calls'
@@ -204,6 +216,7 @@ export interface FileRouteTypes {
     | '/(unauthorized)/signin/'
     | '/(unauthorized)/signup/'
     | '/(authorized)/(organization)/(sidebar)/'
+    | '/(authorized)/(organization)/invite-members/'
     | '/(authorized)/(organization)/(sidebar)/$/'
     | '/(authorized)/(organization)/(sidebar)/agents/'
     | '/(authorized)/(organization)/(sidebar)/calls/'
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarLayoutRouteImport
       parentRoute: typeof authorizedorganizationLayoutRoute
     }
+    '/(authorized)/(organization)/invite-members/': {
+      id: '/(authorized)/(organization)/invite-members/'
+      path: '/invite-members'
+      fullPath: '/invite-members/'
+      preLoaderRoute: typeof authorizedorganizationInviteMembersPageRouteImport
+      parentRoute: typeof authorizedorganizationLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/': {
       id: '/(authorized)/(organization)/(sidebar)/'
       path: '/'
@@ -365,12 +385,15 @@ const authorizedorganizationsidebarLayoutRouteWithChildren =
 
 interface authorizedorganizationLayoutRouteChildren {
   authorizedorganizationsidebarLayoutRoute: typeof authorizedorganizationsidebarLayoutRouteWithChildren
+  authorizedorganizationInviteMembersPageRoute: typeof authorizedorganizationInviteMembersPageRoute
 }
 
 const authorizedorganizationLayoutRouteChildren: authorizedorganizationLayoutRouteChildren =
   {
     authorizedorganizationsidebarLayoutRoute:
       authorizedorganizationsidebarLayoutRouteWithChildren,
+    authorizedorganizationInviteMembersPageRoute:
+      authorizedorganizationInviteMembersPageRoute,
   }
 
 const authorizedorganizationLayoutRouteWithChildren =

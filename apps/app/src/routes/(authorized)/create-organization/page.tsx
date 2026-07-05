@@ -59,7 +59,7 @@ function Page() {
     onSuccess: async () => {
       await queryClient.refetchQueries()
       toast.success("Organization created")
-      navigate({ to: "/" })
+      navigate({ to: "/invite-members" })
     },
     onError: (error) => {
       toast.error(error.message)
