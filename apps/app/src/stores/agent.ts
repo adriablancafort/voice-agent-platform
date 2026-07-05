@@ -1,4 +1,5 @@
 import {
+  addEdge,
   applyEdgeChanges,
   applyNodeChanges,
   type Connection,
@@ -234,13 +235,17 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
       data: { condition: "Transition condition" },
     }
 
-    set((state) => ({
-      sidePanel: { kind: "edge", edge },
-      config: applySelection(
-        { ...state.config, edges: [...state.config.edges, edge] },
-        { edgeId: edge.id }
-      ),
-    }))
+    set((state) => {
+      const edges = addEdge(edge, state.config.edges)
+      if (edges.length === state.config.edges.length) {
+        return state
+      }
+
+      return {
+        sidePanel: { kind: "edge", edge },
+        config: applySelection({ ...state.config, edges }, { edgeId: edge.id }),
+      }
+    })
   },
   selectNode: (node) =>
     set((state) => ({
