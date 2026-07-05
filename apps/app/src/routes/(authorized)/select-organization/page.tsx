@@ -38,6 +38,7 @@ export const Route = createFileRoute("/(authorized)/select-organization/")({
       if (result.error) {
         throw new Error(result.error.message)
       }
+      context.queryClient.removeQueries({ queryKey: ["full-organization"] })
       await context.queryClient.refetchQueries({ type: "active" })
       throw redirect({ to: "/" })
     }
