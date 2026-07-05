@@ -95,6 +95,9 @@ importers:
       '@livekit/protocol':
         specifier: ^1.45.8
         version: 1.45.8
+      '@trigger.dev/sdk':
+        specifier: 'catalog:'
+        version: 4.5.0(react@19.2.4)(zod@4.4.3)
       '@workspace/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -211,6 +214,9 @@ importers:
       '@trigger.dev/sdk':
         specifier: 'catalog:'
         version: 4.5.0(react@19.2.4)(zod@4.4.3)
+      '@workspace/email':
+        specifier: workspace:*
+        version: link:../../packages/email
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2

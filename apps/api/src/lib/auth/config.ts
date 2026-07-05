@@ -1,3 +1,4 @@
+import { tasks } from "@trigger.dev/sdk"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { organization } from "better-auth/plugins"
@@ -14,7 +15,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     async sendResetPassword(data) {
-      console.log("send-reset-password-email", {
+      await tasks.trigger("send-reset-password-email", {
         to: data.user.email,
         name: data.user.name,
         url: data.url,
@@ -27,7 +28,19 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
-  plugins: [organization()],
+  plugins: [
+    organization({
+      async sendInvitationEmail(data) {
+        const inviteLink = `${env.FRONTEND_URL}/join-organization?invitationId=${data.id}&email=${encodeURIComponent(data.email)}`
+
+        await tasks.trigger("send-organization-invitation-email", {
+          to: data.email,
+          url: inviteLink,
+          organizationName: data.organization.name,
+        })
+      },
+    }),
+  ],
   telemetry: {
     enabled: false,
   },
