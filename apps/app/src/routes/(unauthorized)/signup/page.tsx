@@ -1,6 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  Link,
+  useLocation,
+  useNavigate,
+} from "@tanstack/react-router"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -32,7 +37,14 @@ export const Route = createFileRoute("/(unauthorized)/signup/")({
 
 function Page() {
   const navigate = useNavigate()
+  const { searchStr } = useLocation()
+  const redirect = new URLSearchParams(searchStr).get("redirect") ?? undefined
+  const email =
+    new URLSearchParams(redirect?.split("?")[1] ?? "").get("email") ?? ""
   const queryClient = useQueryClient()
+  const callbackURL = redirect
+    ? `${env.FRONTEND_URL}${redirect}`
+    : env.FRONTEND_URL
 
   const signUpFormSchema = z
     .object({
@@ -57,7 +69,7 @@ function Page() {
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       name: "",
-      email: "",
+      email,
       password: "",
       confirmPassword: "",
     },
@@ -77,6 +89,12 @@ function Page() {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["session"] })
       toast.success("Account created")
+
+      if (redirect) {
+        navigate({ href: redirect })
+        return
+      }
+
       navigate({ to: "/" })
     },
     onError: (error) => {
@@ -88,7 +106,7 @@ function Page() {
     await signIn.social(
       {
         provider: "google",
-        callbackURL: env.FRONTEND_URL,
+        callbackURL,
       },
       {
         onError: (ctx) => {
@@ -151,7 +169,7 @@ function Page() {
                         placeholder="name@example.com"
                         autoComplete="email"
                         aria-invalid={fieldState.invalid}
-                        disabled={signUpMutation.isPending}
+                        disabled={signUpMutation.isPending || !!email}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -225,7 +243,11 @@ function Page() {
                   <span className="text-muted-foreground">
                     Already have an account?{" "}
                   </span>
-                  <Link to="/signin" className="underline">
+                  <Link
+                    to="/signin"
+                    search={{ redirect }}
+                    className="underline"
+                  >
                     Sign in
                   </Link>
                 </div>

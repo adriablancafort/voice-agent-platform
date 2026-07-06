@@ -17,6 +17,7 @@ import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthoriz
 import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
 import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
 import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
+import { Route as authorizedJoinOrganizationPageRouteImport } from './routes/(authorized)/join-organization/page'
 import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
 import { Route as authorizedorganizationsidebarLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/layout'
 import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
@@ -66,6 +67,12 @@ const authorizedSelectOrganizationPageRoute =
   authorizedSelectOrganizationPageRouteImport.update({
     id: '/select-organization/',
     path: '/select-organization/',
+    getParentRoute: () => authorizedLayoutRoute,
+  } as any)
+const authorizedJoinOrganizationPageRoute =
+  authorizedJoinOrganizationPageRouteImport.update({
+    id: '/join-organization/',
+    path: '/join-organization/',
     getParentRoute: () => authorizedLayoutRoute,
   } as any)
 const authorizedCreateOrganizationPageRoute =
@@ -124,6 +131,7 @@ const authorizedorganizationsidebarAgentsAgentIdPageRoute =
 
 export interface FileRoutesByFullPath {
   '/create-organization/': typeof authorizedCreateOrganizationPageRoute
+  '/join-organization/': typeof authorizedJoinOrganizationPageRoute
   '/select-organization/': typeof authorizedSelectOrganizationPageRoute
   '/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
@@ -139,6 +147,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/create-organization': typeof authorizedCreateOrganizationPageRoute
+  '/join-organization': typeof authorizedJoinOrganizationPageRoute
   '/select-organization': typeof authorizedSelectOrganizationPageRoute
   '/reset-password': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
@@ -159,6 +168,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)': typeof authorizedorganizationLayoutRouteWithChildren
   '/(authorized)/(organization)/(sidebar)': typeof authorizedorganizationsidebarLayoutRouteWithChildren
   '/(authorized)/create-organization/': typeof authorizedCreateOrganizationPageRoute
+  '/(authorized)/join-organization/': typeof authorizedJoinOrganizationPageRoute
   '/(authorized)/select-organization/': typeof authorizedSelectOrganizationPageRoute
   '/(unauthorized)/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/create-organization/'
+    | '/join-organization/'
     | '/select-organization/'
     | '/reset-password/'
     | '/set-new-password/'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/create-organization'
+    | '/join-organization'
     | '/select-organization'
     | '/reset-password'
     | '/set-new-password'
@@ -210,6 +222,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)'
     | '/(authorized)/(organization)/(sidebar)'
     | '/(authorized)/create-organization/'
+    | '/(authorized)/join-organization/'
     | '/(authorized)/select-organization/'
     | '/(unauthorized)/reset-password/'
     | '/(unauthorized)/set-new-password/'
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/select-organization'
       fullPath: '/select-organization/'
       preLoaderRoute: typeof authorizedSelectOrganizationPageRouteImport
+      parentRoute: typeof authorizedLayoutRoute
+    }
+    '/(authorized)/join-organization/': {
+      id: '/(authorized)/join-organization/'
+      path: '/join-organization'
+      fullPath: '/join-organization/'
+      preLoaderRoute: typeof authorizedJoinOrganizationPageRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
     '/(authorized)/create-organization/': {
@@ -404,6 +424,7 @@ const authorizedorganizationLayoutRouteWithChildren =
 interface authorizedLayoutRouteChildren {
   authorizedorganizationLayoutRoute: typeof authorizedorganizationLayoutRouteWithChildren
   authorizedCreateOrganizationPageRoute: typeof authorizedCreateOrganizationPageRoute
+  authorizedJoinOrganizationPageRoute: typeof authorizedJoinOrganizationPageRoute
   authorizedSelectOrganizationPageRoute: typeof authorizedSelectOrganizationPageRoute
 }
 
@@ -411,6 +432,7 @@ const authorizedLayoutRouteChildren: authorizedLayoutRouteChildren = {
   authorizedorganizationLayoutRoute:
     authorizedorganizationLayoutRouteWithChildren,
   authorizedCreateOrganizationPageRoute: authorizedCreateOrganizationPageRoute,
+  authorizedJoinOrganizationPageRoute: authorizedJoinOrganizationPageRoute,
   authorizedSelectOrganizationPageRoute: authorizedSelectOrganizationPageRoute,
 }
 

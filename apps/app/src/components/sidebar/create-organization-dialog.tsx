@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -40,7 +39,6 @@ export function CreateOrganizationDialog({
   open,
   onOpenChange,
 }: CreateOrganizationDialogProps) {
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const form = useForm<CreateOrganizationFormValues>({
