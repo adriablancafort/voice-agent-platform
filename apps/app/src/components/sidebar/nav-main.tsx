@@ -1,4 +1,10 @@
 import { Link, useMatchRoute } from "@tanstack/react-router"
+import {
+  HistoryIcon,
+  PhoneIcon,
+  SettingsIcon,
+  WorkflowIcon,
+} from "lucide-react"
 
 import {
   SidebarGroup,
@@ -8,50 +14,83 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar"
 
-type NavItem = {
-  title: string
-  url: string
-  icon?: React.ReactNode
+const nav = {
+  top: [
+    {
+      title: "Build",
+      items: [
+        {
+          title: "Agents",
+          url: "/agents",
+          icon: <WorkflowIcon />,
+        },
+      ],
+    },
+    {
+      title: "Deploy",
+      items: [
+        {
+          title: "Phone numbers",
+          url: "/phone-numbers",
+          icon: <PhoneIcon />,
+        },
+      ],
+    },
+    {
+      title: "Monitor",
+      items: [
+        {
+          title: "Calls",
+          url: "/calls",
+          icon: <HistoryIcon />,
+        },
+      ],
+    },
+  ],
+  bottom: [
+    {
+      title: "Platform",
+      items: [
+        {
+          title: "Settings",
+          url: "/settings",
+          icon: <SettingsIcon />,
+        },
+      ],
+    },
+  ],
 }
 
-type NavSection = {
-  title: string
-  items: NavItem[]
-}
-
-export function NavMain({ sections }: { sections: NavSection[] }) {
+export function NavMain() {
   const matchRoute = useMatchRoute()
 
   return (
-    <>
-      {sections.map((section) => (
-        <SidebarGroup key={section.title}>
-          <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
-          <SidebarMenu>
-            {section.items.map((item) => {
-              const isActive = Boolean(
-                matchRoute({
-                  to: item.url,
-                  fuzzy: item.url !== "/",
-                })
-              )
-
-              return (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    tooltip={item.title}
-                    isActive={isActive}
-                    render={<Link to={item.url} />}
-                  >
-                    {item.icon}
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )
-            })}
-          </SidebarMenu>
-        </SidebarGroup>
+    <div className="flex flex-1 flex-col">
+      {[nav.top, nav.bottom].map((sections, index) => (
+        <div key={index} className={index ? "mt-auto" : undefined}>
+          {sections.map((section) => (
+            <SidebarGroup key={section.title}>
+              <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      isActive={
+                        !!matchRoute({ to: item.url, fuzzy: item.url !== "/" })
+                      }
+                      render={<Link to={item.url} />}
+                    >
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          ))}
+        </div>
       ))}
-    </>
+    </div>
   )
 }
