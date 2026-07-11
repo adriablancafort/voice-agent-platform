@@ -12,7 +12,7 @@ import type {
   PhoneNumberListResponse,
   PhoneNumberResponse,
 } from "@workspace/shared/api/phone-numbers/types"
-import { requireOrganization } from "@/lib/auth/organization"
+import { requireOrganization, requirePermission } from "@/lib/auth/organization"
 import { deprovisionInbound, provisionInbound } from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 
@@ -52,6 +52,7 @@ phoneNumberRoutes.get("/", requireOrganization, async (c) => {
 phoneNumberRoutes.post(
   "/",
   requireOrganization,
+  requirePermission({ phoneNumber: ["create"] }),
   validator("json", createPhoneNumberRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
@@ -108,6 +109,7 @@ phoneNumberRoutes.post(
 phoneNumberRoutes.patch(
   "/:id",
   requireOrganization,
+  requirePermission({ phoneNumber: ["update"] }),
   validator("param", phoneNumberIdParamsSchema),
   validator("json", updatePhoneNumberRequestSchema),
   async (c) => {
@@ -185,6 +187,7 @@ phoneNumberRoutes.patch(
 phoneNumberRoutes.delete(
   "/:id",
   requireOrganization,
+  requirePermission({ phoneNumber: ["delete"] }),
   validator("param", phoneNumberIdParamsSchema),
   async (c) => {
     const organizationId = c.get("organizationId")

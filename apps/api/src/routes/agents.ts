@@ -23,7 +23,7 @@ import type {
   DuplicateAgentResponse,
   UpdateAgentNameResponse,
 } from "@workspace/shared/api/agents/types"
-import { requireOrganization } from "@/lib/auth/organization"
+import { requireOrganization, requirePermission } from "@/lib/auth/organization"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
@@ -60,6 +60,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
 agentRoutes.post(
   "/",
   requireOrganization,
+  requirePermission({ agent: ["create"] }),
   validator("json", createAgentRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
@@ -92,6 +93,7 @@ agentRoutes.post(
 agentRoutes.post(
   "/:id/duplicate",
   requireOrganization,
+  requirePermission({ agent: ["create"] }),
   validator("param", agentIdParamsSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
@@ -205,6 +207,7 @@ agentRoutes.get(
 agentRoutes.patch(
   "/:id/name",
   requireOrganization,
+  requirePermission({ agent: ["update"] }),
   validator("param", agentIdParamsSchema),
   validator("json", updateAgentNameRequestSchema),
   async (c) => {
@@ -247,6 +250,7 @@ agentRoutes.patch(
 agentRoutes.patch(
   "/:id/config",
   requireOrganization,
+  requirePermission({ agent: ["update"] }),
   validator("param", agentIdParamsSchema),
   validator("json", updateAgentConfigRequestSchema),
   async (c) => {
@@ -286,6 +290,7 @@ agentRoutes.patch(
 agentRoutes.delete(
   "/:id",
   requireOrganization,
+  requirePermission({ agent: ["delete"] }),
   validator("param", agentIdParamsSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
@@ -392,6 +397,7 @@ agentRoutes.get(
 agentRoutes.post(
   "/:id/publish",
   requireOrganization,
+  requirePermission({ agent: ["update"] }),
   validator("param", agentIdParamsSchema),
   validator("json", publishAgentRequestSchema),
   async (c) => {
