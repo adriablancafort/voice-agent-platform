@@ -39,6 +39,10 @@ const settingsNavItems = [
     title: "Members",
     to: "/settings/members",
   },
+  {
+    title: "Roles",
+    to: "/settings/roles",
+  },
 ]
 
 function SettingsPageHeader() {

@@ -34,4 +34,4 @@ export const member = ac.newRole({
 
 export const roles = { owner, admin, member }
 
-export type OrganizationRoleName = keyof typeof roles
+export type RoleKeys = keyof typeof roles

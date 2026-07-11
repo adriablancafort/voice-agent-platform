@@ -28,6 +28,7 @@ import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } fro
 import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
 import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
 import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
+import { Route as authorizedorganizationsidebarSettingsRolesPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/roles/page'
 import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
 import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
 import { Route as authorizedorganizationsidebarSettingsAccountPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/account/page'
@@ -139,6 +140,12 @@ const authorizedorganizationsidebarSplatPageRoute =
     path: '/$/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
+const authorizedorganizationsidebarSettingsRolesPageRoute =
+  authorizedorganizationsidebarSettingsRolesPageRouteImport.update({
+    id: '/roles/',
+    path: '/roles/',
+    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarSettingsOrganizationPageRoute =
   authorizedorganizationsidebarSettingsOrganizationPageRouteImport.update({
     id: '/organization/',
@@ -184,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
   '/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
+  '/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
 }
 export interface FileRoutesByTo {
   '/create-organization': typeof authorizedCreateOrganizationPageRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/settings/account': typeof authorizedorganizationsidebarSettingsAccountPageRoute
   '/settings/members': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
+  '/settings/roles': typeof authorizedorganizationsidebarSettingsRolesPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -230,6 +239,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
+  '/(authorized)/(organization)/(sidebar)/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/settings/account/'
     | '/settings/members/'
     | '/settings/organization/'
+    | '/settings/roles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/create-organization'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/settings/account'
     | '/settings/members'
     | '/settings/organization'
+    | '/settings/roles'
   id:
     | '__root__'
     | '/(authorized)'
@@ -298,6 +310,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/settings/account/'
     | '/(authorized)/(organization)/(sidebar)/settings/members/'
     | '/(authorized)/(organization)/(sidebar)/settings/organization/'
+    | '/(authorized)/(organization)/(sidebar)/settings/roles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -440,6 +453,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSplatPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/settings/roles/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/roles/'
+      path: '/roles'
+      fullPath: '/settings/roles/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsRolesPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/settings/organization/': {
       id: '/(authorized)/(organization)/(sidebar)/settings/organization/'
       path: '/organization'
@@ -476,6 +496,7 @@ interface authorizedorganizationsidebarSettingsLayoutRouteChildren {
   authorizedorganizationsidebarSettingsAccountPageRoute: typeof authorizedorganizationsidebarSettingsAccountPageRoute
   authorizedorganizationsidebarSettingsMembersPageRoute: typeof authorizedorganizationsidebarSettingsMembersPageRoute
   authorizedorganizationsidebarSettingsOrganizationPageRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
+  authorizedorganizationsidebarSettingsRolesPageRoute: typeof authorizedorganizationsidebarSettingsRolesPageRoute
 }
 
 const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorganizationsidebarSettingsLayoutRouteChildren =
@@ -488,6 +509,8 @@ const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorgani
       authorizedorganizationsidebarSettingsMembersPageRoute,
     authorizedorganizationsidebarSettingsOrganizationPageRoute:
       authorizedorganizationsidebarSettingsOrganizationPageRoute,
+    authorizedorganizationsidebarSettingsRolesPageRoute:
+      authorizedorganizationsidebarSettingsRolesPageRoute,
   }
 
 const authorizedorganizationsidebarSettingsLayoutRouteWithChildren =
