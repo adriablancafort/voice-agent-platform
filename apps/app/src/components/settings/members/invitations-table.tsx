@@ -32,11 +32,9 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { InvitationRowActions } from "@/components/settings/members/invitation-row-actions"
+import { InvitationRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
-import type {
-  OrganizationInvitation,
-  OrganizationRole,
-} from "@/lib/auth/organization"
+import type { OrganizationInvitation } from "@/lib/auth/organization"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -44,13 +42,9 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 
 type InvitationsTableProps = {
   data: OrganizationInvitation[]
-  currentUserRole: OrganizationRole
 }
 
-export function InvitationsTable({
-  data,
-  currentUserRole,
-}: InvitationsTableProps) {
+export function InvitationsTable({ data }: InvitationsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
 
   const pendingInvitations = useMemo(
@@ -65,6 +59,11 @@ export function InvitationsTable({
       cell: ({ row }) => row.original.email,
     },
     {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => <InvitationRoleSelect invitation={row.original} />,
+    },
+    {
       accessorKey: "createdAt",
       header: ({ column }) => (
         <SortableHeader column={column} title="Invited on" />
@@ -74,12 +73,7 @@ export function InvitationsTable({
     {
       id: "actions",
       header: "",
-      cell: ({ row }) => (
-        <InvitationRowActions
-          invitation={row.original}
-          currentUserRole={currentUserRole}
-        />
-      ),
+      cell: ({ row }) => <InvitationRowActions invitation={row.original} />,
     },
   ]
 

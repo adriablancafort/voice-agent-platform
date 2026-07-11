@@ -25,6 +25,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { EditPhoneNumberForm } from "@/components/phone-numbers/edit-phone-number-form"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 type PhoneNumberRowActionsProps = {
   phoneNumber: PhoneNumberListResponse[number]
@@ -36,6 +37,8 @@ export function PhoneNumberRowActions({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const queryClient = useQueryClient()
+  const canUpdate = useCheckPermission({ phoneNumber: ["update"] })
+  const canDelete = useCheckPermission({ phoneNumber: ["delete"] })
 
   const deletePhoneNumberMutation = useMutation({
     mutationFn: () => api.delete(`/phone-numbers/${phoneNumber.id}`),
@@ -70,15 +73,19 @@ export function PhoneNumberRowActions({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={4}>
-            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            <DropdownMenuItem
+              disabled={!canUpdate}
+              onClick={() => setEditOpen(true)}
+            >
               <PencilIcon />
               Edit
             </DropdownMenuItem>
             <AlertDialogTrigger
+              disabled={!canDelete}
               render={
                 <DropdownMenuItem
                   variant="destructive"
-                  disabled={deletePhoneNumberMutation.isPending}
+                  disabled={!canDelete || deletePhoneNumberMutation.isPending}
                 >
                   <Trash2Icon />
                   Delete

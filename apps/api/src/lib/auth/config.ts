@@ -5,6 +5,7 @@ import { organization } from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
+import { ac, admin, member, owner } from "@workspace/shared/auth/permissions"
 import { env } from "@/lib/env"
 
 export const auth = betterAuth({
@@ -35,6 +36,12 @@ export const auth = betterAuth({
   },
   plugins: [
     organization({
+      ac,
+      roles: {
+        owner,
+        admin,
+        member,
+      },
       async sendInvitationEmail(data) {
         const inviteLink = `${env.FRONTEND_URL}/join-organization?invitationId=${data.id}&email=${encodeURIComponent(data.email)}`
 

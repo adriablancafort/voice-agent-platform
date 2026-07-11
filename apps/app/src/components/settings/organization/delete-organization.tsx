@@ -36,6 +36,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 const deleteOrganizationSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -54,6 +55,7 @@ export function DeleteOrganization({
 }: DeleteOrganizationProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const canDelete = useCheckPermission({ organization: ["delete"] })
 
   const form = useForm<DeleteOrganizationValues>({
     resolver: zodResolver(
@@ -112,8 +114,13 @@ export function DeleteOrganization({
           </ItemContent>
           <ItemActions>
             <AlertDialogTrigger
+              disabled={!canDelete}
               render={
-                <Button type="button" variant="destructive">
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={!canDelete}
+                >
                   <Trash2Icon className="size-4" />
                   Delete organization
                 </Button>

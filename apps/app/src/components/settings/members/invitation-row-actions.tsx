@@ -22,27 +22,19 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
-import type {
-  OrganizationInvitation,
-  OrganizationRole,
-} from "@/lib/auth/organization"
+import type { OrganizationInvitation } from "@/lib/auth/organization"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 type InvitationRowActionsProps = {
   invitation: OrganizationInvitation
-  currentUserRole: OrganizationRole
 }
 
 export function InvitationRowActions({
   invitation,
-  currentUserRole,
 }: InvitationRowActionsProps) {
   const queryClient = useQueryClient()
   const [cancelOpen, setCancelOpen] = useState(false)
-
-  const canCancel = organization.checkRolePermission({
-    permissions: { invitation: ["cancel"] },
-    role: currentUserRole,
-  })
+  const canCancel = useCheckPermission({ invitation: ["cancel"] })
 
   const cancelInvitationMutation = useMutation({
     mutationFn: async () => {
@@ -62,10 +54,6 @@ export function InvitationRowActions({
       toast.error(error.message)
     },
   })
-
-  if (!canCancel) {
-    return null
-  }
 
   return (
     <>
@@ -112,6 +100,7 @@ export function InvitationRowActions({
         <DropdownMenuContent align="end" sideOffset={4}>
           <DropdownMenuItem
             variant="destructive"
+            disabled={!canCancel}
             onClick={() => setCancelOpen(true)}
           >
             <Trash2Icon />

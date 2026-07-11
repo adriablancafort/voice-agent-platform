@@ -16,6 +16,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -33,6 +34,7 @@ export function AgentVersionSelector() {
   const loadAgentVersionConfig = useAgentStore(
     (state) => state.loadAgentVersionConfig
   )
+  const canUpdateAgent = useCheckPermission({ agent: ["update"] })
 
   const draftVersionNumber =
     agent.versions.length > 0
@@ -83,7 +85,7 @@ export function AgentVersionSelector() {
               agent.id,
             ])
             if (config) {
-              loadAgentConfig(config)
+              loadAgentConfig(config, !canUpdateAgent)
             }
           }}
         >

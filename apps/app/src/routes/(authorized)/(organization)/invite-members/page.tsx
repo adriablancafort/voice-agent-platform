@@ -29,15 +29,14 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
+import {
+  type AssignableRole,
+  assignableRoleSchema,
+  assignableRoles,
+  roleLabels,
+} from "@/lib/auth/roles"
 
-const inviteRoleSchema = z.enum(["member", "admin"])
-
-type InviteRole = z.infer<typeof inviteRoleSchema>
-
-const inviteRoleLabels: Record<InviteRole, string> = {
-  member: "Member",
-  admin: "Admin",
-}
+type InviteRole = AssignableRole
 
 function inviteMember(email: string, role: InviteRole) {
   return new Promise<void>((resolve) => {
@@ -76,7 +75,7 @@ function Page() {
       .array(
         z.object({
           address: z.email("Enter a valid email address"),
-          role: inviteRoleSchema,
+          role: assignableRoleSchema,
         })
       )
       .min(1, "Add at least one email address.")
@@ -164,12 +163,15 @@ function Page() {
                                 aria-label={`Role for email ${index + 1}`}
                               >
                                 <SelectValue>
-                                  {inviteRoleLabels[field.value]}
+                                  {roleLabels[field.value]}
                                 </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="member">Member</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
+                                {assignableRoles.map((role) => (
+                                  <SelectItem key={role} value={role}>
+                                    {roleLabels[role]}
+                                  </SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
                           </Field>

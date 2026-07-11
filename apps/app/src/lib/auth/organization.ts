@@ -10,12 +10,6 @@ export type OrganizationInvitation = NonNullable<
   Awaited<ReturnType<typeof organization.listInvitations>>["data"]
 >[number]
 
-export type ActiveMember = NonNullable<
-  Awaited<ReturnType<typeof organization.getActiveMember>>["data"]
->
-
-export type OrganizationRole = ActiveMember["role"]
-
 export function fullOrganizationQueryOptions() {
   return queryOptions({
     queryKey: ["full-organization"],
@@ -43,6 +37,9 @@ export function activeMemberQueryOptions() {
     queryKey: ["active-member"],
     queryFn: async () => {
       const { data } = await organization.getActiveMember()
+      if (!data) {
+        throw new Error("No active organization member")
+      }
       return data
     },
     staleTime: 1000 * 60,

@@ -12,6 +12,7 @@ import { useAgentStore } from "@/stores/agent"
 export function AgentNameField() {
   const queryClient = useQueryClient()
   const agent = useAgentStore((state) => state.agent)
+  const readOnly = useAgentStore((state) => state.readOnly)
 
   const updateNameMutation = useMutation({
     mutationFn: (name: string) =>
@@ -35,6 +36,7 @@ export function AgentNameField() {
       value={agent.name}
       onChange={(name) => updateNameMutation.mutate(name)}
       placeholder="Untitled agent"
+      disabled={readOnly}
     />
   )
 }

@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { LogOutIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react"
 import { useState } from "react"
@@ -23,35 +27,26 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
-import type {
-  OrganizationMember,
-  OrganizationRole,
+import {
+  activeMemberQueryOptions,
+  type OrganizationMember,
 } from "@/lib/auth/organization"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 type MemberRowActionsProps = {
   member: OrganizationMember
-  currentUserId: string
-  currentUserRole: OrganizationRole
 }
 
-export function MemberRowActions({
-  member,
-  currentUserId,
-  currentUserRole,
-}: MemberRowActionsProps) {
+export function MemberRowActions({ member }: MemberRowActionsProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [removeOpen, setRemoveOpen] = useState(false)
   const [leaveOpen, setLeaveOpen] = useState(false)
+  const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
 
-  const isCurrentUser = member.userId === currentUserId
-
-  const canRemove =
-    !isCurrentUser &&
-    organization.checkRolePermission({
-      permissions: { member: ["delete"] },
-      role: currentUserRole,
-    })
+  const isCurrentUser = member.userId === activeMember.userId
+  const canDelete = useCheckPermission({ member: ["delete"] })
+  const canRemove = !isCurrentUser && canDelete
 
   const removeMemberMutation = useMutation({
     mutationFn: async () => {
@@ -91,10 +86,6 @@ export function MemberRowActions({
       toast.error(error.message)
     },
   })
-
-  if (!isCurrentUser && !canRemove) {
-    return null
-  }
 
   return (
     <>
@@ -169,9 +160,10 @@ export function MemberRowActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={4}>
-          {canRemove && (
+          {!isCurrentUser && (
             <DropdownMenuItem
               variant="destructive"
+              disabled={!canRemove}
               onClick={() => setRemoveOpen(true)}
             >
               <Trash2Icon />
@@ -182,6 +174,7 @@ export function MemberRowActions({
           {isCurrentUser && (
             <DropdownMenuItem
               variant="destructive"
+              disabled={member.role.includes("owner")}
               onClick={() => setLeaveOpen(true)}
             >
               <LogOutIcon />

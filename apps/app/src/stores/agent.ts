@@ -44,7 +44,7 @@ type AgentEditorState = {
 type AgentEditorStore = AgentEditorState & {
   setAgent: (agent: AgentDetailResponse) => void
   setConfig: (config: ClientAgentConfig) => void
-  loadAgentConfig: (config: AgentConfig) => void
+  loadAgentConfig: (config: AgentConfig, readOnly: boolean) => void
   loadAgentVersionConfig: (
     config: AgentConfig,
     version: { id: string; number: number }
@@ -117,10 +117,10 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
   ...initialState,
   setAgent: (agent) => set({ agent }),
   setConfig: (config) => set({ config }),
-  loadAgentConfig: (config) =>
+  loadAgentConfig: (config, readOnly) =>
     set((state) => ({
       config: toClientAgentConfig(config),
-      readOnly: false,
+      readOnly,
       activeVersionNumber: null,
       activeVersionId: null,
       sidePanel: closedSidePanel,

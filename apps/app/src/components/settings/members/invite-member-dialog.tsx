@@ -30,18 +30,18 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
+import {
+  assignableRoleSchema,
+  assignableRoles,
+  roleLabels,
+} from "@/lib/auth/roles"
 
 const inviteMemberFormSchema = z.object({
   email: z.email("Enter a valid email address"),
-  role: z.enum(["member", "admin"]),
+  role: assignableRoleSchema,
 })
 
 type InviteMemberFormValues = z.infer<typeof inviteMemberFormSchema>
-
-const inviteRoleLabels: Record<InviteMemberFormValues["role"], string> = {
-  member: "Member",
-  admin: "Admin",
-}
 
 type InviteMemberDialogProps = {
   open: boolean
@@ -144,11 +144,14 @@ export function InviteMemberDialog({
                     disabled={inviteMemberMutation.isPending}
                   >
                     <SelectTrigger id={field.name} className="w-full">
-                      <SelectValue>{inviteRoleLabels[field.value]}</SelectValue>
+                      <SelectValue>{roleLabels[field.value]}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="member">Member</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
+                      {assignableRoles.map((role) => (
+                        <SelectItem key={role} value={role}>
+                          {roleLabels[role]}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </Field>

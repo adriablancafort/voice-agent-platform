@@ -17,6 +17,7 @@ import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 const organizationInformationSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -46,6 +47,7 @@ export function OrganizationInformation({
   slug,
 }: OrganizationInformationProps) {
   const queryClient = useQueryClient()
+  const canUpdate = useCheckPermission({ organization: ["update"] })
 
   const form = useForm<OrganizationInformationValues>({
     resolver: zodResolver(organizationInformationSchema),
@@ -75,6 +77,9 @@ export function OrganizationInformation({
     },
   })
 
+  const formDisabled =
+    !canUpdate || updateOrganizationInformationMutation.isPending
+
   return (
     <FieldGroup>
       <FieldSet>
@@ -102,7 +107,7 @@ export function OrganizationInformation({
                   id={field.name}
                   autoComplete="organization"
                   aria-invalid={fieldState.invalid}
-                  disabled={updateOrganizationInformationMutation.isPending}
+                  disabled={formDisabled}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -122,7 +127,7 @@ export function OrganizationInformation({
                   id={field.name}
                   autoComplete="off"
                   aria-invalid={fieldState.invalid}
-                  disabled={updateOrganizationInformationMutation.isPending}
+                  disabled={formDisabled}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -131,10 +136,7 @@ export function OrganizationInformation({
             )}
           />
 
-          <Button
-            type="submit"
-            disabled={updateOrganizationInformationMutation.isPending}
-          >
+          <Button type="submit" disabled={formDisabled}>
             {updateOrganizationInformationMutation.isPending ? (
               <Spinner className="size-4" />
             ) : (

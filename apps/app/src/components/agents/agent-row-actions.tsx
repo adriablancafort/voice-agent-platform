@@ -24,12 +24,16 @@ import { DeleteAgentDialog } from "@/components/agents/delete-agent-dialog"
 import { DownloadAgentDialog } from "@/components/agents/download-agent-dialog"
 import { EditAgentNameDialog } from "@/components/agents/edit-agent-name-dialog"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 export function AgentRowActions({ agent }: { agent: AgentsListItem }) {
   const [editNameOpen, setEditNameOpen] = useState(false)
   const [downloadOpen, setDownloadOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const queryClient = useQueryClient()
+  const canUpdate = useCheckPermission({ agent: ["update"] })
+  const canCreate = useCheckPermission({ agent: ["create"] })
+  const canDelete = useCheckPermission({ agent: ["delete"] })
 
   const duplicateAgentMutation = useMutation({
     mutationFn: () =>
@@ -75,12 +79,15 @@ export function AgentRowActions({ agent }: { agent: AgentsListItem }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={4}>
-          <DropdownMenuItem onClick={() => setEditNameOpen(true)}>
+          <DropdownMenuItem
+            disabled={!canUpdate}
+            onClick={() => setEditNameOpen(true)}
+          >
             <PencilIcon />
             Edit name
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={duplicateAgentMutation.isPending}
+            disabled={!canCreate || duplicateAgentMutation.isPending}
             onClick={() => duplicateAgentMutation.mutate()}
           >
             <CopyIcon />
@@ -92,6 +99,7 @@ export function AgentRowActions({ agent }: { agent: AgentsListItem }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
+            disabled={!canDelete}
             onClick={() => setDeleteOpen(true)}
           >
             <Trash2Icon />

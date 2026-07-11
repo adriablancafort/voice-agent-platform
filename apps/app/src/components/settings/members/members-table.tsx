@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -42,46 +43,41 @@ import {
 } from "@workspace/ui/components/table"
 import { InviteMemberDialog } from "@/components/settings/members/invite-member-dialog"
 import { MemberRowActions } from "@/components/settings/members/member-row-actions"
+import { MemberRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
-import { organization } from "@/lib/auth/client"
-import type {
-  OrganizationMember,
-  OrganizationRole,
+import {
+  activeMemberQueryOptions,
+  type OrganizationMember,
 } from "@/lib/auth/organization"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
 })
 
-type MembersTableProps = {
-  data: OrganizationMember[]
-  currentUserId: string
-  currentUserRole: OrganizationRole
+function MemberName({ member }: { member: OrganizationMember }) {
+  const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
+  return member.userId === activeMember.userId
+    ? `${member.user.name} (You)`
+    : member.user.name
 }
 
-export function MembersTable({
-  data,
-  currentUserId,
-  currentUserRole,
-}: MembersTableProps) {
+type MembersTableProps = {
+  data: OrganizationMember[]
+}
+
+export function MembersTable({ data }: MembersTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const [inviteOpen, setInviteOpen] = useState(false)
-
-  const canInvite = organization.checkRolePermission({
-    permissions: { invitation: ["create"] },
-    role: currentUserRole,
-  })
+  const canInvite = useCheckPermission({ invitation: ["create"] })
 
   const columns: ColumnDef<OrganizationMember>[] = [
     {
       accessorFn: (row) => row.user.name,
       id: "name",
       header: ({ column }) => <SortableHeader column={column} title="Name" />,
-      cell: ({ row }) =>
-        row.original.userId === currentUserId
-          ? `${row.original.user.name} (You)`
-          : row.original.user.name,
+      cell: ({ row }) => <MemberName member={row.original} />,
     },
     {
       accessorFn: (row) => row.user.email,
@@ -92,7 +88,7 @@ export function MembersTable({
     {
       accessorKey: "role",
       header: "Role",
-      cell: ({ row }) => row.original.role,
+      cell: ({ row }) => <MemberRoleSelect member={row.original} />,
     },
     {
       accessorKey: "createdAt",
@@ -104,13 +100,7 @@ export function MembersTable({
     {
       id: "actions",
       header: "",
-      cell: ({ row }) => (
-        <MemberRowActions
-          member={row.original}
-          currentUserId={currentUserId}
-          currentUserRole={currentUserRole}
-        />
-      ),
+      cell: ({ row }) => <MemberRowActions member={row.original} />,
     },
   ]
 
@@ -145,12 +135,10 @@ export function MembersTable({
             <Search />
           </InputGroupAddon>
         </InputGroup>
-        {canInvite && (
-          <Button onClick={() => setInviteOpen(true)}>
-            <PlusIcon />
-            Invite member
-          </Button>
-        )}
+        <Button onClick={() => setInviteOpen(true)} disabled={!canInvite}>
+          <PlusIcon />
+          Invite member
+        </Button>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>

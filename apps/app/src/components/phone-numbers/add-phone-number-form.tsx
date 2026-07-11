@@ -31,10 +31,12 @@ import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 export function AddPhoneNumberForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
+  const canCreate = useCheckPermission({ phoneNumber: ["create"] })
 
   const form = useForm<CreatePhoneNumberRequest>({
     resolver: zodResolver(createPhoneNumberRequestSchema),
@@ -71,8 +73,8 @@ export function AddPhoneNumberForm() {
         saveMutation.reset()
       }}
     >
-      <DialogTrigger>
-        <Button>
+      <DialogTrigger disabled={!canCreate}>
+        <Button disabled={!canCreate}>
           <PlusIcon />
           Add phone number
         </Button>

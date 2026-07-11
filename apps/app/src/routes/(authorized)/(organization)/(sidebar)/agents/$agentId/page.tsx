@@ -24,6 +24,7 @@ import { TestAgentButton } from "@/components/agents/test-agent-button"
 import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
 
 function agentQueryOptions(agentId: string) {
@@ -93,6 +94,7 @@ function Page() {
   const { data: agentConfig } = useSuspenseQuery(
     agentConfigQueryOptions(agentId)
   )
+  const canUpdateAgent = useCheckPermission({ agent: ["update"] })
   const setAgent = useAgentStore((state) => state.setAgent)
   const loadAgentConfig = useAgentStore((state) => state.loadAgentConfig)
   const name = useAgentStore((state) => state.agent.name)
@@ -102,8 +104,8 @@ function Page() {
   }, [agent, setAgent])
 
   useLayoutEffect(() => {
-    loadAgentConfig(agentConfig)
-  }, [agentId, loadAgentConfig])
+    loadAgentConfig(agentConfig, !canUpdateAgent)
+  }, [agentId, agentConfig, canUpdateAgent, loadAgentConfig])
 
   return (
     <>

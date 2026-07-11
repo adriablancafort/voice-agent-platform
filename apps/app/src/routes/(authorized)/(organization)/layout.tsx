@@ -1,12 +1,16 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
-import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
+import {
+  activeMemberQueryOptions,
+  fullOrganizationQueryOptions,
+} from "@/lib/auth/organization"
 
 export const Route = createFileRoute("/(authorized)/(organization)")({
   beforeLoad: async ({ context }) => {
-    const organization = await context.queryClient.ensureQueryData(
-      fullOrganizationQueryOptions()
-    )
+    const [organization] = await Promise.all([
+      context.queryClient.ensureQueryData(fullOrganizationQueryOptions()),
+      context.queryClient.ensureQueryData(activeMemberQueryOptions()),
+    ])
 
     if (!organization) {
       throw redirect({ to: "/select-organization" })

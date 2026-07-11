@@ -36,6 +36,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 type PhoneNumberSheetProps = {
   phoneNumber: PhoneNumberListResponse[number]
@@ -49,6 +50,7 @@ export function PhoneNumberSheet({
   onOpenChange,
 }: PhoneNumberSheetProps) {
   const queryClient = useQueryClient()
+  const canUpdate = useCheckPermission({ phoneNumber: ["update"] })
 
   const form = useForm<UpdatePhoneNumberRequest>({
     resolver: zodResolver(updatePhoneNumberRequestSchema),
@@ -89,6 +91,8 @@ export function PhoneNumberSheet({
     },
   })
 
+  const formDisabled = !canUpdate || saveMutation.isPending
+
   return (
     <Sheet
       open={open}
@@ -123,7 +127,7 @@ export function PhoneNumberSheet({
                         field.onChange(agentId)
                         form.setValue("agentVersionId", null)
                       }}
-                      disabled={saveMutation.isPending}
+                      disabled={formDisabled}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue>
@@ -164,7 +168,7 @@ export function PhoneNumberSheet({
                       onValueChange={(value) =>
                         field.onChange(value === "draft" ? null : value)
                       }
-                      disabled={!selectedAgentId || saveMutation.isPending}
+                      disabled={!selectedAgentId || formDisabled}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue>
@@ -198,7 +202,7 @@ export function PhoneNumberSheet({
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={saveMutation.isPending}>
+            <Button type="submit" disabled={formDisabled}>
               {saveMutation.isPending ? <Spinner className="size-4" /> : "Save"}
             </Button>
           </SheetFooter>

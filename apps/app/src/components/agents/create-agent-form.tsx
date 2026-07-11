@@ -32,11 +32,13 @@ import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 export function CreateAgentForm() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const canCreate = useCheckPermission({ agent: ["create"] })
 
   const form = useForm<CreateAgentRequest>({
     resolver: zodResolver(createAgentRequestSchema),
@@ -68,14 +70,14 @@ export function CreateAgentForm() {
   return (
     <Dialog
       open={open}
-      onOpenChange={(open) => {
-        setOpen(open)
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen)
         form.reset()
         createAgentMutation.reset()
       }}
     >
-      <DialogTrigger>
-        <Button>
+      <DialogTrigger disabled={!canCreate}>
+        <Button disabled={!canCreate}>
           <PlusIcon />
           New Agent
         </Button>

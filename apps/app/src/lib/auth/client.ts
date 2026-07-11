@@ -1,11 +1,21 @@
 import { createAuthClient } from "better-auth/client"
 import { organizationClient } from "better-auth/client/plugins"
 
+import { ac, admin, member, owner } from "@workspace/shared/auth/permissions"
 import { env } from "@/lib/env"
 
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
-  plugins: [organizationClient()],
+  plugins: [
+    organizationClient({
+      ac,
+      roles: {
+        owner,
+        admin,
+        member,
+      },
+    }),
+  ],
 })
 
 export const {
