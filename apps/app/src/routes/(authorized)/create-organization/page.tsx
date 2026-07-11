@@ -70,7 +70,7 @@ function Page() {
     <>
       <title>Create organization</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
-        <Card className="w-full max-w-sm">
+        <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-xl">Create organization</CardTitle>
             <CardDescription>Create an organization</CardDescription>

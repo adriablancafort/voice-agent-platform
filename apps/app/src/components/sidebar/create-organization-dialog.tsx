@@ -73,7 +73,7 @@ export function CreateOrganizationDialog({
       open={open}
       onOpenChange={(nextOpen) => {
         onOpenChange(nextOpen)
-        form.reset({ name: "" })
+        form.reset()
         createOrganizationMutation.reset()
       }}
     >

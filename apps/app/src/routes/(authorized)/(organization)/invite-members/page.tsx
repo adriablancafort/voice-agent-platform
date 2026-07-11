@@ -16,21 +16,35 @@ import {
 import { Field, FieldError, FieldGroup } from "@workspace/ui/components/field"
 import {
   InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
   InputGroupInput,
 } from "@workspace/ui/components/input-group"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
 
-function inviteMember(email: string) {
+const inviteRoleSchema = z.enum(["member", "admin"])
+
+type InviteRole = z.infer<typeof inviteRoleSchema>
+
+const inviteRoleLabels: Record<InviteRole, string> = {
+  member: "Member",
+  admin: "Admin",
+}
+
+function inviteMember(email: string, role: InviteRole) {
   return new Promise<void>((resolve) => {
     organization.inviteMember(
       {
         email,
-        role: "member",
+        role,
       },
       {
         onSuccess: () => {
@@ -62,6 +76,7 @@ function Page() {
       .array(
         z.object({
           address: z.email("Enter a valid email address"),
+          role: inviteRoleSchema,
         })
       )
       .min(1, "Add at least one email address.")
@@ -73,7 +88,7 @@ function Page() {
   const form = useForm<InviteMembersFormValues>({
     resolver: zodResolver(inviteMembersFormSchema),
     defaultValues: {
-      emails: [{ address: "" }],
+      emails: [{ address: "", role: "member" }],
     },
   })
 
@@ -83,7 +98,9 @@ function Page() {
   })
 
   async function handleInviteMembers(values: InviteMembersFormValues) {
-    await Promise.all(values.emails.map(({ address }) => inviteMember(address)))
+    await Promise.all(
+      values.emails.map(({ address, role }) => inviteMember(address, role))
+    )
     await queryClient.invalidateQueries({ queryKey: ["full-organization"] })
     navigate({ to: "/" })
   }
@@ -92,7 +109,7 @@ function Page() {
     <>
       <title>Invite members</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
-        <Card className="w-full max-w-sm">
+        <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-xl">Invite members</CardTitle>
             <CardDescription>
@@ -104,43 +121,75 @@ function Page() {
               <FieldGroup>
                 <FieldGroup className="gap-4">
                   {fields.map((field, index) => (
-                    <Controller
-                      key={field.id}
-                      name={`emails.${index}.address`}
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <InputGroup>
-                            <InputGroupInput
-                              {...field}
-                              id={field.name}
-                              type="email"
-                              placeholder="name@example.com"
-                              autoComplete={index === 0 ? "email" : "off"}
-                              aria-invalid={fieldState.invalid}
-                              disabled={form.formState.isSubmitting}
-                            />
-                            {fields.length > 1 && (
-                              <InputGroupAddon align="inline-end">
-                                <InputGroupButton
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon-xs"
-                                  onClick={() => remove(index)}
-                                  disabled={form.formState.isSubmitting}
-                                  aria-label={`Remove email ${index + 1}`}
-                                >
-                                  <XIcon />
-                                </InputGroupButton>
-                              </InputGroupAddon>
+                    <div key={field.id} className="flex gap-2">
+                      <Controller
+                        name={`emails.${index}.address`}
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            className="min-w-0 flex-1"
+                          >
+                            <InputGroup>
+                              <InputGroupInput
+                                {...field}
+                                id={field.name}
+                                type="email"
+                                placeholder="name@example.com"
+                                autoComplete={index === 0 ? "email" : "off"}
+                                aria-invalid={fieldState.invalid}
+                                disabled={form.formState.isSubmitting}
+                              />
+                            </InputGroup>
+                            {fieldState.invalid && (
+                              <FieldError errors={[fieldState.error]} />
                             )}
-                          </InputGroup>
-                          {fieldState.invalid && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name={`emails.${index}.role`}
+                        control={form.control}
+                        render={({ field }) => (
+                          <Field className="w-28 shrink-0">
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              disabled={form.formState.isSubmitting}
+                            >
+                              <SelectTrigger
+                                id={field.name}
+                                className="w-full"
+                                aria-label={`Role for email ${index + 1}`}
+                              >
+                                <SelectValue>
+                                  {inviteRoleLabels[field.value]}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="member">Member</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </Field>
+                        )}
+                      />
+
+                      {fields.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          className="mt-0.5 shrink-0"
+                          onClick={() => remove(index)}
+                          disabled={form.formState.isSubmitting}
+                          aria-label={`Remove email ${index + 1}`}
+                        >
+                          <XIcon />
+                        </Button>
                       )}
-                    />
+                    </div>
                   ))}
 
                   {fields.length < 5 && (
@@ -148,7 +197,7 @@ function Page() {
                       type="button"
                       variant="ghost"
                       className="w-full"
-                      onClick={() => append({ address: "" })}
+                      onClick={() => append({ address: "", role: "member" })}
                       disabled={form.formState.isSubmitting}
                     >
                       Add email address

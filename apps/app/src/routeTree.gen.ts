@@ -29,6 +29,7 @@ import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './ro
 import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
 import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
 import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
+import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
 import { Route as authorizedorganizationsidebarSettingsAccountPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/account/page'
 import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
 
@@ -144,6 +145,12 @@ const authorizedorganizationsidebarSettingsOrganizationPageRoute =
     path: '/organization/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
+const authorizedorganizationsidebarSettingsMembersPageRoute =
+  authorizedorganizationsidebarSettingsMembersPageRouteImport.update({
+    id: '/members/',
+    path: '/members/',
+    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarSettingsAccountPageRoute =
   authorizedorganizationsidebarSettingsAccountPageRouteImport.update({
     id: '/account/',
@@ -175,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof authorizedorganizationsidebarSettingsPageRoute
   '/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
 }
 export interface FileRoutesByTo {
@@ -194,6 +202,7 @@ export interface FileRoutesByTo {
   '/settings': typeof authorizedorganizationsidebarSettingsPageRoute
   '/agents/$agentId': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/settings/account': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/settings/members': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
 }
 export interface FileRoutesById {
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/settings/': typeof authorizedorganizationsidebarSettingsPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/(authorized)/(organization)/(sidebar)/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
 }
 export interface FileRouteTypes {
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/agents/$agentId/'
     | '/settings/account/'
+    | '/settings/members/'
     | '/settings/organization/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/agents/$agentId'
     | '/settings/account'
+    | '/settings/members'
     | '/settings/organization'
   id:
     | '__root__'
@@ -284,6 +296,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/settings/'
     | '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
     | '/(authorized)/(organization)/(sidebar)/settings/account/'
+    | '/(authorized)/(organization)/(sidebar)/settings/members/'
     | '/(authorized)/(organization)/(sidebar)/settings/organization/'
   fileRoutesById: FileRoutesById
 }
@@ -434,6 +447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/settings/members/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/members/'
+      path: '/members'
+      fullPath: '/settings/members/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsMembersPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/settings/account/': {
       id: '/(authorized)/(organization)/(sidebar)/settings/account/'
       path: '/account'
@@ -454,6 +474,7 @@ declare module '@tanstack/react-router' {
 interface authorizedorganizationsidebarSettingsLayoutRouteChildren {
   authorizedorganizationsidebarSettingsPageRoute: typeof authorizedorganizationsidebarSettingsPageRoute
   authorizedorganizationsidebarSettingsAccountPageRoute: typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  authorizedorganizationsidebarSettingsMembersPageRoute: typeof authorizedorganizationsidebarSettingsMembersPageRoute
   authorizedorganizationsidebarSettingsOrganizationPageRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
 }
 
@@ -463,6 +484,8 @@ const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorgani
       authorizedorganizationsidebarSettingsPageRoute,
     authorizedorganizationsidebarSettingsAccountPageRoute:
       authorizedorganizationsidebarSettingsAccountPageRoute,
+    authorizedorganizationsidebarSettingsMembersPageRoute:
+      authorizedorganizationsidebarSettingsMembersPageRoute,
     authorizedorganizationsidebarSettingsOrganizationPageRoute:
       authorizedorganizationsidebarSettingsOrganizationPageRoute,
   }
