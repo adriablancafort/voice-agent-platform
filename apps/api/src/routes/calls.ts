@@ -17,7 +17,7 @@ import type {
   StartCallResponse,
   TriggerOutboundCallResponse,
 } from "@workspace/shared/api/calls/types"
-import { requireOrganization } from "@/lib/auth/organization"
+import { requireOrganization, requirePermission } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
 import { placeOutboundCall } from "@/lib/livekit"
@@ -339,6 +339,7 @@ callRoutes.get("/", requireOrganization, async (c) => {
 callRoutes.post(
   "/outbound",
   requireOrganization,
+  requirePermission({ calls: ["create"] }),
   validator("json", triggerOutboundCallRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")

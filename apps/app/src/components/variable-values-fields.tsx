@@ -5,11 +5,13 @@ import type { VariableValues } from "@/hooks/use-variable-values"
 type VariableValuesFieldsProps = {
   variables: VariableValues
   className?: string
+  readOnly?: boolean
 }
 
 export function VariableValuesFields({
   variables,
   className,
+  readOnly = false,
 }: VariableValuesFieldsProps) {
   if (variables.keys.length === 0) {
     return null
@@ -24,6 +26,7 @@ export function VariableValuesFields({
             value={variables.values[key] ?? ""}
             onChange={(event) => variables.setValue(key, event.target.value)}
             placeholder={`Value for {{${key}}}`}
+            readOnly={readOnly}
           />
         </Field>
       ))}

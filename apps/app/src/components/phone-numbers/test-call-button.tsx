@@ -44,6 +44,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { VariableValuesFields } from "@/components/variable-values-fields"
 import { useVariableValues } from "@/hooks/use-variable-values"
 import { api } from "@/lib/api"
+import { useCheckPermission } from "@/lib/auth/permissions"
 
 type OutboundFormValues = Omit<TriggerOutboundCallRequest, "variables">
 
@@ -55,6 +56,7 @@ function hasSipConnection(phoneNumber: PhoneNumberListResponse[number]) {
 
 export function TestCallButton() {
   const [open, setOpen] = useState(false)
+  const canCreate = useCheckPermission({ calls: ["create"] })
 
   const form = useForm<OutboundFormValues>({
     resolver: zodResolver(
@@ -139,6 +141,8 @@ export function TestCallButton() {
     })
   }
 
+  const readOnly = !canCreate || callMutation.isPending
+
   return (
     <Sheet
       open={open}
@@ -176,7 +180,7 @@ export function TestCallButton() {
                     <Select
                       value={field.value || undefined}
                       onValueChange={field.onChange}
-                      disabled={callMutation.isPending}
+                      readOnly={readOnly}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue placeholder="Select a phone number">
@@ -217,7 +221,7 @@ export function TestCallButton() {
                       aria-invalid={fieldState.invalid}
                       placeholder="+14155551234"
                       autoComplete="off"
-                      disabled={callMutation.isPending}
+                      readOnly={readOnly}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -238,7 +242,7 @@ export function TestCallButton() {
                         field.onChange(value)
                         form.setValue("agentVersionId", null)
                       }}
-                      disabled={callMutation.isPending}
+                      readOnly={readOnly}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue placeholder="Select an agent">
@@ -278,7 +282,7 @@ export function TestCallButton() {
                       onValueChange={(value) =>
                         field.onChange(value === "draft" ? null : value)
                       }
-                      disabled={!selectedAgentId || callMutation.isPending}
+                      readOnly={!selectedAgentId || readOnly}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue>
@@ -309,12 +313,12 @@ export function TestCallButton() {
                 )}
               />
 
-              <VariableValuesFields variables={variables} />
+              <VariableValuesFields variables={variables} readOnly={readOnly} />
             </FieldGroup>
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={callMutation.isPending}>
+            <Button type="submit" disabled={readOnly}>
               {callMutation.isPending ? (
                 <Spinner className="size-4" />
               ) : (

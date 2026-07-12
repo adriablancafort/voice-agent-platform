@@ -10,6 +10,7 @@ export const statement = {
   ...defaultStatements,
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
+  calls: ["create"],
 }
 
 export const ac = createAccessControl(statement)
@@ -18,18 +19,21 @@ export const owner = ac.newRole({
   ...ownerAc.statements,
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
+  calls: ["create"],
 })
 
 export const admin = ac.newRole({
   ...adminAc.statements,
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
+  calls: ["create"],
 })
 
 export const member = ac.newRole({
   ...memberAc.statements,
   agent: [],
   phoneNumber: [],
+  calls: [],
 })
 
 export const roles = { owner, admin, member }

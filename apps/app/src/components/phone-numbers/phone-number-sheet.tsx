@@ -91,7 +91,7 @@ export function PhoneNumberSheet({
     },
   })
 
-  const formDisabled = !canUpdate || saveMutation.isPending
+  const readOnly = !canUpdate || saveMutation.isPending
 
   return (
     <Sheet
@@ -104,7 +104,7 @@ export function PhoneNumberSheet({
     >
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Configure phone number</SheetTitle>
+          <SheetTitle>Inbound calls</SheetTitle>
         </SheetHeader>
 
         <form
@@ -119,7 +119,7 @@ export function PhoneNumberSheet({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Inbound agent</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Response agent</FieldLabel>
                     <Select
                       value={field.value ?? "none"}
                       onValueChange={(value) => {
@@ -127,7 +127,7 @@ export function PhoneNumberSheet({
                         field.onChange(agentId)
                         form.setValue("agentVersionId", null)
                       }}
-                      disabled={formDisabled}
+                      readOnly={readOnly}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue>
@@ -168,7 +168,7 @@ export function PhoneNumberSheet({
                       onValueChange={(value) =>
                         field.onChange(value === "draft" ? null : value)
                       }
-                      disabled={!selectedAgentId || formDisabled}
+                      readOnly={!selectedAgentId || readOnly}
                     >
                       <SelectTrigger id={field.name}>
                         <SelectValue>
@@ -202,7 +202,7 @@ export function PhoneNumberSheet({
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={formDisabled}>
+            <Button type="submit" disabled={readOnly}>
               {saveMutation.isPending ? <Spinner className="size-4" /> : "Save"}
             </Button>
           </SheetFooter>
