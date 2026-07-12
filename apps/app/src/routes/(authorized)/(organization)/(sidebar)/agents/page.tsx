@@ -12,6 +12,7 @@ import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { AgentsDataTable } from "@/components/agents/agents-data-table"
 import { CreateAgentForm } from "@/components/agents/create-agent-form"
+import { ImportAgentForm } from "@/components/agents/import-agent-form"
 import { api } from "@/lib/api"
 
 function queryOptions() {
@@ -42,7 +43,8 @@ function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto">
+      <div className="ml-auto flex space-x-3">
+        <ImportAgentForm />
         <CreateAgentForm />
       </div>
     </header>
