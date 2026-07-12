@@ -80,6 +80,36 @@ function parseCost(value: string | null) {
   return value === null ? null : Number(value)
 }
 
+function exactFilterFn(
+  row: { getValue: (columnId: string) => unknown },
+  columnId: string,
+  filterValue: string
+) {
+  if (!filterValue || filterValue === "all") {
+    return true
+  }
+
+  return row.getValue(columnId) === filterValue
+}
+
+const channelFilterOptions = [
+  { value: "all", label: "All channels" },
+  { value: "phone_call", label: "Phone" },
+  { value: "web_call", label: "Web" },
+]
+
+const directionFilterOptions = [
+  { value: "all", label: "All directions" },
+  { value: "inbound", label: "Inbound" },
+  { value: "outbound", label: "Outbound" },
+]
+
+const statusFilterOptions = [
+  { value: "all", label: "All statuses" },
+  { value: "completed", label: "Completed" },
+  { value: "in_progress", label: "In progress" },
+]
+
 function CostCell({ call }: { call: CallListResponse[number] }) {
   const totalCost = parseCost(call.totalCost)
 
@@ -146,6 +176,7 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     accessorKey: "channel",
+    filterFn: exactFilterFn,
     header: "Channel",
     cell: ({ row }) => {
       const isPhone = row.original.channel === "phone_call"
@@ -167,6 +198,7 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     accessorKey: "direction",
+    filterFn: exactFilterFn,
     header: "Direction",
     cell: ({ row }) => {
       const isInbound = row.original.direction === "inbound"
@@ -221,6 +253,7 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     accessorKey: "status",
+    filterFn: exactFilterFn,
     header: "Status",
     cell: ({ row }) =>
       row.original.status === "in_progress" ? (
@@ -250,20 +283,104 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
     },
   })
 
+  const channelFilter = table.getColumn("channel")?.getFilterValue() ?? "all"
+  const directionFilter =
+    table.getColumn("direction")?.getFilterValue() ?? "all"
+  const statusFilter = table.getColumn("status")?.getFilterValue() ?? "all"
+
   return (
     <div>
-      <InputGroup className="mb-5 max-w-xs">
-        <InputGroupInput
-          value={(table.getColumn("agent")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("agent")?.setFilterValue(event.target.value)
-          }
-          placeholder="Search calls..."
-        />
-        <InputGroupAddon>
-          <Search />
-        </InputGroupAddon>
-      </InputGroup>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <InputGroup className="max-w-xs">
+          <InputGroupInput
+            value={(table.getColumn("agent")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("agent")?.setFilterValue(event.target.value)
+            }
+            placeholder="Search calls..."
+          />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+        </InputGroup>
+        <div className="flex items-center gap-2">
+          <Select
+            value={channelFilter}
+            onValueChange={(value) =>
+              table
+                .getColumn("channel")
+                ?.setFilterValue(value === "all" ? undefined : value)
+            }
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue>
+                {
+                  channelFilterOptions.find(
+                    (option) => option.value === channelFilter
+                  )?.label
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {channelFilterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={directionFilter}
+            onValueChange={(value) =>
+              table
+                .getColumn("direction")
+                ?.setFilterValue(value === "all" ? undefined : value)
+            }
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue>
+                {
+                  directionFilterOptions.find(
+                    (option) => option.value === directionFilter
+                  )?.label
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {directionFilterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={statusFilter}
+            onValueChange={(value) =>
+              table
+                .getColumn("status")
+                ?.setFilterValue(value === "all" ? undefined : value)
+            }
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue>
+                {
+                  statusFilterOptions.find(
+                    (option) => option.value === statusFilter
+                  )?.label
+                }
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {statusFilterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
