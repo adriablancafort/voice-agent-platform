@@ -1,10 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import {
   ChevronsUpDownIcon,
   GalleryVerticalEndIcon,
   PlusIcon,
 } from "lucide-react"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 
 import {
   DropdownMenu,
@@ -21,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { organization } from "@/lib/auth/client"
 import {
@@ -29,13 +34,29 @@ import {
 } from "@/lib/auth/organization"
 import { CreateOrganizationDialog } from "./create-organization-dialog"
 
+function OrganizationSwitcherSkeleton() {
+  return <Skeleton className="h-12 w-full" />
+}
+
 export function OrganizationSwitcher() {
+  return (
+    <Suspense fallback={<OrganizationSwitcherSkeleton />}>
+      <OrganizationSwitcherContent />
+    </Suspense>
+  )
+}
+
+function OrganizationSwitcherContent() {
   const { isMobile } = useSidebar()
   const queryClient = useQueryClient()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
-  const { data: activeOrganization } = useQuery(fullOrganizationQueryOptions())
-  const { data: organizations } = useQuery(organizationsListQueryOptions())
+  const { data: activeOrganization } = useSuspenseQuery(
+    fullOrganizationQueryOptions()
+  )
+  const { data: organizations } = useSuspenseQuery(
+    organizationsListQueryOptions()
+  )
 
   const setActiveMutation = useMutation({
     mutationFn: async (organizationId: string) => {
@@ -53,7 +74,7 @@ export function OrganizationSwitcher() {
   })
 
   if (!activeOrganization) {
-    return null
+    return <OrganizationSwitcherSkeleton />
   }
 
   return (

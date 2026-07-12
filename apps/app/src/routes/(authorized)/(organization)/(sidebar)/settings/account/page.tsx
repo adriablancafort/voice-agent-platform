@@ -23,12 +23,6 @@ function accountProvidersQueryOptions() {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/account/"
 )({
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(sessionQueryOptions()),
-      context.queryClient.ensureQueryData(accountProvidersQueryOptions()),
-    ])
-  },
   component: Page,
 })
 

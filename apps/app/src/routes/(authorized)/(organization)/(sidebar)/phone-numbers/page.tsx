@@ -25,14 +25,12 @@ function queryOptions() {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/phone-numbers/"
 )({
-  loader: async ({ context }) =>
-    context.queryClient.ensureQueryData(queryOptions()),
   component: Page,
 })
 
 function Header() {
   return (
-    <header className="flex h-18 shrink-0 items-center gap-2 px-5">
+    <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
       <Separator
         orientation="vertical"

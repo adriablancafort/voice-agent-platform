@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { useLayoutEffect } from "react"
+import { Suspense, useLayoutEffect } from "react"
 
 import type {
   AgentConfigResponse,
@@ -16,6 +16,7 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { AgentNameField } from "@/components/agents/agent-name-field"
 import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
@@ -44,16 +45,27 @@ function agentConfigQueryOptions(agentId: string) {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/agents/$agentId/"
 )({
-  loader: async ({ context, params }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(agentQueryOptions(params.agentId)),
-      context.queryClient.ensureQueryData(
-        agentConfigQueryOptions(params.agentId)
-      ),
-    ])
-  },
   component: Page,
 })
+
+function AgentEditorSkeleton() {
+  return (
+    <>
+      <header className="flex h-18 shrink-0 items-center gap-3 px-5">
+        <Skeleton className="size-6" />
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-40" />
+        <div className="ml-auto flex space-x-3">
+          <Skeleton className="h-9 w-20" />
+          <Skeleton className="h-9 w-20" />
+          <Skeleton className="h-9 w-28" />
+          <Skeleton className="h-9 w-24" />
+        </div>
+      </header>
+      <Skeleton className="size-full rounded-none" />
+    </>
+  )
+}
 
 function Header() {
   return (
@@ -89,6 +101,14 @@ function Header() {
 }
 
 function Page() {
+  return (
+    <Suspense fallback={<AgentEditorSkeleton />}>
+      <AgentEditor />
+    </Suspense>
+  )
+}
+
+function AgentEditor() {
   const { agentId } = Route.useParams()
   const { data: agent } = useSuspenseQuery(agentQueryOptions(agentId))
   const { data: agentConfig } = useSuspenseQuery(

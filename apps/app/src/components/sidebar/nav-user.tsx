@@ -8,6 +8,7 @@ import {
   MoonIcon,
   SunIcon,
 } from "lucide-react"
+import { Suspense } from "react"
 
 import {
   Avatar,
@@ -33,12 +34,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { useTheme } from "@/components/theme-provider"
 import { signOut } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
+function NavUserSkeleton() {
+  return <Skeleton className="h-12 w-full" />
+}
+
 export function NavUser() {
+  return (
+    <Suspense fallback={<NavUserSkeleton />}>
+      <NavUserContent />
+    </Suspense>
+  )
+}
+
+function NavUserContent() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { isMobile } = useSidebar()
@@ -46,7 +60,7 @@ export function NavUser() {
   const { data: session } = useSuspenseQuery(sessionQueryOptions())
 
   if (!session) {
-    return null
+    return <NavUserSkeleton />
   }
 
   const user = {

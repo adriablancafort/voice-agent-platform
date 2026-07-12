@@ -8,9 +8,6 @@ import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/organization/"
 )({
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(fullOrganizationQueryOptions())
-  },
   component: Page,
 })
 

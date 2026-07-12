@@ -4,6 +4,7 @@ import {
   Outlet,
   useMatchRoute,
 } from "@tanstack/react-router"
+import { Suspense } from "react"
 
 import {
   Breadcrumb,
@@ -19,6 +20,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings"
@@ -45,6 +47,15 @@ const settingsNavItems = [
   },
 ]
 
+function SettingsContentSkeleton() {
+  return (
+    <div className="mx-auto max-w-lg space-y-8">
+      <Skeleton className="h-14 w-60" />
+      <Skeleton className="h-120 w-full" />
+    </div>
+  )
+}
+
 function SettingsPageHeader() {
   const matchRoute = useMatchRoute()
   const activeItem = settingsNavItems.find((item) =>
@@ -52,7 +63,7 @@ function SettingsPageHeader() {
   )
 
   return (
-    <header className="flex h-18 shrink-0 items-center gap-2 px-5">
+    <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
       <Separator
         orientation="vertical"
@@ -107,7 +118,9 @@ function Layout() {
           <SettingsNav />
         </div>
         <div className="w-full pr-40">
-          <Outlet />
+          <Suspense fallback={<SettingsContentSkeleton />}>
+            <Outlet />
+          </Suspense>
         </div>
       </div>
     </>

@@ -12,14 +12,6 @@ import {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/members/"
 )({
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(organizationMembersQueryOptions()),
-      context.queryClient.ensureQueryData(
-        organizationInvitationsQueryOptions()
-      ),
-    ])
-  },
   component: Page,
 })
 

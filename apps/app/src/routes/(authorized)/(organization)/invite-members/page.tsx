@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { XIcon } from "lucide-react"
+import { Suspense } from "react"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -25,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
@@ -65,10 +67,28 @@ export const Route = createFileRoute(
   component: Page,
 })
 
+function InviteMembersSkeleton() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center p-6">
+      <Skeleton className="h-80 w-full max-w-md" />
+    </div>
+  )
+}
+
 function Page() {
+  return (
+    <Suspense fallback={<InviteMembersSkeleton />}>
+      <InviteMembersContent />
+    </Suspense>
+  )
+}
+
+function InviteMembersContent() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { data: activeOrganization } = useQuery(fullOrganizationQueryOptions())
+  const { data: activeOrganization } = useSuspenseQuery(
+    fullOrganizationQueryOptions()
+  )
 
   const inviteMembersFormSchema = z.object({
     emails: z
