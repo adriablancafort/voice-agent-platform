@@ -12,6 +12,7 @@
   "dependencies": {
     "@trigger.dev/sdk": "catalog:",
     "@workspace/email": "workspace:*",
+    "@workspace/shared": "workspace:*",
     "dotenv": "catalog:"
   },
   "devDependencies": {

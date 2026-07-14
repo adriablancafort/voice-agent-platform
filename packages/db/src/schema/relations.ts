@@ -9,6 +9,10 @@ import {
   session,
   user,
 } from "@workspace/db/schema/auth"
+import {
+  batchCallRecipientsTable,
+  batchCallsTable,
+} from "@workspace/db/schema/batch-calls"
 import { callsTable } from "@workspace/db/schema/calls"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
@@ -16,6 +20,8 @@ export const relations = defineRelations(
   {
     agentsTable,
     agentVersionsTable,
+    batchCallsTable,
+    batchCallRecipientsTable,
     callsTable,
     phoneNumbersTable,
     user,
@@ -43,6 +49,10 @@ export const relations = defineRelations(
         from: r.agentsTable.id,
         to: r.callsTable.agentId,
       }),
+      batchCalls: r.many.batchCallsTable({
+        from: r.agentsTable.id,
+        to: r.batchCallsTable.agentId,
+      }),
     },
     agentVersionsTable: {
       agent: r.one.agentsTable({
@@ -56,6 +66,38 @@ export const relations = defineRelations(
       calls: r.many.callsTable({
         from: r.agentVersionsTable.id,
         to: r.callsTable.agentVersionId,
+      }),
+      batchCalls: r.many.batchCallsTable({
+        from: r.agentVersionsTable.id,
+        to: r.batchCallsTable.agentVersionId,
+      }),
+    },
+    batchCallsTable: {
+      organization: r.one.organization({
+        from: r.batchCallsTable.organizationId,
+        to: r.organization.id,
+      }),
+      phoneNumber: r.one.phoneNumbersTable({
+        from: r.batchCallsTable.phoneNumberId,
+        to: r.phoneNumbersTable.id,
+      }),
+      agent: r.one.agentsTable({
+        from: r.batchCallsTable.agentId,
+        to: r.agentsTable.id,
+      }),
+      agentVersion: r.one.agentVersionsTable({
+        from: r.batchCallsTable.agentVersionId,
+        to: r.agentVersionsTable.id,
+      }),
+      recipients: r.many.batchCallRecipientsTable({
+        from: r.batchCallsTable.id,
+        to: r.batchCallRecipientsTable.batchCallId,
+      }),
+    },
+    batchCallRecipientsTable: {
+      batchCall: r.one.batchCallsTable({
+        from: r.batchCallRecipientsTable.batchCallId,
+        to: r.batchCallsTable.id,
       }),
     },
     callsTable: {
@@ -84,6 +126,10 @@ export const relations = defineRelations(
       agentVersion: r.one.agentVersionsTable({
         from: r.phoneNumbersTable.agentVersionId,
         to: r.agentVersionsTable.id,
+      }),
+      batchCalls: r.many.batchCallsTable({
+        from: r.phoneNumbersTable.id,
+        to: r.batchCallsTable.phoneNumberId,
       }),
     },
     user: {
@@ -132,6 +178,10 @@ export const relations = defineRelations(
       calls: r.many.callsTable({
         from: r.organization.id,
         to: r.callsTable.organizationId,
+      }),
+      batchCalls: r.many.batchCallsTable({
+        from: r.organization.id,
+        to: r.batchCallsTable.organizationId,
       }),
     },
     member: {

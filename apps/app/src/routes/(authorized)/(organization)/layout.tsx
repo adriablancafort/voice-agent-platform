@@ -4,7 +4,7 @@ import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
 
 export const Route = createFileRoute("/(authorized)/(organization)")({
-  component: OrganizationLayout,
+  component: Layout,
 })
 
 function OrganizationRedirectGuard() {
@@ -19,7 +19,7 @@ function OrganizationRedirectGuard() {
   return null
 }
 
-function OrganizationLayout() {
+function Layout() {
   return (
     <>
       <OrganizationRedirectGuard />

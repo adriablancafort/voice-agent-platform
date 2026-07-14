@@ -19,7 +19,12 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
-import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
+import type {
+  BatchCallListItem,
+  BatchCallListResponse,
+  BatchCallStatus,
+} from "@workspace/shared/api/batch-calls/types"
+import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import {
   InputGroup,
@@ -41,8 +46,6 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
-import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -50,11 +53,33 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   timeStyle: "short",
 })
 
-const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
+const statusLabel: Record<BatchCallStatus, string> = {
+  scheduled: "Scheduled",
+  triggered: "Triggered",
+}
+
+const columns: ColumnDef<BatchCallListItem>[] = [
   {
-    accessorKey: "number",
-    header: "Number",
-    cell: ({ row }) => row.original.number,
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => row.original.name,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge variant="secondary">{statusLabel[row.original.status]}</Badge>
+    ),
+  },
+  {
+    id: "recipients",
+    header: "Recipients",
+    cell: ({ row }) => row.original.totalCount,
+  },
+  {
+    id: "from",
+    header: "From",
+    cell: ({ row }) => row.original.phoneNumber?.number,
   },
   {
     id: "agent",
@@ -73,40 +98,25 @@ const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
   {
     id: "version",
     header: "Version",
-    cell: ({ row }) => {
-      if (!row.original.agent) {
-        return null
-      }
-
-      if (!row.original.agentVersion) {
-        return "Latest (draft)"
-      }
-
-      return `V${row.original.agentVersion.number}`
-    },
+    cell: ({ row }) =>
+      row.original.agentVersion
+        ? `V${row.original.agentVersion.number}`
+        : "Latest (draft)",
   },
   {
-    accessorKey: "updatedAt",
-    header: ({ column }) => <SortableHeader column={column} title="Updated" />,
-    cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row }) => <PhoneNumberRowActions phoneNumber={row.original} />,
+    id: "when",
+    accessorFn: (row) => row.scheduledAt ?? row.createdAt,
+    header: ({ column }) => <SortableHeader column={column} title="When" />,
+    cell: ({ row }) =>
+      dateFormatter.format(
+        new Date(row.original.scheduledAt ?? row.original.createdAt)
+      ),
   },
 ]
 
-export function PhoneNumbersDataTable({
-  data,
-}: {
-  data: PhoneNumberListResponse
-}) {
+export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [selected, setSelected] = useState<
-    PhoneNumberListResponse[number] | null
-  >(null)
 
   const table = useReactTable({
     data,
@@ -128,11 +138,11 @@ export function PhoneNumbersDataTable({
     <div>
       <InputGroup className="mb-5 max-w-xs">
         <InputGroupInput
-          value={(table.getColumn("number")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("number")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          placeholder="Search phone numbers..."
+          placeholder="Search batch calls..."
         />
         <InputGroupAddon>
           <Search />
@@ -144,12 +154,7 @@ export function PhoneNumbersDataTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className={
-                      header.column.id === "actions" ? "w-0" : undefined
-                    }
-                  >
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -164,23 +169,9 @@ export function PhoneNumbersDataTable({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className="cursor-pointer"
-                  onClick={() => setSelected(row.original)}
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={
-                        cell.column.id === "actions" ? "w-0" : undefined
-                      }
-                      onClick={
-                        cell.column.id === "actions"
-                          ? (event) => event.stopPropagation()
-                          : undefined
-                      }
-                    >
+                    <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -260,19 +251,6 @@ export function PhoneNumbersDataTable({
           </Button>
         </div>
       </div>
-
-      {selected && (
-        <PhoneNumberSheet
-          key={selected.id}
-          phoneNumber={selected}
-          open
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelected(null)
-            }
-          }}
-        />
-      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { Link, useMatchRoute } from "@tanstack/react-router"
 import {
   HistoryIcon,
   PhoneIcon,
+  PhoneOutgoingIcon,
   SettingsIcon,
   WorkflowIcon,
 } from "lucide-react"
@@ -33,6 +34,11 @@ const nav = {
           title: "Phone numbers",
           url: "/phone-numbers",
           icon: <PhoneIcon />,
+        },
+        {
+          title: "Batch calls",
+          url: "/batch-calls",
+          icon: <PhoneOutgoingIcon />,
         },
       ],
     },
