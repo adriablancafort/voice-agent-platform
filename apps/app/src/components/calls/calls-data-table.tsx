@@ -57,6 +57,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -267,6 +268,9 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
 export function CallsDataTable({ data }: { data: CallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const [selectedCall, setSelectedCall] = useState<
+    CallListResponse[number] | null
+  >(null)
 
   const table = useReactTable({
     data,
@@ -402,7 +406,11 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() => setSelectedCall(row.original)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -484,6 +492,17 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
           </Button>
         </div>
       </div>
+      {selectedCall && (
+        <CallDetailSheet
+          call={selectedCall}
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              setSelectedCall(null)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import type { z } from "zod"
 
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import type {
+  callTranscriptSchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
   startOutboundCallRequestSchema,
@@ -24,6 +25,8 @@ export type CallDispatchMetadata = {
   toNumber?: string
   fromNumber?: string
 }
+
+export type CallTranscript = z.infer<typeof callTranscriptSchema>
 
 export type StartWebCallRequest = z.infer<typeof startWebCallRequestSchema>
 export type StartInboundCallRequest = z.infer<
@@ -75,6 +78,36 @@ export type CallListResponse = {
   agent: { name: string } | null
   agentVersion: { number: number } | null
 }[]
+
+export type CallDetailResponse = {
+  id: string
+  organizationId: string
+  agentId: string
+  agentVersionId: string | null
+  channel: CallChannel
+  direction: CallDirection
+  status: CallStatus
+  fromNumber: string | null
+  toNumber: string | null
+  sttModel: string
+  llmModel: string
+  ttsModel: string
+  livekitRoomName: string
+  startedAt: Date
+  endedAt: Date | null
+  durationMs: number | null
+  sttCost: string | null
+  llmCost: string | null
+  ttsCost: string | null
+  telephonyCost: string | null
+  platformCost: string | null
+  totalCost: string | null
+  transcript: CallTranscript | null
+  createdAt: Date
+  updatedAt: Date
+  agent: { name: string } | null
+  agentVersion: { number: number } | null
+}
 
 export type TriggerOutboundCallResponse = {
   ok: true

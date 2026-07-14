@@ -29,11 +29,23 @@ export const startOutboundCallRequestSchema = z
   })
   .strict()
 
+export const callTranscriptItemSchema = z
+  .object({
+    id: z.string().min(1),
+    role: z.enum(["user", "assistant"]),
+    content: z.string().min(1),
+    createdAt: z.number().int().nonnegative(),
+  })
+  .strict()
+
+export const callTranscriptSchema = z.array(callTranscriptItemSchema)
+
 export const completeCallRequestSchema = z
   .object({
     callId: z.uuid(),
     endedAt: z.iso.datetime(),
     status: z.enum(["completed"]),
+    transcript: callTranscriptSchema,
   })
   .strict()
 

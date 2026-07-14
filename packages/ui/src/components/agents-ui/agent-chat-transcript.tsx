@@ -46,6 +46,10 @@ export interface AgentChatTranscriptProps extends ComponentProps<"div"> {
    * Additional CSS class names to apply to the conversation container.
    */
   className?: string
+  /**
+   * Initial scroll behavior.
+   */
+  initial?: ComponentProps<typeof Conversation>["initial"]
 }
 
 /**

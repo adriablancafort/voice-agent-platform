@@ -82,7 +82,8 @@ export function startCall(
 
 export function completeCall(
   callId: string,
-  status: CompleteCallRequest["status"]
+  status: CompleteCallRequest["status"],
+  transcript: CompleteCallRequest["transcript"]
 ) {
   const endedAt = new Date().toISOString()
 
@@ -93,6 +94,7 @@ export function completeCall(
         callId,
         endedAt,
         status,
+        transcript,
       },
     }
   )

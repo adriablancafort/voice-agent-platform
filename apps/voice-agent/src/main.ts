@@ -16,6 +16,7 @@ import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"
 import { completeCall, parseDispatchMetadata, startCall } from "@/lib/calls"
 import { env } from "@/lib/env"
+import { buildCallTranscript } from "@/lib/transcript"
 
 interface ProcessUserData {
   vad: silero.VAD
@@ -60,7 +61,7 @@ export default defineAgent<ProcessUserData>({
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
       if (remoteParticipant.identity === participant.identity) {
-        completeCall(callId, "completed")
+        completeCall(callId, "completed", buildCallTranscript(session.history))
       }
     })
 

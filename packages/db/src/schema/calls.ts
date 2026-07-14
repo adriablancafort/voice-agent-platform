@@ -1,6 +1,7 @@
 import {
   index,
   integer,
+  jsonb,
   numeric,
   pgTable,
   text,
@@ -10,6 +11,7 @@ import {
 
 import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
+import type { CallTranscript } from "@workspace/shared/api/calls/types"
 
 export const callsTable = pgTable(
   "calls",
@@ -46,6 +48,7 @@ export const callsTable = pgTable(
     platformCost: numeric("platform_cost", { precision: 12, scale: 6 }),
     totalCost: numeric("total_cost", { precision: 12, scale: 6 }),
     livekitRoomName: text("livekit_room_name").notNull(),
+    transcript: jsonb().$type<CallTranscript | null>(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),

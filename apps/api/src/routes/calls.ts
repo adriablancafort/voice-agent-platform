@@ -12,6 +12,7 @@ import {
   triggerOutboundCallRequestSchema,
 } from "@workspace/shared/api/calls/schemas"
 import type {
+  CallDetailResponse,
   CallListResponse,
   CompleteCallResponse,
   StartCallResponse,
@@ -290,6 +291,7 @@ callRoutes.post(
           telephonyCost: costs.telephony.toFixed(6),
           platformCost: costs.platform.toFixed(6),
           totalCost: costs.total.toFixed(6),
+          transcript: payload.transcript,
           updatedAt: new Date(),
         })
         .where(eq(callsTable.id, payload.callId))
@@ -305,6 +307,40 @@ callRoutes.post(
   }
 )
 
+callRoutes.get("/:callId", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+  const callId = c.req.param("callId")
+
+  try {
+    const call = await db.query.callsTable.findFirst({
+      where: {
+        id: callId,
+        organizationId,
+      },
+      with: {
+        agent: {
+          columns: {
+            name: true,
+          },
+        },
+        agentVersion: {
+          columns: {
+            number: true,
+          },
+        },
+      },
+    })
+
+    if (!call) {
+      return c.json({ error: "Call not found" }, 404)
+    }
+
+    return c.json(call satisfies CallDetailResponse)
+  } catch {
+    return c.json({ error: "Failed to fetch call" }, 500)
+  }
+})
+
 callRoutes.get("/", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
 
@@ -312,6 +348,9 @@ callRoutes.get("/", requireOrganization, async (c) => {
     const calls = await db.query.callsTable.findMany({
       where: {
         organizationId,
+      },
+      columns: {
+        transcript: false,
       },
       with: {
         agent: {
