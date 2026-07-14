@@ -42,8 +42,12 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       overrideDefaultEmailVerification: true,
+      rateLimit: {
+        window: 300,
+        max: 3,
+      },
       async sendVerificationOTP({ email, otp, type }) {
-        if (type == "email-verification") {
+        if (type === "email-verification") {
           await tasks.trigger("send-verification-otp-email", {
             to: email,
             otp,
@@ -69,6 +73,10 @@ export const auth = betterAuth({
       },
     }),
   ],
+  rateLimit: {
+    window: 60,
+    max: 100,
+  },
   telemetry: {
     enabled: false,
   },
