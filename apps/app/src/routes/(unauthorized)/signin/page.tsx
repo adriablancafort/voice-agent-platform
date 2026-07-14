@@ -68,6 +68,12 @@ function Page() {
         password: values.password,
       })
       if (result.error) {
+        if (result.error.code === "EMAIL_NOT_VERIFIED") {
+          navigate({
+            to: "/email-verification",
+            search: { email: values.email, redirect },
+          })
+        }
         throw new Error(result.error.message)
       }
     },

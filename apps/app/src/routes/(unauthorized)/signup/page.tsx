@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import {
   createFileRoute,
   Link,
@@ -41,7 +41,6 @@ function Page() {
   const redirect = new URLSearchParams(searchStr).get("redirect") ?? undefined
   const email =
     new URLSearchParams(redirect?.split("?")[1] ?? "").get("email") ?? ""
-  const queryClient = useQueryClient()
   const callbackURL = redirect
     ? `${env.FRONTEND_URL}${redirect}`
     : env.FRONTEND_URL
@@ -86,16 +85,11 @@ function Page() {
         throw new Error(result.error.message)
       }
     },
-    onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["session"] })
-      toast.success("Account created")
-
-      if (redirect) {
-        navigate({ href: redirect })
-        return
-      }
-
-      navigate({ to: "/" })
+    onSuccess: (_, values) => {
+      navigate({
+        to: "/email-verification",
+        search: { email: values.email, redirect },
+      })
     },
     onError: (error) => {
       toast.error(error.message)

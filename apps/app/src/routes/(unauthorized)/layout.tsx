@@ -4,6 +4,7 @@ import { z } from "zod"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
 const searchSchema = z.object({
+  email: z.email().optional(),
   redirect: z.string().optional(),
 })
 

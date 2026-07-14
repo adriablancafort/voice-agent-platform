@@ -16,6 +16,7 @@ import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthoriz
 import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
 import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
 import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
+import { Route as unauthorizedEmailVerificationPageRouteImport } from './routes/(unauthorized)/email-verification/page'
 import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
 import { Route as authorizedJoinOrganizationPageRouteImport } from './routes/(authorized)/join-organization/page'
 import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
@@ -69,6 +70,12 @@ const unauthorizedResetPasswordPageRoute =
   unauthorizedResetPasswordPageRouteImport.update({
     id: '/reset-password/',
     path: '/reset-password/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
+const unauthorizedEmailVerificationPageRoute =
+  unauthorizedEmailVerificationPageRouteImport.update({
+    id: '/email-verification/',
+    path: '/email-verification/',
     getParentRoute: () => unauthorizedLayoutRoute,
   } as any)
 const authorizedSelectOrganizationPageRoute =
@@ -189,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/create-organization/': typeof authorizedCreateOrganizationPageRoute
   '/join-organization/': typeof authorizedJoinOrganizationPageRoute
   '/select-organization/': typeof authorizedSelectOrganizationPageRoute
+  '/email-verification/': typeof unauthorizedEmailVerificationPageRoute
   '/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/signin/': typeof unauthorizedSigninPageRoute
@@ -213,6 +221,7 @@ export interface FileRoutesByTo {
   '/create-organization': typeof authorizedCreateOrganizationPageRoute
   '/join-organization': typeof authorizedJoinOrganizationPageRoute
   '/select-organization': typeof authorizedSelectOrganizationPageRoute
+  '/email-verification': typeof unauthorizedEmailVerificationPageRoute
   '/reset-password': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
   '/signin': typeof unauthorizedSigninPageRoute
@@ -241,6 +250,7 @@ export interface FileRoutesById {
   '/(authorized)/create-organization/': typeof authorizedCreateOrganizationPageRoute
   '/(authorized)/join-organization/': typeof authorizedJoinOrganizationPageRoute
   '/(authorized)/select-organization/': typeof authorizedSelectOrganizationPageRoute
+  '/(unauthorized)/email-verification/': typeof unauthorizedEmailVerificationPageRoute
   '/(unauthorized)/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/create-organization/'
     | '/join-organization/'
     | '/select-organization/'
+    | '/email-verification/'
     | '/reset-password/'
     | '/set-new-password/'
     | '/signin/'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/create-organization'
     | '/join-organization'
     | '/select-organization'
+    | '/email-verification'
     | '/reset-password'
     | '/set-new-password'
     | '/signin'
@@ -318,6 +330,7 @@ export interface FileRouteTypes {
     | '/(authorized)/create-organization/'
     | '/(authorized)/join-organization/'
     | '/(authorized)/select-organization/'
+    | '/(unauthorized)/email-verification/'
     | '/(unauthorized)/reset-password/'
     | '/(unauthorized)/set-new-password/'
     | '/(unauthorized)/signin/'
@@ -393,6 +406,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password/'
       preLoaderRoute: typeof unauthorizedResetPasswordPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/email-verification/': {
+      id: '/(unauthorized)/email-verification/'
+      path: '/email-verification'
+      fullPath: '/email-verification/'
+      preLoaderRoute: typeof unauthorizedEmailVerificationPageRouteImport
       parentRoute: typeof unauthorizedLayoutRoute
     }
     '/(authorized)/select-organization/': {
@@ -634,6 +654,7 @@ const authorizedLayoutRouteWithChildren =
   authorizedLayoutRoute._addFileChildren(authorizedLayoutRouteChildren)
 
 interface unauthorizedLayoutRouteChildren {
+  unauthorizedEmailVerificationPageRoute: typeof unauthorizedEmailVerificationPageRoute
   unauthorizedResetPasswordPageRoute: typeof unauthorizedResetPasswordPageRoute
   unauthorizedSetNewPasswordPageRoute: typeof unauthorizedSetNewPasswordPageRoute
   unauthorizedSigninPageRoute: typeof unauthorizedSigninPageRoute
@@ -641,6 +662,8 @@ interface unauthorizedLayoutRouteChildren {
 }
 
 const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
+  unauthorizedEmailVerificationPageRoute:
+    unauthorizedEmailVerificationPageRoute,
   unauthorizedResetPasswordPageRoute: unauthorizedResetPasswordPageRoute,
   unauthorizedSetNewPasswordPageRoute: unauthorizedSetNewPasswordPageRoute,
   unauthorizedSigninPageRoute: unauthorizedSigninPageRoute,

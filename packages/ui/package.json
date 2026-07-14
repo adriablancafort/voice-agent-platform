@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
+    "input-otp": "^1.4.2",
     "livekit-client": "catalog:",
     "lucide-react": "catalog:",
     "motion": "^12.38.0",

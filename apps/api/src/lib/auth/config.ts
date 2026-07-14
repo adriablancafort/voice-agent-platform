@@ -1,7 +1,7 @@
 import { tasks } from "@trigger.dev/sdk"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { organization } from "better-auth/plugins"
+import { emailOTP, organization } from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
@@ -20,6 +20,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     async sendResetPassword(data) {
       await tasks.trigger("send-reset-password-email", {
         to: data.user.email,
@@ -28,6 +29,10 @@ export const auth = betterAuth({
       })
     },
   },
+  emailVerification: {
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
+  },
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
@@ -35,6 +40,17 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    emailOTP({
+      overrideDefaultEmailVerification: true,
+      async sendVerificationOTP({ email, otp, type }) {
+        if (type == "email-verification") {
+          await tasks.trigger("send-verification-otp-email", {
+            to: email,
+            otp,
+          })
+        }
+      },
+    }),
     organization({
       ac,
       roles: {
