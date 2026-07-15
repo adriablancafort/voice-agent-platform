@@ -3,6 +3,8 @@ import { parseJsonObject } from "@/lib/json"
 
 const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
 
+const SYSTEM_VARIABLES = new Set(["date", "time", "phone_number"])
+
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", {
     timeZone: "UTC",
@@ -52,6 +54,15 @@ export function createVariables(attributes: CallVariableValues) {
         const value = values[key]
         return value === undefined ? match : value
       })
+    },
+    snapshot() {
+      const variables: CallVariableValues = {}
+      for (const [key, value] of Object.entries(values)) {
+        if (!SYSTEM_VARIABLES.has(key)) {
+          variables[key] = value
+        }
+      }
+      return variables
     },
   }
 }

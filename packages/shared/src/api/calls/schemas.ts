@@ -46,6 +46,7 @@ export const completeCallRequestSchema = z
     endedAt: z.iso.datetime(),
     status: z.enum(["completed"]),
     transcript: callTranscriptSchema,
+    variables: z.record(z.string(), z.string()).optional(),
   })
   .strict()
 

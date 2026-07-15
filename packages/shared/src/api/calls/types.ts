@@ -103,6 +103,7 @@ export type CallDetailResponse = {
   platformCost: string | null
   totalCost: string | null
   transcript: CallTranscript | null
+  variables: CallVariableValues | null
   createdAt: Date
   updatedAt: Date
   agent: { name: string } | null

@@ -61,7 +61,12 @@ export default defineAgent<ProcessUserData>({
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
       if (remoteParticipant.identity === participant.identity) {
-        completeCall(callId, "completed", buildCallTranscript(session.history))
+        completeCall(
+          callId,
+          "completed",
+          buildCallTranscript(session.history),
+          variables.snapshot()
+        )
       }
     })
 

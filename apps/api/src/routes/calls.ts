@@ -292,6 +292,7 @@ callRoutes.post(
           platformCost: costs.platform.toFixed(6),
           totalCost: costs.total.toFixed(6),
           transcript: payload.transcript,
+          variables: payload.variables ?? null,
           updatedAt: new Date(),
         })
         .where(eq(callsTable.id, payload.callId))
