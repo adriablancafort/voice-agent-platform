@@ -39,6 +39,16 @@ export function ConversationNode({
       <div className="p-3 pt-0 text-xs text-muted-foreground">
         {data.instructions.text}
       </div>
+      {data.extractVariables && (
+        <>
+          <div className="px-3 text-xs text-foreground">Extracting:</div>
+          <div className="p-3 pt-1 text-xs text-muted-foreground">
+            {data.extractVariables
+              .map((variable) => `{{${variable.key}}}`)
+              .join(", ")}
+          </div>
+        </>
+      )}
       <Handle
         type="source"
         position={Position.Bottom}

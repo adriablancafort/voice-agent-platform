@@ -1,5 +1,7 @@
 import { llm, voice } from "@livekit/agents"
+import { z } from "zod"
 
+import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
 import { FLOW_INSTRUCTIONS } from "@/flow/prompts"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
@@ -40,18 +42,53 @@ export class FlowAgent extends voice.Agent {
   }
 
   private _buildNodeTools(node: FlowConversationNode): llm.ToolContext {
-    return Object.fromEntries(
-      node.outgoingEdges.map((edge) => [
-        edge.transitionToolName,
-        llm.tool({
-          description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition)}`,
-          execute: async () => {
-            await this._transitionTo(edge.targetNode)
-            return `Transitioned to "${edge.targetNode.name}"`
-          },
-        }),
-      ])
-    )
+    const tools: llm.ToolContext = {}
+
+    for (const edge of node.outgoingEdges) {
+      tools[edge.transitionToolName] = llm.tool({
+        description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition)}`,
+        execute: async () => {
+          await this._transitionTo(edge.targetNode)
+          return `Transitioned to "${edge.targetNode.name}"`
+        },
+      })
+    }
+
+    if (node.extractVariables) {
+      tools.extract_variables = this._buildExtractTool(node.extractVariables)
+    }
+
+    return tools
+  }
+
+  private _buildExtractTool(extractVariables: ExtractVariable[]) {
+    const shape: Record<string, z.ZodType> = {}
+
+    for (const variable of extractVariables) {
+      let field: z.ZodType =
+        variable.type === "number"
+          ? z.number()
+          : variable.type === "boolean"
+            ? z.boolean()
+            : z.string()
+
+      if (variable.description) {
+        field = field.describe(variable.description)
+      }
+
+      shape[variable.key] = field.optional()
+    }
+
+    return llm.tool({
+      description:
+        "Call when the user provides the requested values. Only include the fields you are confident about.",
+      parameters: z.object(shape),
+      execute: async (args) => {
+        for (const [key, value] of Object.entries(args)) {
+          this.variables.set(key, String(value))
+        }
+      },
+    })
   }
 
   private async _transitionTo(node: FlowNode) {

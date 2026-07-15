@@ -1,4 +1,7 @@
-import type { FlowNodeInstructions } from "@workspace/shared/api/agent-config/types"
+import type {
+  ExtractVariable,
+  FlowNodeInstructions,
+} from "@workspace/shared/api/agent-config/types"
 
 // Runtime flow
 export interface FlowConversationNode {
@@ -7,6 +10,7 @@ export interface FlowConversationNode {
   isStart?: true
   startSpeaker?: "agent" | "user"
   instructions: FlowNodeInstructions
+  extractVariables?: ExtractVariable[]
   outgoingEdges: FlowEdge[]
 }
 

@@ -32,6 +32,17 @@ export const flowNodeInstructionsSchema = z.object({
   text: z.string().trim().min(1),
 })
 
+export const extractVariableSchema = z
+  .object({
+    key: z
+      .string()
+      .trim()
+      .regex(/^[a-z0-9_]+$/, "Invalid variable key"),
+    description: z.string().trim(),
+    type: z.enum(["string", "number", "boolean"]),
+  })
+  .strict()
+
 export const flowNodeConfigSchema = z.discriminatedUnion("type", [
   z.object({
     id: z.string().trim().min(1),
@@ -43,6 +54,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         isStart: z.literal(true).optional(),
         startSpeaker: z.enum(["agent", "user"]).optional(),
         instructions: flowNodeInstructionsSchema,
+        extractVariables: z.array(extractVariableSchema).optional(),
       })
       .strict(),
   }),

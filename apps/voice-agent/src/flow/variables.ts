@@ -55,6 +55,12 @@ export function createVariables(attributes: CallVariableValues) {
         return value === undefined ? match : value
       })
     },
+    set(key: string, value: string) {
+      values[key] = value
+    },
+    get(key: string) {
+      return values[key]
+    },
     snapshot() {
       const variables: CallVariableValues = {}
       for (const [key, value] of Object.entries(values)) {

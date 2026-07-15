@@ -2,6 +2,7 @@ import type { z } from "zod"
 
 import type {
   agentConfigSchema,
+  extractVariableSchema,
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
@@ -10,6 +11,7 @@ import type {
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
 export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
+export type ExtractVariable = z.infer<typeof extractVariableSchema>
 export type FlowNodeConfig = z.infer<typeof flowNodeConfigSchema>
 export type FlowConversationNode = Extract<
   FlowNodeConfig,
