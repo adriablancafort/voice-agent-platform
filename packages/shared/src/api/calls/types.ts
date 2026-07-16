@@ -110,6 +110,8 @@ export type CallDetailResponse = {
   agentVersion: { number: number } | null
 }
 
+export type CallDownloadResponse = CallDetailResponse[]
+
 export type TriggerOutboundCallResponse = {
   ok: true
 }

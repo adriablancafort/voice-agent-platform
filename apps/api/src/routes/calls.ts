@@ -13,6 +13,7 @@ import {
 } from "@workspace/shared/api/calls/schemas"
 import type {
   CallDetailResponse,
+  CallDownloadResponse,
   CallListResponse,
   CompleteCallResponse,
   StartCallResponse,
@@ -307,6 +308,37 @@ callRoutes.post(
     }
   }
 )
+
+callRoutes.get("/download", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+
+  try {
+    const calls = await db.query.callsTable.findMany({
+      where: {
+        organizationId,
+      },
+      with: {
+        agent: {
+          columns: {
+            name: true,
+          },
+        },
+        agentVersion: {
+          columns: {
+            number: true,
+          },
+        },
+      },
+      orderBy: {
+        startedAt: "desc",
+      },
+    })
+
+    return c.json(calls satisfies CallDownloadResponse)
+  } catch {
+    return c.json({ error: "Failed to download calls" }, 500)
+  }
+})
 
 callRoutes.get("/:callId", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
