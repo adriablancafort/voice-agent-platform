@@ -70,12 +70,64 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
   }),
 ])
 
+export const expressionOperatorSchema = z.enum([
+  "greater_than",
+  "greater_or_equal",
+  "less_than",
+  "less_or_equal",
+  "equals",
+  "not_equals",
+  "contains",
+  "not_contains",
+  "exists",
+  "not_exists",
+])
+
+const valuelessOperators = new Set<z.infer<typeof expressionOperatorSchema>>([
+  "exists",
+  "not_exists",
+])
+
+export const expressionConditionSchema = z
+  .object({
+    variable: z.string().trim().min(1),
+    operator: expressionOperatorSchema,
+    value: z.string().optional(),
+  })
+  .strict()
+  .refine(
+    (condition) =>
+      valuelessOperators.has(condition.operator) ||
+      (condition.value?.trim().length ?? 0) > 0,
+    {
+      message: "Value is required for this operator.",
+      path: ["value"],
+    }
+  )
+
+export const flowEdgeConditionSchema = z.discriminatedUnion("type", [
+  z
+    .object({
+      type: z.literal("prompt"),
+      prompt: z.string().trim().min(1),
+    })
+    .strict(),
+  z
+    .object({
+      type: z.literal("expression"),
+      match: z.enum(["all", "any"]),
+      conditions: z.array(expressionConditionSchema).min(1),
+    })
+    .strict(),
+  z.object({ type: z.literal("always") }).strict(),
+])
+
 export const flowEdgeConfigSchema = z.object({
   id: z.string().trim().min(1),
   source: z.string().trim().min(1),
   target: z.string().trim().min(1),
   data: z.object({
-    condition: z.string().trim().min(1),
+    condition: flowEdgeConditionSchema,
   }),
 })
 
@@ -120,6 +172,7 @@ export const agentConfigSchema = z
 
     const edgeIds = new Set<string>()
     const sourceTargetKeys = new Set<string>()
+    const edgesBySource = new Map<string, number>()
 
     config.edges.forEach((edge, index) => {
       // Edge IDs must be unique
@@ -160,5 +213,21 @@ export const agentConfigSchema = z
         })
       }
       sourceTargetKeys.add(key)
+      edgesBySource.set(edge.source, (edgesBySource.get(edge.source) ?? 0) + 1)
+    })
+
+    // No more edges if there is an always
+    config.edges.forEach((edge, index) => {
+      if (
+        edge.data.condition.type === "always" &&
+        (edgesBySource.get(edge.source) ?? 0) > 1
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["edges", index],
+          message:
+            "An always transition must be the only transition on a node.",
+        })
+      }
     })
   })

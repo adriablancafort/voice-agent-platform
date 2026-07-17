@@ -47,7 +47,10 @@ export function createDefaultAgentConfig(): AgentConfig {
         source: "conversation",
         target: "end",
         data: {
-          condition: "Conversation completed",
+          condition: {
+            type: "prompt",
+            prompt: "Conversation completed",
+          },
         },
       },
     ],

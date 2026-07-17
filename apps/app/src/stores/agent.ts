@@ -232,7 +232,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     const edge: FlowEdgeConfig = {
       ...connection,
       id: crypto.randomUUID(),
-      data: { condition: "Transition condition" },
+      data: {
+        condition: { type: "prompt", prompt: "Transition condition" },
+      },
     }
 
     set((state) => {

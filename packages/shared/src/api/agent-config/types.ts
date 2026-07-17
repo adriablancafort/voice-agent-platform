@@ -2,7 +2,10 @@ import type { z } from "zod"
 
 import type {
   agentConfigSchema,
+  expressionConditionSchema,
+  expressionOperatorSchema,
   extractVariableSchema,
+  flowEdgeConditionSchema,
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
@@ -19,4 +22,7 @@ export type FlowConversationNode = Extract<
 >
 export type FlowEndNode = Extract<FlowNodeConfig, { type: "end" }>
 export type FlowEdgeConfig = z.infer<typeof flowEdgeConfigSchema>
+export type FlowEdgeCondition = z.infer<typeof flowEdgeConditionSchema>
+export type ExpressionCondition = z.infer<typeof expressionConditionSchema>
+export type ExpressionOperator = z.infer<typeof expressionOperatorSchema>
 export type TurnDetectionConfig = z.infer<typeof turnDetectionConfigSchema>

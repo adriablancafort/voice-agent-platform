@@ -28,7 +28,16 @@ function collectVariableKeys(config: AgentConfig) {
   }
 
   for (const edge of config.edges) {
-    extractKeys(edge.data.condition, keys)
+    const condition = edge.data.condition
+    if (condition.type === "prompt") {
+      extractKeys(condition.prompt, keys)
+    } else if (condition.type === "expression") {
+      for (const entry of condition.conditions) {
+        if (!SYSTEM_VARIABLES.has(entry.variable)) {
+          keys.add(entry.variable)
+        }
+      }
+    }
   }
 
   return [...keys].sort()

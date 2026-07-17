@@ -1,5 +1,6 @@
 import type {
   ExtractVariable,
+  FlowEdgeCondition,
   FlowNodeInstructions,
 } from "@workspace/shared/api/agent-config/types"
 
@@ -22,7 +23,7 @@ export interface FlowEndNode {
 export type FlowNode = FlowConversationNode | FlowEndNode
 
 export interface FlowEdge {
-  condition: string
+  condition: FlowEdgeCondition
   transitionToolName: string
   targetNode: FlowNode
 }

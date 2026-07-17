@@ -2,6 +2,7 @@ import { llm, voice } from "@livekit/agents"
 import { z } from "zod"
 
 import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
+import { evaluateExpression } from "@/flow/expression"
 import { FLOW_INSTRUCTIONS } from "@/flow/prompts"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
@@ -45,23 +46,32 @@ export class FlowAgent extends voice.Agent {
     const tools: llm.ToolContext = {}
 
     for (const edge of node.outgoingEdges) {
+      if (edge.condition.type !== "prompt") {
+        continue
+      }
+
       tools[edge.transitionToolName] = llm.tool({
-        description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition)}`,
+        description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition.prompt)}`,
         execute: async () => {
           await this._transitionTo(edge.targetNode)
-          return `Transitioned to "${edge.targetNode.name}"`
         },
       })
     }
 
     if (node.extractVariables) {
-      tools.extract_variables = this._buildExtractTool(node.extractVariables)
+      tools.extract_variables = this._buildExtractTool(
+        node,
+        node.extractVariables
+      )
     }
 
     return tools
   }
 
-  private _buildExtractTool(extractVariables: ExtractVariable[]) {
+  private _buildExtractTool(
+    node: FlowConversationNode,
+    extractVariables: ExtractVariable[]
+  ) {
     const shape: Record<string, z.ZodType> = {}
 
     for (const variable of extractVariables) {
@@ -87,25 +97,46 @@ export class FlowAgent extends voice.Agent {
         for (const [key, value] of Object.entries(args)) {
           this.variables.set(key, String(value))
         }
+
+        const target = this._matchedTarget(node)
+        if (target) {
+          await this._transitionTo(target)
+        }
       },
     })
   }
 
-  private async _transitionTo(node: FlowNode) {
-    if (node.type === "conversation") {
-      this._instructions = buildNodeInstructions(
-        this.graph,
-        node,
-        this.variables
-      )
-      await this.updateTools(this._buildNodeTools(node))
+  private _matchedTarget(node: FlowConversationNode): FlowNode | undefined {
+    const edge = node.outgoingEdges.find(
+      (candidate) =>
+        candidate.condition.type === "always" ||
+        (candidate.condition.type === "expression" &&
+          evaluateExpression(candidate.condition, this.variables))
+    )
+    return edge?.targetNode
+  }
 
-      if (node.instructions.type === "say") {
-        await this.session.say(this.variables.replace(node.instructions.text))
-      }
-    } else if (node.type === "end") {
+  private async _transitionTo(node: FlowNode) {
+    if (node.type === "end") {
       await endCall()
       return
+    }
+
+    this._instructions = buildNodeInstructions(this.graph, node, this.variables)
+    await this.updateTools(this._buildNodeTools(node))
+    await this._enterNode(node)
+  }
+
+  private async _enterNode(node: FlowConversationNode) {
+    const speech =
+      node.instructions.type === "say"
+        ? this.session.say(this.variables.replace(node.instructions.text))
+        : this.session.generateReply()
+
+    const target = this._matchedTarget(node)
+    if (target) {
+      await speech.waitForPlayout()
+      await this._transitionTo(target)
     }
   }
 
@@ -113,13 +144,7 @@ export class FlowAgent extends voice.Agent {
     const startNode = this.graph.startNode
 
     if (startNode.startSpeaker === "agent") {
-      if (startNode.instructions.type === "say") {
-        await this.session.say(
-          this.variables.replace(startNode.instructions.text)
-        )
-      } else {
-        await this.session.generateReply()
-      }
+      await this._enterNode(startNode)
     }
   }
 }

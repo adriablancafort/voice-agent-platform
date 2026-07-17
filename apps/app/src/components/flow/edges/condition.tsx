@@ -10,6 +10,7 @@ import type { FlowEdgeConfig } from "@workspace/shared/api/agent-config/types"
 import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
 import { FlowEdgeActions } from "./actions"
+import { formatConditionLabel } from "./condition-format"
 
 type ConditionEdgeType = Edge<FlowEdgeConfig["data"]>
 
@@ -51,7 +52,7 @@ export function ConditionEdge({
             )}
             onClick={() => selectEdge({ id, source, target, data: data! })}
           >
-            {data?.condition}
+            {data ? formatConditionLabel(data.condition) : ""}
           </div>
           {selected && <FlowEdgeActions id={id} />}
         </div>
