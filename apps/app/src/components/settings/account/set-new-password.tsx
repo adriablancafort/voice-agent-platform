@@ -207,7 +207,7 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
             </DialogClose>
             <Button type="submit" disabled={setNewPasswordMutation.isPending}>
               {setNewPasswordMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
+                <Spinner className="mx-8" />
               ) : (
                 "Set new password"
               )}

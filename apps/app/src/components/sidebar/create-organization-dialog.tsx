@@ -129,7 +129,7 @@ export function CreateOrganizationDialog({
               disabled={createOrganizationMutation.isPending}
             >
               {createOrganizationMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
+                <Spinner className="mx-8" />
               ) : (
                 "Create organization"
               )}

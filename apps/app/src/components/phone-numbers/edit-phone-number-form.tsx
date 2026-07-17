@@ -198,11 +198,7 @@ export function EditPhoneNumberForm({
               </Button>
             </DialogClose>
             <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
-              ) : (
-                "Save"
-              )}
+              {saveMutation.isPending ? <Spinner className="mx-8" /> : "Save"}
             </Button>
           </DialogFooter>
         </form>

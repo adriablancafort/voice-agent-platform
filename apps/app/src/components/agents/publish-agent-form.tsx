@@ -153,7 +153,7 @@ export function PublishAgentForm() {
             </DialogClose>
             <Button type="submit" disabled={publishAgentMutation.isPending}>
               {publishAgentMutation.isPending ? (
-                <Spinner className="mx-5 size-4" />
+                <Spinner className="mx-5" />
               ) : (
                 "Publish"
               )}

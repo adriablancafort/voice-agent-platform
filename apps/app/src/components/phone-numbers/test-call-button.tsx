@@ -320,7 +320,7 @@ export function TestCallButton() {
           <SheetFooter>
             <Button type="submit" disabled={readOnly}>
               {callMutation.isPending ? (
-                <Spinner className="size-4" />
+                <Spinner />
               ) : (
                 <>
                   <PhoneOutgoingIcon />

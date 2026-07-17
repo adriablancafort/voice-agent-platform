@@ -106,7 +106,7 @@ export function ImportAgentForm() {
             onClick={() => createAgentMutation.mutate()}
           >
             {createAgentMutation.isPending ? (
-              <Spinner className="mx-8 size-4" />
+              <Spinner className="mx-8" />
             ) : (
               "Import agent"
             )}

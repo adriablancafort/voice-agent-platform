@@ -128,7 +128,7 @@ export function CreateAgentForm() {
             </DialogClose>
             <Button type="submit" disabled={createAgentMutation.isPending}>
               {createAgentMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
+                <Spinner className="mx-8" />
               ) : (
                 "Create agent"
               )}

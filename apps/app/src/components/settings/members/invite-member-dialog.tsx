@@ -170,7 +170,7 @@ export function InviteMemberDialog({
             </DialogClose>
             <Button type="submit" disabled={inviteMemberMutation.isPending}>
               {inviteMemberMutation.isPending ? (
-                <Spinner className="mx-6 size-4" />
+                <Spinner className="mx-6" />
               ) : (
                 "Send invitation"
               )}

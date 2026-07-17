@@ -96,11 +96,7 @@ export function UserInformation({ name, email }: UserInformationProps) {
             type="submit"
             disabled={updateUserInformationMutation.isPending}
           >
-            {updateUserInformationMutation.isPending ? (
-              <Spinner className="size-4" />
-            ) : (
-              "Save"
-            )}
+            {updateUserInformationMutation.isPending ? <Spinner /> : "Save"}
           </Button>
         </FieldGroup>
       </form>

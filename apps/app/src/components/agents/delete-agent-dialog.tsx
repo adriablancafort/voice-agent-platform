@@ -68,7 +68,7 @@ export function DeleteAgentDialog({
             onClick={() => deleteAgentMutation.mutate()}
           >
             {deleteAgentMutation.isPending ? (
-              <Spinner className="mx-3 size-4" />
+              <Spinner className="mx-3" />
             ) : (
               "Delete"
             )}

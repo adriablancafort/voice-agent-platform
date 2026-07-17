@@ -78,7 +78,7 @@ export function InvitationRowActions({
               }}
             >
               {cancelInvitationMutation.isPending ? (
-                <Spinner className="mx-6 size-4" />
+                <Spinner className="mx-6" />
               ) : (
                 "Cancel invitation"
               )}

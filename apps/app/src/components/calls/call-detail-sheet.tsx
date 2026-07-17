@@ -69,7 +69,7 @@ export function CallDetailSheet({
 
         {isLoading ? (
           <div className="flex flex-1 items-center justify-center">
-            <Spinner className="size-4" />
+            <Spinner />
           </div>
         ) : messages.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">

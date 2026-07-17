@@ -33,7 +33,7 @@ export function DownloadCallsButton() {
       onClick={() => downloadMutation.mutate()}
     >
       {downloadMutation.isPending ? (
-        <Spinner className="size-4 mx-9" />
+        <Spinner className="mx-9" />
       ) : (
         <>
           <DownloadIcon />

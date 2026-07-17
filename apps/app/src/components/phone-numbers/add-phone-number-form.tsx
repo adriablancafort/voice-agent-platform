@@ -199,7 +199,7 @@ export function AddPhoneNumberForm() {
             </DialogClose>
             <Button type="submit" disabled={saveMutation.isPending}>
               {saveMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
+                <Spinner className="mx-8" />
               ) : (
                 "Add phone number"
               )}

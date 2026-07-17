@@ -166,7 +166,7 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
                 }
               >
                 {deleteAccountMutation.isPending ? (
-                  <Spinner className="mx-3 size-4" />
+                  <Spinner className="mx-3" />
                 ) : (
                   "Delete account"
                 )}

@@ -156,7 +156,7 @@ export function DownloadAgentDialog({
             onClick={() => downloadMutation.mutate()}
           >
             {downloadMutation.isPending ? (
-              <Spinner className="mx-8 size-4" />
+              <Spinner className="mx-8" />
             ) : (
               "Download"
             )}

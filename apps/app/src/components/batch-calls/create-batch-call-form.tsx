@@ -513,11 +513,7 @@ export function CreateBatchCallForm() {
           className="w-full"
           disabled={!canSubmit || createMutation.isPending}
         >
-          {createMutation.isPending ? (
-            <Spinner className="size-4" />
-          ) : (
-            "Create batch call"
-          )}
+          {createMutation.isPending ? <Spinner /> : "Create batch call"}
         </Button>
       </form>
 

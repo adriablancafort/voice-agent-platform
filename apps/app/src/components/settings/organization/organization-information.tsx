@@ -138,7 +138,7 @@ export function OrganizationInformation({
 
           <Button type="submit" disabled={formDisabled}>
             {updateOrganizationInformationMutation.isPending ? (
-              <Spinner className="size-4" />
+              <Spinner />
             ) : (
               "Save"
             )}

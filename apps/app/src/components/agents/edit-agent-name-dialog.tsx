@@ -120,7 +120,7 @@ export function EditAgentNameDialog({
             </DialogClose>
             <Button type="submit" disabled={updateNameMutation.isPending}>
               {updateNameMutation.isPending ? (
-                <Spinner className="mx-8 size-4" />
+                <Spinner className="mx-8" />
               ) : (
                 "Save"
               )}

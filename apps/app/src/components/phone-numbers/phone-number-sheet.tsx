@@ -203,7 +203,7 @@ export function PhoneNumberSheet({
 
           <SheetFooter>
             <Button type="submit" disabled={readOnly}>
-              {saveMutation.isPending ? <Spinner className="size-4" /> : "Save"}
+              {saveMutation.isPending ? <Spinner /> : "Save"}
             </Button>
           </SheetFooter>
         </form>
