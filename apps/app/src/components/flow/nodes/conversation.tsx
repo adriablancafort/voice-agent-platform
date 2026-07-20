@@ -36,8 +36,10 @@ export function ConversationNode({
       <div className="p-3 pb-1 text-xs text-foreground capitalize">
         {data.instructions.type}:
       </div>
-      <div className="p-3 pt-0 text-xs text-muted-foreground">
-        {data.instructions.text}
+      <div className="p-3 pt-0">
+        <div className="line-clamp-8 whitespace-pre-wrap wrap-break-word text-xs text-muted-foreground">
+          {data.instructions.text}
+        </div>
       </div>
       {data.extractVariables && (
         <>
