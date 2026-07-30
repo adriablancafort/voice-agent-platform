@@ -9,6 +9,7 @@ import {
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import {
   Card,
@@ -28,7 +29,7 @@ import { Input } from "@workspace/ui/components/input"
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
-import { signIn } from "@/lib/auth/client"
+import { getLastUsedLoginMethod, signIn } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 
 export const Route = createFileRoute("/(unauthorized)/signin/")({
@@ -42,6 +43,8 @@ function Page() {
   const email =
     new URLSearchParams(redirect?.split("?")[1] ?? "").get("email") ?? ""
   const queryClient = useQueryClient()
+  const lastLoginMethod = getLastUsedLoginMethod()
+
   const callbackURL = redirect
     ? `${env.FRONTEND_URL}${redirect}`
     : env.FRONTEND_URL
@@ -175,8 +178,20 @@ function Page() {
                   )}
                 />
 
-                <Button type="submit" disabled={signInMutation.isPending}>
+                <Button
+                  type="submit"
+                  disabled={signInMutation.isPending}
+                  className="relative"
+                >
                   {signInMutation.isPending ? <Spinner /> : "Sign in"}
+                  {lastLoginMethod === "email" && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute -top-2 right-2"
+                    >
+                      Last used
+                    </Badge>
+                  )}
                 </Button>
 
                 <FieldSeparator>Or continue with</FieldSeparator>
@@ -185,6 +200,7 @@ function Page() {
                   variant="outline"
                   disabled={signInMutation.isPending}
                   onClick={handleGoogleSignIn}
+                  className="relative"
                 >
                   <img
                     src="/logos/google.svg"
@@ -192,6 +208,14 @@ function Page() {
                     className="size-5"
                   />
                   Sign in with Google
+                  {lastLoginMethod === "google" && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute -top-2 right-2"
+                    >
+                      Last used
+                    </Badge>
+                  )}
                 </Button>
 
                 <div className="text-center text-sm">

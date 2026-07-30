@@ -1,7 +1,7 @@
 import { tasks } from "@trigger.dev/sdk"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { emailOTP, organization } from "better-auth/plugins"
+import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
@@ -71,6 +71,9 @@ export const auth = betterAuth({
           organizationName: data.organization.name,
         })
       },
+    }),
+    lastLoginMethod({
+      storeInDatabase: true,
     }),
   ],
   rateLimit: {

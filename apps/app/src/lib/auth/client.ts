@@ -1,5 +1,9 @@
 import { createAuthClient } from "better-auth/client"
-import { emailOTPClient, organizationClient } from "better-auth/client/plugins"
+import {
+  emailOTPClient,
+  lastLoginMethodClient,
+  organizationClient,
+} from "better-auth/client/plugins"
 
 import { ac, admin, member, owner } from "@workspace/shared/auth/permissions"
 import { env } from "@/lib/env"
@@ -16,6 +20,7 @@ export const authClient = createAuthClient({
         member,
       },
     }),
+    lastLoginMethodClient(),
   ],
 })
 
@@ -23,10 +28,13 @@ export const {
   accountInfo,
   changeEmail,
   changePassword,
+  clearLastUsedLoginMethod,
   deleteUser,
   emailOtp,
   getAccessToken,
+  getLastUsedLoginMethod,
   getSession,
+  isLastUsedLoginMethod,
   linkSocial,
   listAccounts,
   listSessions,
