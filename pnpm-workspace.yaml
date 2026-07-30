@@ -1,6 +1,9 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - "apps/*"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: true
 
 catalog:
   '@biomejs/biome': 2.3.8
