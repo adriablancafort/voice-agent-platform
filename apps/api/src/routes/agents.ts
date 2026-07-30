@@ -23,7 +23,8 @@ import type {
   DuplicateAgentResponse,
   UpdateAgentNameResponse,
 } from "@workspace/shared/api/agents/types"
-import { requireOrganization, requirePermission } from "@/lib/auth/organization"
+import { requireOrganization } from "@/lib/auth/organization"
+import { requirePermission } from "@/lib/auth/permissions"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()

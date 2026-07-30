@@ -16,7 +16,8 @@ import type {
   CreateBatchCallResponse,
   TriggerBatchCallResponse,
 } from "@workspace/shared/api/batch-calls/types"
-import { requireOrganization, requirePermission } from "@/lib/auth/organization"
+import { requireOrganization } from "@/lib/auth/organization"
+import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { placeOutboundCall } from "@/lib/livekit"
 import { validator } from "@/lib/validator"

@@ -12,7 +12,8 @@ import type {
   PhoneNumberListResponse,
   PhoneNumberResponse,
 } from "@workspace/shared/api/phone-numbers/types"
-import { requireOrganization, requirePermission } from "@/lib/auth/organization"
+import { requireOrganization } from "@/lib/auth/organization"
+import { requirePermission } from "@/lib/auth/permissions"
 import { deprovisionInbound, provisionInbound } from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 

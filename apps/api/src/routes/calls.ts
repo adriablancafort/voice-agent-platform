@@ -19,7 +19,8 @@ import type {
   StartCallResponse,
   TriggerOutboundCallResponse,
 } from "@workspace/shared/api/calls/types"
-import { requireOrganization, requirePermission } from "@/lib/auth/organization"
+import { requireOrganization } from "@/lib/auth/organization"
+import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
 import { placeOutboundCall } from "@/lib/livekit"

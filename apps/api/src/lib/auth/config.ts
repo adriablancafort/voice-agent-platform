@@ -5,7 +5,7 @@ import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
-import { ac, admin, member, owner } from "@workspace/shared/auth/permissions"
+import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
 import { env } from "@/lib/env"
 
 export const auth = betterAuth({
@@ -55,6 +55,9 @@ export const auth = betterAuth({
         }
       },
     }),
+    lastLoginMethod({
+      storeInDatabase: true,
+    }),
     organization({
       ac,
       roles: {
@@ -71,9 +74,6 @@ export const auth = betterAuth({
           organizationName: data.organization.name,
         })
       },
-    }),
-    lastLoginMethod({
-      storeInDatabase: true,
     }),
   ],
   rateLimit: {

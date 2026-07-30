@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { type RoleKeys, roles } from "@workspace/shared/auth/permissions"
+import { type RoleKeys, roles } from "@workspace/shared/auth/roles"
 
 export const assignableRoleSchema = z.enum(["admin", "member"])
 
