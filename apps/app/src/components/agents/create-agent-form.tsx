@@ -54,8 +54,8 @@ export function CreateAgentForm() {
         body: values,
       }),
     onSuccess: (agent) => {
-      setOpen(false)
       form.reset()
+      setOpen(false)
       navigate({
         to: "/agents/$agentId",
         params: { agentId: agent.id },

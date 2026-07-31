@@ -58,9 +58,9 @@ export function PublishAgentForm() {
         { body: values }
       ),
     onSuccess: (publishedVersion) => {
-      setOpen(false)
-      form.reset()
       toast.success(`V${publishedVersion.number} published`)
+      form.reset()
+      setOpen(false)
       queryClient.invalidateQueries({
         queryKey: ["agents", "detail", agent.id],
       })

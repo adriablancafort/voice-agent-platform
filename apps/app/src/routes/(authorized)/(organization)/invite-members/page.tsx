@@ -40,25 +40,13 @@ import {
 
 type InviteRole = AssignableRole
 
-function inviteMember(email: string, role: InviteRole) {
-  return new Promise<void>((resolve) => {
-    organization.inviteMember(
-      {
-        email,
-        role,
-      },
-      {
-        onSuccess: () => {
-          toast.success(`Invitation sent to ${email}`)
-          resolve()
-        },
-        onError: (ctx) => {
-          toast.error(`${email}: ${ctx.error.message}`)
-          resolve()
-        },
-      }
-    )
-  })
+async function inviteMember(email: string, role: InviteRole) {
+  const result = await organization.inviteMember({ email, role })
+  if (result.error) {
+    toast.error(`${email}: ${result.error.message}`)
+    return
+  }
+  toast.success(`Invitation sent to ${email}`)
 }
 
 export const Route = createFileRoute(

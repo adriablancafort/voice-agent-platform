@@ -125,8 +125,8 @@ export function TestCallButton() {
       ),
     onSuccess: () => {
       toast.success("Outbound call started")
-      setOpen(false)
       form.reset()
+      setOpen(false)
       variables.reset()
     },
     onError: (error) => {

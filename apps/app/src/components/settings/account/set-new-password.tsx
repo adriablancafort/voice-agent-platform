@@ -83,8 +83,8 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
     },
     onSuccess: () => {
       toast.success("New password set")
-      setOpen(false)
       form.reset()
+      setOpen(false)
     },
     onError: (error) => {
       toast.error(error.message)

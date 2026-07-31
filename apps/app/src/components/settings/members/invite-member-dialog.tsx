@@ -74,8 +74,9 @@ export function InviteMemberDialog({
     },
     onSuccess: (_data, values) => {
       toast.success(`Invitation sent to ${values.email}`)
-      queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
+      form.reset()
       onOpenChange(false)
+      queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
     },
     onError: (error) => {
       toast.error(error.message)

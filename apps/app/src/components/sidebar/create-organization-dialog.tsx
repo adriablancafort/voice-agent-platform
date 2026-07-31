@@ -59,9 +59,10 @@ export function CreateOrganizationDialog({
       }
     },
     onSuccess: async () => {
-      await queryClient.refetchQueries()
       toast.success("Organization created")
+      form.reset()
       onOpenChange(false)
+      await queryClient.refetchQueries()
     },
     onError: (error) => {
       toast.error(error.message)

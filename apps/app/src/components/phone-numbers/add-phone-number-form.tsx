@@ -55,8 +55,8 @@ export function AddPhoneNumberForm() {
         { body: values }
       ),
     onSuccess: () => {
-      setOpen(false)
       form.reset()
+      setOpen(false)
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })
     },
     onError: (error) => {

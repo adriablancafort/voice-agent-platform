@@ -137,8 +137,8 @@ export function CreateBatchCallForm() {
         { body }
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
       toast.success("Batch call triggered")
+      queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
       navigate({ to: "/batch-calls" })
     },
     onError: (error) => {

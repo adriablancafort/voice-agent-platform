@@ -57,8 +57,8 @@ function Page() {
       }
     },
     onSuccess: async () => {
-      await queryClient.refetchQueries()
       toast.success("Organization created")
+      await queryClient.refetchQueries()
       navigate({ to: "/invite-members" })
     },
     onError: (error) => {
