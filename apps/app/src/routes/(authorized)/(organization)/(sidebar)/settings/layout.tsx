@@ -117,7 +117,7 @@ function Layout() {
         <div className="w-60 pr-10">
           <SettingsNav />
         </div>
-        <div className="w-full pr-40">
+        <div className="w-full lg:pr-40">
           <Suspense fallback={<SettingsContentSkeleton />}>
             <Outlet />
           </Suspense>
