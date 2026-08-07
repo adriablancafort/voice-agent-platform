@@ -2,106 +2,121 @@ import {
   type AgentState,
   type ReceivedMessage,
 } from "@livekit/components-react"
+import { ArrowDownIcon } from "lucide-react"
 import { AnimatePresence } from "motion/react"
-import { type ComponentProps } from "react"
+import { type ComponentProps, useCallback } from "react"
+import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom"
 
 import { AgentChatIndicator } from "@workspace/ui/components/agents-ui/agent-chat-indicator"
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from "@workspace/ui/components/ai-elements/conversation"
-import {
-  Message,
-  MessageContent,
-  MessageResponse,
-} from "@workspace/ui/components/ai-elements/message"
+import { Button } from "@workspace/ui/components/button"
+import { cn } from "@workspace/ui/lib/utils"
 
-function getMessageSpacingClass(
+function messageSpacing(
   index: number,
-  messageOrigin: "user" | "assistant",
+  origin: "user" | "assistant",
   messages: ReceivedMessage[]
 ) {
   const next = messages[index + 1]
   if (!next) return "mb-5"
 
   const nextOrigin = next.from?.isLocal ? "user" : "assistant"
-  return nextOrigin === messageOrigin ? "mb-2" : "mb-5"
+  return nextOrigin === origin ? "mb-2" : "mb-5"
 }
 
-/**
- * Props for the AgentChatTranscript component.
- */
-export interface AgentChatTranscriptProps extends ComponentProps<"div"> {
-  /**
-   * The current state of the agent. When 'thinking', displays a loading indicator.
-   */
-  agentState?: AgentState
-  /**
-   * Array of messages to display in the transcript.
-   * @defaultValue []
-   */
-  messages?: ReceivedMessage[]
-  /**
-   * Additional CSS class names to apply to the conversation container.
-   */
-  className?: string
-  /**
-   * Initial scroll behavior.
-   */
-  initial?: ComponentProps<typeof Conversation>["initial"]
-}
-
-/**
- * A chat transcript component that displays a conversation between the user and agent.
- * Shows messages with timestamps and origin indicators, plus a thinking indicator
- * when the agent is processing.
- *
- * @extends ComponentProps<'div'>
- *
- * @example
- * ```tsx
- * <AgentChatTranscript
- *   agentState={agentState}
- *   messages={chatMessages}
- * />
- * ```
- */
-export function AgentChatTranscript({
+function TranscriptMessages({
   agentState,
-  messages = [],
-  className,
-  ...props
-}: AgentChatTranscriptProps) {
+  messages,
+}: {
+  agentState?: AgentState
+  messages: ReceivedMessage[]
+}) {
+  const { scrollRef, contentRef } = useStickToBottomContext()
+
   return (
-    <Conversation className={className} {...props}>
-      <ConversationContent className="gap-0">
-        {messages.map((receivedMessage, index) => {
-          const { id, timestamp, from, message } = receivedMessage
-          const time = new Date(timestamp)
-          const messageOrigin = from?.isLocal ? "user" : "assistant"
-          const locale =
-            typeof navigator !== "undefined" ? navigator.language : "en-US"
-          const title = time.toLocaleTimeString(locale, { timeStyle: "full" })
+    <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
+      <div ref={contentRef} className="flex flex-col px-4 py-4">
+        {messages.map((msg, index) => {
+          const origin = msg.from?.isLocal ? "user" : "assistant"
 
           return (
-            <Message
-              key={id}
-              title={title}
-              from={messageOrigin}
-              className={getMessageSpacingClass(index, messageOrigin, messages)}
+            <div
+              key={msg.id}
+              title={new Date(msg.timestamp).toLocaleTimeString(undefined, {
+                timeStyle: "full",
+              })}
+              className={cn(
+                "flex flex-col",
+                origin === "user" ? "items-end" : "items-start",
+                messageSpacing(index, origin, messages)
+              )}
             >
-              <MessageContent>
-                <MessageResponse>{message}</MessageResponse>
-              </MessageContent>
-            </Message>
+              <div
+                className={cn(
+                  "max-w-full text-sm wrap-break-word whitespace-pre-wrap",
+                  origin === "user" &&
+                    "rounded-lg bg-secondary px-4 py-3 text-foreground"
+                )}
+              >
+                {msg.message}
+              </div>
+            </div>
           )
         })}
         <AnimatePresence>
           {agentState === "thinking" && <AgentChatIndicator size="sm" />}
         </AnimatePresence>
-      </ConversationContent>
-      <ConversationScrollButton />
-    </Conversation>
+      </div>
+    </div>
+  )
+}
+
+function ScrollToBottomButton() {
+  const { isAtBottom, scrollToBottom } = useStickToBottomContext()
+  const onClick = useCallback(() => {
+    scrollToBottom()
+  }, [scrollToBottom])
+
+  if (isAtBottom) return null
+
+  return (
+    <Button
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full"
+      onClick={onClick}
+      size="icon"
+      type="button"
+      variant="outline"
+    >
+      <ArrowDownIcon className="size-4" />
+    </Button>
+  )
+}
+
+export interface AgentChatTranscriptProps extends ComponentProps<"div"> {
+  agentState?: AgentState
+  messages?: ReceivedMessage[]
+  initial?: ComponentProps<typeof StickToBottom>["initial"]
+}
+
+export function AgentChatTranscript({
+  agentState,
+  messages = [],
+  className,
+  initial = "smooth",
+  ...props
+}: AgentChatTranscriptProps) {
+  return (
+    <StickToBottom
+      className={cn(
+        "relative flex min-h-0 flex-1 flex-col overflow-hidden",
+        className
+      )}
+      initial={initial}
+      resize="smooth"
+      role="log"
+      {...props}
+    >
+      <TranscriptMessages agentState={agentState} messages={messages} />
+      <ScrollToBottomButton />
+    </StickToBottom>
   )
 }
