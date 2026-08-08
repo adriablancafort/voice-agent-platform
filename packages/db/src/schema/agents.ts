@@ -1,7 +1,7 @@
 import {
   index,
   integer,
-  jsonb,
+  json,
   pgTable,
   text,
   timestamp,
@@ -21,7 +21,7 @@ export const agentsTable = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     name: varchar({ length: 255 }).notNull(),
-    config: jsonb().$type<AgentConfig>().notNull(),
+    config: json().$type<AgentConfig>().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),
@@ -42,7 +42,7 @@ export const agentVersionsTable = pgTable(
     number: integer("number").notNull(),
     name: varchar({ length: 255 }),
     description: text(),
-    config: jsonb().$type<AgentConfig>().notNull(),
+    config: json().$type<AgentConfig>().notNull(),
     publishedAt: timestamp("published_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),

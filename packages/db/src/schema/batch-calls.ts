@@ -1,7 +1,7 @@
 import {
   index,
   integer,
-  jsonb,
+  json,
   pgTable,
   text,
   timestamp,
@@ -60,7 +60,7 @@ export const batchCallRecipientsTable = pgTable(
       .notNull()
       .references(() => batchCallsTable.id, { onDelete: "cascade" }),
     toNumber: text("to_number").notNull(),
-    variables: jsonb().$type<Record<string, string>>().notNull().default({}),
+    variables: json().$type<Record<string, string>>().notNull().default({}),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),

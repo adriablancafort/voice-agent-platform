@@ -1,7 +1,7 @@
 import {
   index,
   integer,
-  jsonb,
+  json,
   numeric,
   pgTable,
   text,
@@ -51,8 +51,8 @@ export const callsTable = pgTable(
     platformCost: numeric("platform_cost", { precision: 12, scale: 6 }),
     totalCost: numeric("total_cost", { precision: 12, scale: 6 }),
     livekitRoomName: text("livekit_room_name").notNull(),
-    transcript: jsonb().$type<CallTranscript | null>(),
-    variables: jsonb().$type<CallVariableValues | null>(),
+    transcript: json().$type<CallTranscript | null>(),
+    variables: json().$type<CallVariableValues | null>(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),
