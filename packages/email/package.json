@@ -11,8 +11,7 @@
   "exports": {
     "./components/*": "./src/components/*.tsx",
     "./templates/*": "./src/templates/*.tsx",
-    "./send": "./src/send.ts",
-    "./transport": "./src/transport.ts"
+    "./*": "./src/*.ts"
   },
   "dependencies": {
     "dotenv": "catalog:",
