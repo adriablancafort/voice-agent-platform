@@ -9,40 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as unauthorizedLayoutRouteImport } from './routes/(unauthorized)/layout'
 import { Route as authorizedLayoutRouteImport } from './routes/(authorized)/layout'
+import { Route as unauthorizedLayoutRouteImport } from './routes/(unauthorized)/layout'
 import { Route as authorizedorganizationLayoutRouteImport } from './routes/(authorized)/(organization)/layout'
-import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
-import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
-import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
-import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
-import { Route as unauthorizedEmailVerificationPageRouteImport } from './routes/(unauthorized)/email-verification/page'
-import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
-import { Route as authorizedJoinOrganizationPageRouteImport } from './routes/(authorized)/join-organization/page'
-import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
 import { Route as authorizedorganizationsidebarLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/layout'
-import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
+import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
+import { Route as authorizedJoinOrganizationPageRouteImport } from './routes/(authorized)/join-organization/page'
+import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
+import { Route as unauthorizedEmailVerificationPageRouteImport } from './routes/(unauthorized)/email-verification/page'
+import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
+import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
+import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
+import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
 import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
 import { Route as authorizedorganizationsidebarSettingsLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/layout'
-import { Route as authorizedorganizationsidebarSettingsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/page'
-import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
-import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
-import { Route as authorizedorganizationsidebarBatchCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/page'
-import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
+import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
 import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
-import { Route as authorizedorganizationsidebarSettingsRolesPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/roles/page'
-import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
-import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
-import { Route as authorizedorganizationsidebarSettingsAccountPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/account/page'
-import { Route as authorizedorganizationsidebarBatchCallsCreatePageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/create/page'
+import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
+import { Route as authorizedorganizationsidebarBatchCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/page'
+import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
+import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
+import { Route as authorizedorganizationsidebarSettingsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/page'
 import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
+import { Route as authorizedorganizationsidebarBatchCallsCreatePageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/create/page'
+import { Route as authorizedorganizationsidebarSettingsAccountPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/account/page'
+import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
+import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
+import { Route as authorizedorganizationsidebarSettingsRolesPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/roles/page'
 
-const unauthorizedLayoutRoute = unauthorizedLayoutRouteImport.update({
-  id: '/(unauthorized)',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authorizedLayoutRoute = authorizedLayoutRouteImport.update({
   id: '/(authorized)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const unauthorizedLayoutRoute = unauthorizedLayoutRouteImport.update({
+  id: '/(unauthorized)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authorizedorganizationLayoutRoute =
@@ -50,38 +50,15 @@ const authorizedorganizationLayoutRoute =
     id: '/(organization)',
     getParentRoute: () => authorizedLayoutRoute,
   } as any)
-const unauthorizedSignupPageRoute = unauthorizedSignupPageRouteImport.update({
-  id: '/signup/',
-  path: '/signup/',
-  getParentRoute: () => unauthorizedLayoutRoute,
-} as any)
-const unauthorizedSigninPageRoute = unauthorizedSigninPageRouteImport.update({
-  id: '/signin/',
-  path: '/signin/',
-  getParentRoute: () => unauthorizedLayoutRoute,
-} as any)
-const unauthorizedSetNewPasswordPageRoute =
-  unauthorizedSetNewPasswordPageRouteImport.update({
-    id: '/set-new-password/',
-    path: '/set-new-password/',
-    getParentRoute: () => unauthorizedLayoutRoute,
+const authorizedorganizationsidebarLayoutRoute =
+  authorizedorganizationsidebarLayoutRouteImport.update({
+    id: '/(sidebar)',
+    getParentRoute: () => authorizedorganizationLayoutRoute,
   } as any)
-const unauthorizedResetPasswordPageRoute =
-  unauthorizedResetPasswordPageRouteImport.update({
-    id: '/reset-password/',
-    path: '/reset-password/',
-    getParentRoute: () => unauthorizedLayoutRoute,
-  } as any)
-const unauthorizedEmailVerificationPageRoute =
-  unauthorizedEmailVerificationPageRouteImport.update({
-    id: '/email-verification/',
-    path: '/email-verification/',
-    getParentRoute: () => unauthorizedLayoutRoute,
-  } as any)
-const authorizedSelectOrganizationPageRoute =
-  authorizedSelectOrganizationPageRouteImport.update({
-    id: '/select-organization/',
-    path: '/select-organization/',
+const authorizedCreateOrganizationPageRoute =
+  authorizedCreateOrganizationPageRouteImport.update({
+    id: '/create-organization/',
+    path: '/create-organization/',
     getParentRoute: () => authorizedLayoutRoute,
   } as any)
 const authorizedJoinOrganizationPageRoute =
@@ -90,23 +67,40 @@ const authorizedJoinOrganizationPageRoute =
     path: '/join-organization/',
     getParentRoute: () => authorizedLayoutRoute,
   } as any)
-const authorizedCreateOrganizationPageRoute =
-  authorizedCreateOrganizationPageRouteImport.update({
-    id: '/create-organization/',
-    path: '/create-organization/',
+const authorizedSelectOrganizationPageRoute =
+  authorizedSelectOrganizationPageRouteImport.update({
+    id: '/select-organization/',
+    path: '/select-organization/',
     getParentRoute: () => authorizedLayoutRoute,
   } as any)
-const authorizedorganizationsidebarLayoutRoute =
-  authorizedorganizationsidebarLayoutRouteImport.update({
-    id: '/(sidebar)',
-    getParentRoute: () => authorizedorganizationLayoutRoute,
+const unauthorizedEmailVerificationPageRoute =
+  unauthorizedEmailVerificationPageRouteImport.update({
+    id: '/email-verification/',
+    path: '/email-verification/',
+    getParentRoute: () => unauthorizedLayoutRoute,
   } as any)
-const authorizedorganizationInviteMembersPageRoute =
-  authorizedorganizationInviteMembersPageRouteImport.update({
-    id: '/invite-members/',
-    path: '/invite-members/',
-    getParentRoute: () => authorizedorganizationLayoutRoute,
+const unauthorizedResetPasswordPageRoute =
+  unauthorizedResetPasswordPageRouteImport.update({
+    id: '/reset-password/',
+    path: '/reset-password/',
+    getParentRoute: () => unauthorizedLayoutRoute,
   } as any)
+const unauthorizedSetNewPasswordPageRoute =
+  unauthorizedSetNewPasswordPageRouteImport.update({
+    id: '/set-new-password/',
+    path: '/set-new-password/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
+const unauthorizedSigninPageRoute = unauthorizedSigninPageRouteImport.update({
+  id: '/signin/',
+  path: '/signin/',
+  getParentRoute: () => unauthorizedLayoutRoute,
+} as any)
+const unauthorizedSignupPageRoute = unauthorizedSignupPageRouteImport.update({
+  id: '/signup/',
+  path: '/signup/',
+  getParentRoute: () => unauthorizedLayoutRoute,
+} as any)
 const authorizedorganizationsidebarPageRoute =
   authorizedorganizationsidebarPageRouteImport.update({
     id: '/',
@@ -119,28 +113,16 @@ const authorizedorganizationsidebarSettingsLayoutRoute =
     path: '/settings',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedorganizationsidebarSettingsPageRoute =
-  authorizedorganizationsidebarSettingsPageRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
+const authorizedorganizationInviteMembersPageRoute =
+  authorizedorganizationInviteMembersPageRouteImport.update({
+    id: '/invite-members/',
+    path: '/invite-members/',
+    getParentRoute: () => authorizedorganizationLayoutRoute,
   } as any)
-const authorizedorganizationsidebarPhoneNumbersPageRoute =
-  authorizedorganizationsidebarPhoneNumbersPageRouteImport.update({
-    id: '/phone-numbers/',
-    path: '/phone-numbers/',
-    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
-  } as any)
-const authorizedorganizationsidebarCallsPageRoute =
-  authorizedorganizationsidebarCallsPageRouteImport.update({
-    id: '/calls/',
-    path: '/calls/',
-    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
-  } as any)
-const authorizedorganizationsidebarBatchCallsPageRoute =
-  authorizedorganizationsidebarBatchCallsPageRouteImport.update({
-    id: '/batch-calls/',
-    path: '/batch-calls/',
+const authorizedorganizationsidebarSplatPageRoute =
+  authorizedorganizationsidebarSplatPageRouteImport.update({
+    id: '/$/',
+    path: '/$/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
 const authorizedorganizationsidebarAgentsPageRoute =
@@ -149,22 +131,46 @@ const authorizedorganizationsidebarAgentsPageRoute =
     path: '/agents/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedorganizationsidebarSplatPageRoute =
-  authorizedorganizationsidebarSplatPageRouteImport.update({
-    id: '/$/',
-    path: '/$/',
+const authorizedorganizationsidebarBatchCallsPageRoute =
+  authorizedorganizationsidebarBatchCallsPageRouteImport.update({
+    id: '/batch-calls/',
+    path: '/batch-calls/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedorganizationsidebarSettingsRolesPageRoute =
-  authorizedorganizationsidebarSettingsRolesPageRouteImport.update({
-    id: '/roles/',
-    path: '/roles/',
+const authorizedorganizationsidebarCallsPageRoute =
+  authorizedorganizationsidebarCallsPageRouteImport.update({
+    id: '/calls/',
+    path: '/calls/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarPhoneNumbersPageRoute =
+  authorizedorganizationsidebarPhoneNumbersPageRouteImport.update({
+    id: '/phone-numbers/',
+    path: '/phone-numbers/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarSettingsPageRoute =
+  authorizedorganizationsidebarSettingsPageRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
-const authorizedorganizationsidebarSettingsOrganizationPageRoute =
-  authorizedorganizationsidebarSettingsOrganizationPageRouteImport.update({
-    id: '/organization/',
-    path: '/organization/',
+const authorizedorganizationsidebarAgentsAgentIdPageRoute =
+  authorizedorganizationsidebarAgentsAgentIdPageRouteImport.update({
+    id: '/agents/$agentId/',
+    path: '/agents/$agentId/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarBatchCallsCreatePageRoute =
+  authorizedorganizationsidebarBatchCallsCreatePageRouteImport.update({
+    id: '/batch-calls/create/',
+    path: '/batch-calls/create/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarSettingsAccountPageRoute =
+  authorizedorganizationsidebarSettingsAccountPageRouteImport.update({
+    id: '/account/',
+    path: '/account/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
 const authorizedorganizationsidebarSettingsMembersPageRoute =
@@ -173,23 +179,17 @@ const authorizedorganizationsidebarSettingsMembersPageRoute =
     path: '/members/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
-const authorizedorganizationsidebarSettingsAccountPageRoute =
-  authorizedorganizationsidebarSettingsAccountPageRouteImport.update({
-    id: '/account/',
-    path: '/account/',
+const authorizedorganizationsidebarSettingsOrganizationPageRoute =
+  authorizedorganizationsidebarSettingsOrganizationPageRouteImport.update({
+    id: '/organization/',
+    path: '/organization/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
-const authorizedorganizationsidebarBatchCallsCreatePageRoute =
-  authorizedorganizationsidebarBatchCallsCreatePageRouteImport.update({
-    id: '/batch-calls/create/',
-    path: '/batch-calls/create/',
-    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
-  } as any)
-const authorizedorganizationsidebarAgentsAgentIdPageRoute =
-  authorizedorganizationsidebarAgentsAgentIdPageRouteImport.update({
-    id: '/agents/$agentId/',
-    path: '/agents/$agentId/',
-    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+const authorizedorganizationsidebarSettingsRolesPageRoute =
+  authorizedorganizationsidebarSettingsRolesPageRouteImport.update({
+    id: '/roles/',
+    path: '/roles/',
+    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -359,18 +359,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(unauthorized)': {
-      id: '/(unauthorized)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof unauthorizedLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(authorized)': {
       id: '/(authorized)'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authorizedLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(unauthorized)': {
+      id: '/(unauthorized)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof unauthorizedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(authorized)/(organization)': {
@@ -380,46 +380,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationLayoutRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
-    '/(unauthorized)/signup/': {
-      id: '/(unauthorized)/signup/'
-      path: '/signup'
-      fullPath: '/signup/'
-      preLoaderRoute: typeof unauthorizedSignupPageRouteImport
-      parentRoute: typeof unauthorizedLayoutRoute
+    '/(authorized)/(organization)/(sidebar)': {
+      id: '/(authorized)/(organization)/(sidebar)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authorizedorganizationsidebarLayoutRouteImport
+      parentRoute: typeof authorizedorganizationLayoutRoute
     }
-    '/(unauthorized)/signin/': {
-      id: '/(unauthorized)/signin/'
-      path: '/signin'
-      fullPath: '/signin/'
-      preLoaderRoute: typeof unauthorizedSigninPageRouteImport
-      parentRoute: typeof unauthorizedLayoutRoute
-    }
-    '/(unauthorized)/set-new-password/': {
-      id: '/(unauthorized)/set-new-password/'
-      path: '/set-new-password'
-      fullPath: '/set-new-password/'
-      preLoaderRoute: typeof unauthorizedSetNewPasswordPageRouteImport
-      parentRoute: typeof unauthorizedLayoutRoute
-    }
-    '/(unauthorized)/reset-password/': {
-      id: '/(unauthorized)/reset-password/'
-      path: '/reset-password'
-      fullPath: '/reset-password/'
-      preLoaderRoute: typeof unauthorizedResetPasswordPageRouteImport
-      parentRoute: typeof unauthorizedLayoutRoute
-    }
-    '/(unauthorized)/email-verification/': {
-      id: '/(unauthorized)/email-verification/'
-      path: '/email-verification'
-      fullPath: '/email-verification/'
-      preLoaderRoute: typeof unauthorizedEmailVerificationPageRouteImport
-      parentRoute: typeof unauthorizedLayoutRoute
-    }
-    '/(authorized)/select-organization/': {
-      id: '/(authorized)/select-organization/'
-      path: '/select-organization'
-      fullPath: '/select-organization/'
-      preLoaderRoute: typeof authorizedSelectOrganizationPageRouteImport
+    '/(authorized)/create-organization/': {
+      id: '/(authorized)/create-organization/'
+      path: '/create-organization'
+      fullPath: '/create-organization/'
+      preLoaderRoute: typeof authorizedCreateOrganizationPageRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
     '/(authorized)/join-organization/': {
@@ -429,26 +401,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedJoinOrganizationPageRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
-    '/(authorized)/create-organization/': {
-      id: '/(authorized)/create-organization/'
-      path: '/create-organization'
-      fullPath: '/create-organization/'
-      preLoaderRoute: typeof authorizedCreateOrganizationPageRouteImport
+    '/(authorized)/select-organization/': {
+      id: '/(authorized)/select-organization/'
+      path: '/select-organization'
+      fullPath: '/select-organization/'
+      preLoaderRoute: typeof authorizedSelectOrganizationPageRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)': {
-      id: '/(authorized)/(organization)/(sidebar)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof authorizedorganizationsidebarLayoutRouteImport
-      parentRoute: typeof authorizedorganizationLayoutRoute
+    '/(unauthorized)/email-verification/': {
+      id: '/(unauthorized)/email-verification/'
+      path: '/email-verification'
+      fullPath: '/email-verification/'
+      preLoaderRoute: typeof unauthorizedEmailVerificationPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
     }
-    '/(authorized)/(organization)/invite-members/': {
-      id: '/(authorized)/(organization)/invite-members/'
-      path: '/invite-members'
-      fullPath: '/invite-members/'
-      preLoaderRoute: typeof authorizedorganizationInviteMembersPageRouteImport
-      parentRoute: typeof authorizedorganizationLayoutRoute
+    '/(unauthorized)/reset-password/': {
+      id: '/(unauthorized)/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof unauthorizedResetPasswordPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/set-new-password/': {
+      id: '/(unauthorized)/set-new-password/'
+      path: '/set-new-password'
+      fullPath: '/set-new-password/'
+      preLoaderRoute: typeof unauthorizedSetNewPasswordPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/signin/': {
+      id: '/(unauthorized)/signin/'
+      path: '/signin'
+      fullPath: '/signin/'
+      preLoaderRoute: typeof unauthorizedSigninPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/signup/': {
+      id: '/(unauthorized)/signup/'
+      path: '/signup'
+      fullPath: '/signup/'
+      preLoaderRoute: typeof unauthorizedSignupPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
     }
     '/(authorized)/(organization)/(sidebar)/': {
       id: '/(authorized)/(organization)/(sidebar)/'
@@ -464,32 +457,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSettingsLayoutRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/settings/': {
-      id: '/(authorized)/(organization)/(sidebar)/settings/'
-      path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof authorizedorganizationsidebarSettingsPageRouteImport
-      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
+    '/(authorized)/(organization)/invite-members/': {
+      id: '/(authorized)/(organization)/invite-members/'
+      path: '/invite-members'
+      fullPath: '/invite-members/'
+      preLoaderRoute: typeof authorizedorganizationInviteMembersPageRouteImport
+      parentRoute: typeof authorizedorganizationLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/phone-numbers/': {
-      id: '/(authorized)/(organization)/(sidebar)/phone-numbers/'
-      path: '/phone-numbers'
-      fullPath: '/phone-numbers/'
-      preLoaderRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRouteImport
-      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
-    }
-    '/(authorized)/(organization)/(sidebar)/calls/': {
-      id: '/(authorized)/(organization)/(sidebar)/calls/'
-      path: '/calls'
-      fullPath: '/calls/'
-      preLoaderRoute: typeof authorizedorganizationsidebarCallsPageRouteImport
-      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
-    }
-    '/(authorized)/(organization)/(sidebar)/batch-calls/': {
-      id: '/(authorized)/(organization)/(sidebar)/batch-calls/'
-      path: '/batch-calls'
-      fullPath: '/batch-calls/'
-      preLoaderRoute: typeof authorizedorganizationsidebarBatchCallsPageRouteImport
+    '/(authorized)/(organization)/(sidebar)/$/': {
+      id: '/(authorized)/(organization)/(sidebar)/$/'
+      path: '/$'
+      fullPath: '/$/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSplatPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
     '/(authorized)/(organization)/(sidebar)/agents/': {
@@ -499,25 +478,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarAgentsPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/$/': {
-      id: '/(authorized)/(organization)/(sidebar)/$/'
-      path: '/$'
-      fullPath: '/$/'
-      preLoaderRoute: typeof authorizedorganizationsidebarSplatPageRouteImport
+    '/(authorized)/(organization)/(sidebar)/batch-calls/': {
+      id: '/(authorized)/(organization)/(sidebar)/batch-calls/'
+      path: '/batch-calls'
+      fullPath: '/batch-calls/'
+      preLoaderRoute: typeof authorizedorganizationsidebarBatchCallsPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/settings/roles/': {
-      id: '/(authorized)/(organization)/(sidebar)/settings/roles/'
-      path: '/roles'
-      fullPath: '/settings/roles/'
-      preLoaderRoute: typeof authorizedorganizationsidebarSettingsRolesPageRouteImport
+    '/(authorized)/(organization)/(sidebar)/calls/': {
+      id: '/(authorized)/(organization)/(sidebar)/calls/'
+      path: '/calls'
+      fullPath: '/calls/'
+      preLoaderRoute: typeof authorizedorganizationsidebarCallsPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)/phone-numbers/': {
+      id: '/(authorized)/(organization)/(sidebar)/phone-numbers/'
+      path: '/phone-numbers'
+      fullPath: '/phone-numbers/'
+      preLoaderRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)/settings/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/settings/organization/': {
-      id: '/(authorized)/(organization)/(sidebar)/settings/organization/'
-      path: '/organization'
-      fullPath: '/settings/organization/'
-      preLoaderRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRouteImport
+    '/(authorized)/(organization)/(sidebar)/agents/$agentId/': {
+      id: '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
+      path: '/agents/$agentId'
+      fullPath: '/agents/$agentId/'
+      preLoaderRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)/batch-calls/create/': {
+      id: '/(authorized)/(organization)/(sidebar)/batch-calls/create/'
+      path: '/batch-calls/create'
+      fullPath: '/batch-calls/create/'
+      preLoaderRoute: typeof authorizedorganizationsidebarBatchCallsCreatePageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)/settings/account/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/account/'
+      path: '/account'
+      fullPath: '/settings/account/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsAccountPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
     '/(authorized)/(organization)/(sidebar)/settings/members/': {
@@ -527,26 +534,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSettingsMembersPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/settings/account/': {
-      id: '/(authorized)/(organization)/(sidebar)/settings/account/'
-      path: '/account'
-      fullPath: '/settings/account/'
-      preLoaderRoute: typeof authorizedorganizationsidebarSettingsAccountPageRouteImport
+    '/(authorized)/(organization)/(sidebar)/settings/organization/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/organization/'
+      path: '/organization'
+      fullPath: '/settings/organization/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
-    '/(authorized)/(organization)/(sidebar)/batch-calls/create/': {
-      id: '/(authorized)/(organization)/(sidebar)/batch-calls/create/'
-      path: '/batch-calls/create'
-      fullPath: '/batch-calls/create/'
-      preLoaderRoute: typeof authorizedorganizationsidebarBatchCallsCreatePageRouteImport
-      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
-    }
-    '/(authorized)/(organization)/(sidebar)/agents/$agentId/': {
-      id: '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
-      path: '/agents/$agentId'
-      fullPath: '/agents/$agentId/'
-      preLoaderRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRouteImport
-      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    '/(authorized)/(organization)/(sidebar)/settings/roles/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/roles/'
+      path: '/roles'
+      fullPath: '/settings/roles/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsRolesPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
   }
 }
