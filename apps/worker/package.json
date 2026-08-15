@@ -11,6 +11,8 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
+    "@workspace/email": "workspace:*",
+    "@workspace/shared": "workspace:*",
     "bullmq": "catalog:",
     "dotenv": "catalog:",
     "ioredis": "catalog:"

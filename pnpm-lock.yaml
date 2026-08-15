@@ -282,6 +282,12 @@ importers:
 
   apps/worker:
     dependencies:
+      '@workspace/email':
+        specifier: workspace:*
+        version: link:../../packages/email
+      '@workspace/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       bullmq:
         specifier: 'catalog:'
         version: 6.1.0(ioredis@6.0.0)(pg@8.23.0)

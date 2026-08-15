@@ -1,7 +1,8 @@
+import { batchCallsWorker } from "@/batch-calls/worker"
 import { emailsWorker } from "@/emails/worker"
 import { connection } from "@/lib/redis"
 
-const workers = [emailsWorker]
+const workers = [emailsWorker, batchCallsWorker]
 
 for (const worker of workers) {
   worker.on("ready", () => {
