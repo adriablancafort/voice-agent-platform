@@ -8,6 +8,7 @@ export const env = {
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? "",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
+  REDIS_URL: process.env.REDIS_URL ?? "",
   API_TOKEN: process.env.API_TOKEN ?? "",
   LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY ?? "",
   LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ?? "",

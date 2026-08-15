@@ -101,9 +101,6 @@ importers:
       '@livekit/protocol':
         specifier: ^1.50.4
         version: 1.50.4
-      '@trigger.dev/sdk':
-        specifier: 'catalog:'
-        version: 4.5.11(react@19.2.8)(zod@4.4.3)
       '@workspace/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -113,6 +110,9 @@ importers:
       better-auth:
         specifier: 'catalog:'
         version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      bullmq:
+        specifier: 'catalog:'
+        version: 6.1.0(ioredis@6.0.0)(pg@8.23.0)
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
@@ -122,6 +122,9 @@ importers:
       hono:
         specifier: ^4.13.2
         version: 4.13.2
+      ioredis:
+        specifier: 'catalog:'
+        version: 6.0.0
       livekit-server-sdk:
         specifier: 'catalog:'
         version: 2.17.0

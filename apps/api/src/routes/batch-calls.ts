@@ -1,4 +1,3 @@
-import { tasks } from "@trigger.dev/sdk"
 import { eq } from "drizzle-orm"
 import { Hono } from "hono"
 
@@ -20,6 +19,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { placeOutboundCall } from "@/lib/livekit"
+import { batchCallsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
 export const batchCallRoutes = new Hono()
@@ -158,10 +158,10 @@ batchCallRoutes.post(
         )
       })
 
-      await tasks.trigger(
+      await batchCallsQueue.add(
         "process-batch-call",
         { batchCallId },
-        scheduledAt ? { delay: scheduledAt } : undefined
+        scheduledAt ? { delay: scheduledAt.getTime() - Date.now() } : undefined
       )
 
       return c.json({ id: batchCallId } satisfies CreateBatchCallResponse)

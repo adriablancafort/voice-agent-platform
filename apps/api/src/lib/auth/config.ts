@@ -1,4 +1,3 @@
-import { tasks } from "@trigger.dev/sdk"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
@@ -7,6 +6,7 @@ import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
 import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
 import { env } from "@/lib/env"
+import { emailsQueue } from "@/lib/queues"
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -22,7 +22,7 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     async sendResetPassword(data) {
-      await tasks.trigger("send-reset-password-email", {
+      await emailsQueue.add("send-reset-password", {
         to: data.user.email,
         name: data.user.name,
         url: data.url,
@@ -48,7 +48,7 @@ export const auth = betterAuth({
       },
       async sendVerificationOTP({ email, otp, type }) {
         if (type === "email-verification") {
-          await tasks.trigger("send-verification-otp-email", {
+          await emailsQueue.add("send-verification-otp", {
             to: email,
             otp,
           })
@@ -68,7 +68,7 @@ export const auth = betterAuth({
       async sendInvitationEmail(data) {
         const inviteLink = `${env.FRONTEND_URL}/join-organization?invitationId=${data.id}&email=${encodeURIComponent(data.email)}`
 
-        await tasks.trigger("send-organization-invitation-email", {
+        await emailsQueue.add("send-organization-invitation", {
           to: data.email,
           url: inviteLink,
           organizationName: data.organization.name,
