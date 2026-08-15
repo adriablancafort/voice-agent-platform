@@ -2,14 +2,9 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "types": [],
-    "strict": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
     "paths": {
       "@workspace/ui/*": ["./src/*"]
     }
