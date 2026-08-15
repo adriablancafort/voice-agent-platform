@@ -6,24 +6,24 @@ allowBuilds:
   esbuild: true
 
 catalog:
-  '@biomejs/biome': 2.3.8
-  '@livekit/components-react': 2.9.21
-  '@tailwindcss/vite': 4.1.18
-  '@trigger.dev/build': 4.5.0
-  '@trigger.dev/sdk': 4.5.0
-  '@types/node': 25.1.0
-  '@types/react': 19.2.10
-  '@types/react-dom': 19.2.3
-  better-auth: 1.6.14
+  '@biomejs/biome': 2.5.8
+  '@livekit/components-react': 2.9.24
+  '@tailwindcss/vite': 4.3.3
+  '@trigger.dev/build': 4.5.11
+  '@trigger.dev/sdk': 4.5.11
+  '@types/node': 26.2.0
+  '@types/react': 19.2.18
+  '@types/react-dom': 19.2.4
+  better-auth: 1.6.29
   dotenv: 17.4.2
-  drizzle-orm: 1.0.0-beta.22
-  livekit-client: 2.19.0
-  livekit-server-sdk: 2.15.3
-  lucide-react: 1.16.0
-  react: 19.2.4
-  react-dom: 19.2.4
-  trigger.dev: 4.5.0
-  tsx: 4.7.1
-  typescript: 5.9.3
-  vite: 7.3.2
+  drizzle-orm: 1.0.0-rc.4
+  livekit-client: 2.21.0
+  livekit-server-sdk: 2.17.0
+  lucide-react: 1.31.0
+  react: 19.2.8
+  react-dom: 19.2.8
+  trigger.dev: 4.5.11
+  tsx: 4.23.12
+  typescript: 7.0.2
+  vite: 8.2.1
   zod: 4.4.3

@@ -11,30 +11,30 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "^5.9.0",
     "@livekit/components-react": "catalog:",
-    "@tanstack/react-query": "^5.100.10",
-    "@tanstack/react-router": "^1.170.2",
+    "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-router": "^1.170.29",
     "@tanstack/react-table": "^8.21.3",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "@xyflow/react": "^12.10.2",
+    "@xyflow/react": "^12.11.3",
     "better-auth": "catalog:",
     "livekit-client": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.76.0",
+    "react-hook-form": "^7.85.0",
     "zod": "catalog:",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",
-    "@tanstack/router-plugin": "^1.168.3",
+    "@tanstack/router-plugin": "^1.168.32",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^6.0.5",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

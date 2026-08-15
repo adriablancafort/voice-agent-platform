@@ -21,11 +21,11 @@
     "@workspace/shared": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
-    "pg": "^8.20.0"
+    "pg": "^8.23.0"
   },
   "devDependencies": {
-    "@types/pg": "^8.20.0",
-    "drizzle-kit": "1.0.0-beta.22",
+    "@types/pg": "^8.21.0",
+    "drizzle-kit": "1.0.0-rc.4",
     "tsx": "catalog:"
   }
 }
