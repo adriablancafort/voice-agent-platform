@@ -9,8 +9,6 @@ catalog:
   '@biomejs/biome': 2.5.8
   '@livekit/components-react': 2.9.24
   '@tailwindcss/vite': 4.3.3
-  '@trigger.dev/build': 4.5.11
-  '@trigger.dev/sdk': 4.5.11
   '@types/node': 26.2.0
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.4
@@ -24,7 +22,6 @@ catalog:
   lucide-react: 1.31.0
   react: 19.2.8
   react-dom: 19.2.8
-  trigger.dev: 4.5.11
   tsx: 4.23.12
   typescript: 7.0.2
   vite: 8.2.1
