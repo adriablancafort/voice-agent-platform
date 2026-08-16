@@ -1,4 +1,4 @@
-# LiveKit SIP (self-hosted)
+# LiveKit SIP
 
 Phone-call bridge for inbound/outbound telephony. Follows [LiveKit SIP self-hosting](https://docs.livekit.io/transport/self-hosting/sip-server/).
 
@@ -18,7 +18,7 @@ cd /opt/livekit-sip
 ./start.sh
 ```
 
-`start.sh` installs Docker/`docker-compose` if needed, loads `.env`, substitutes `${VARS}` into the config YAML, and starts the stack.
+`start.sh` loads `.env` and runs `docker-compose up -d`.
 
 3. **Firewall**
 
@@ -29,4 +29,4 @@ sudo ufw allow 10000:20000/udp
 sudo ufw enable
 ```
 
-SIP URI is `<public-ip>:5060`. Create trunks and dispatch rules via the LiveKit APIs/CLI against your server.
+SIP URI is `<public-ip>:5060`.

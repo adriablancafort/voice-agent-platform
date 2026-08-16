@@ -1,6 +1,6 @@
-# LiveKit Server (self-hosted)
+# LiveKit Server
 
-LiveKit + Redis + Caddy on one Linux VM. Follows [LiveKit VM self-hosting](https://docs.livekit.io/transport/self-hosting/vm/).
+LiveKit + Redis + Caddy. Follows [LiveKit VM self-hosting](https://docs.livekit.io/transport/self-hosting/vm/).
 
 ## Deploy
 
@@ -16,7 +16,7 @@ cd /opt/livekit
 ./start.sh
 ```
 
-`start.sh` installs Docker/`docker-compose` if needed, loads `.env`, substitutes `${VARS}` into the config YAML, installs the `livekit-docker` systemd unit, and starts the stack.
+`start.sh` installs Docker/`docker-compose` if needed, loads `.env`, substitutes `${VARS}` into the config YAML, installs the `livekit-docker` systemd unit, and starts the stack. Run this before SIP, egress or the voice agent.
 
 3. **Firewall**
 
@@ -32,12 +32,8 @@ sudo ufw enable
 4. **Verify**
 
 ```bash
-systemctl status livekit-docker
-cd /opt/livekit && sudo docker-compose logs
 curl https://livekit.yourdomain.com   # should return OK
 ```
-
-Look for Caddy log lines: `certificate obtained successfully` for both domains.
 
 App env:
 
@@ -46,7 +42,3 @@ LIVEKIT_URL=wss://livekit.yourdomain.com
 LIVEKIT_API_KEY=<from .env>
 LIVEKIT_API_SECRET=<from .env>
 ```
-
-## Redis for egress / SIP on other VMs
-
-Default `redis.conf` binds `127.0.0.1` only. For remote workers, bind to a private interface, firewall it to those hosts, and point them at `<private-ip>:6379`.

@@ -28,7 +28,6 @@ if [ ! -x /usr/local/bin/docker-compose ]; then
 fi
 
 systemctl enable docker
-systemctl start docker || true
 
 docker run --rm \
   -e LIVEKIT_DOMAIN -e TURN_DOMAIN -e LIVEKIT_API_KEY -e LIVEKIT_API_SECRET \
@@ -56,4 +55,4 @@ EOF
 
 systemctl daemon-reload
 systemctl enable livekit-docker
-systemctl restart livekit-docker
+systemctl start livekit-docker

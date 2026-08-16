@@ -1,4 +1,4 @@
-# LiveKit Egress (self-hosted)
+# LiveKit Egress
 
 Recording worker for call audio/video. Follows [LiveKit egress self-hosting](https://docs.livekit.io/transport/self-hosting/egress/).
 
@@ -6,7 +6,7 @@ Must use the **same Redis** and API key/secret as [`../livekit-server`](../livek
 
 ## Deploy
 
-1. **VM sizing** - LiveKit recommends at least 4 CPUs and 4 GB RAM per egress instance. Prefer a dedicated VM so recordings do not steal CPU from the LiveKit server.
+1. **VM sizing** - LiveKit recommends at least 4 CPUs and 4 GB RAM per egress instance.
 
 2. **Configure and copy**
 
@@ -18,6 +18,4 @@ cd /opt/livekit-egress
 ./start.sh
 ```
 
-`start.sh` installs Docker/`docker-compose` if needed, loads `.env`, substitutes `${VARS}` into the config YAML, and starts the stack.
-
-Compose keeps `cap_add: SYS_ADMIN` and `shm_size: 1gb` so Chrome can start. Point `REDIS_ADDRESS` at the LiveKit server Redis.
+`start.sh` loads `.env` and runs `docker-compose up -d`.

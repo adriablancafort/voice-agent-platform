@@ -4,6 +4,14 @@ services:
     restart: unless-stopped
     network_mode: "host"
     environment:
-      SIP_CONFIG_FILE: /etc/sip.yaml
-    volumes:
-      - ./sip.yaml:/etc/sip.yaml:ro
+      SIP_CONFIG_BODY: |
+        api_key: '${LIVEKIT_API_KEY}'
+        api_secret: '${LIVEKIT_API_SECRET}'
+        ws_url: '${LIVEKIT_URL}'
+        redis:
+          address: '${REDIS_ADDRESS}'
+        sip_port: 5060
+        rtp_port: 10000-20000
+        use_external_ip: true
+        logging:
+          level: info

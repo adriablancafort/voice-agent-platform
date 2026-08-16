@@ -1,9 +1,0 @@
-log_level: info
-api_key: ${LIVEKIT_API_KEY}
-api_secret: ${LIVEKIT_API_SECRET}
-ws_url: ${LIVEKIT_URL}
-redis:
-  address: ${REDIS_ADDRESS}
-sip_port: 5060
-rtp_port: 10000-20000
-use_external_ip: true

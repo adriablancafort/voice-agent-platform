@@ -7,6 +7,10 @@ services:
       - SYS_ADMIN
     shm_size: "1gb"
     environment:
-      EGRESS_CONFIG_FILE: /etc/egress.yaml
-    volumes:
-      - ./egress.yaml:/etc/egress.yaml:ro
+      EGRESS_CONFIG_BODY: |
+        api_key: '${LIVEKIT_API_KEY}'
+        api_secret: '${LIVEKIT_API_SECRET}'
+        ws_url: '${LIVEKIT_URL}'
+        redis:
+          address: '${REDIS_ADDRESS}'
+        log_level: info
