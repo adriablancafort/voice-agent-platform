@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
     "types": ["node"],
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,

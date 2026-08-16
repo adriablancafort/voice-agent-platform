@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2023",
     "types": ["node"],
-    "skipLibCheck": true,
-    "moduleDetection": "force",
-    "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true,
-    "noEmit": true,
     "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./src/*"]
     }

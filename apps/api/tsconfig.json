@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
     "types": ["node"],
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
     "paths": {
       "@/*": ["./src/*"]
     }
