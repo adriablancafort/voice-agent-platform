@@ -11,7 +11,7 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.0",
+    "@hookform/resolvers": "5.8.0",
     "@livekit/components-react": "catalog:",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-router": "^1.170.29",

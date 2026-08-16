@@ -4,6 +4,7 @@ packages:
 
 allowBuilds:
   esbuild: true
+  msgpackr-extract: true
 
 catalog:
   '@biomejs/biome': 2.5.8
