@@ -14,4 +14,10 @@ export const env = {
   LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ?? "",
   LIVEKIT_URL: process.env.LIVEKIT_URL ?? "",
   LIVEKIT_AGENT_NAME: process.env.LIVEKIT_AGENT_NAME ?? "voice-agent",
+  S3_ACCESS_KEY: process.env.S3_ACCESS_KEY ?? "",
+  S3_SECRET_KEY: process.env.S3_SECRET_KEY ?? "",
+  S3_BUCKET: process.env.S3_BUCKET ?? "",
+  S3_REGION: process.env.S3_REGION ?? "",
+  S3_ENDPOINT: process.env.S3_ENDPOINT ?? "",
+  S3_PUBLIC_URL: process.env.S3_PUBLIC_URL ?? "",
 }

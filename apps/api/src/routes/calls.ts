@@ -23,7 +23,12 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
-import { placeOutboundCall } from "@/lib/livekit"
+import {
+  getRecordingUrl,
+  placeOutboundCall,
+  startCallRecording,
+  stopCallRecording,
+} from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
@@ -116,6 +121,8 @@ callRoutes.post(
         })
         .returning({ id: callsTable.id })
 
+      await startCallRecording(payload.livekitRoomName, call.id)
+
       return c.json(
         {
           callId: call.id,
@@ -181,6 +188,8 @@ callRoutes.post(
         })
         .returning({ id: callsTable.id })
 
+      await startCallRecording(payload.livekitRoomName, call.id)
+
       return c.json(
         {
           callId: call.id,
@@ -230,6 +239,8 @@ callRoutes.post(
           startedAt: new Date(payload.startedAt),
         })
         .returning({ id: callsTable.id })
+
+      await startCallRecording(payload.livekitRoomName, call.id)
 
       return c.json(
         {
@@ -281,6 +292,8 @@ callRoutes.post(
         ttsModel: call.ttsModel,
       })
 
+      await stopCallRecording(call.livekitRoomName)
+
       const [updated] = await db
         .update(callsTable)
         .set({
@@ -295,6 +308,7 @@ callRoutes.post(
           totalCost: costs.total.toFixed(6),
           transcript: payload.transcript,
           variables: payload.variables ?? null,
+          recordingUrl: getRecordingUrl(call.id),
           updatedAt: new Date(),
         })
         .where(eq(callsTable.id, payload.callId))
@@ -385,6 +399,7 @@ callRoutes.get("/", requireOrganization, async (c) => {
       },
       columns: {
         transcript: false,
+        recordingUrl: false,
       },
       with: {
         agent: {

@@ -65,6 +65,14 @@ export function CallDetailSheet({
               ? ` - ${secondsFormatter.format(call.durationMs / 1000)}s`
               : null}
           </SheetDescription>
+          {data?.recordingUrl ? (
+            <audio
+              className="w-full mt-2 max-h-12"
+              controls
+              preload="metadata"
+              src={data.recordingUrl}
+            />
+          ) : null}
         </SheetHeader>
 
         {isLoading ? (

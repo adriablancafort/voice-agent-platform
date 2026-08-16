@@ -4,9 +4,3 @@ api_secret: ${LIVEKIT_API_SECRET}
 ws_url: ${LIVEKIT_URL}
 redis:
   address: ${REDIS_ADDRESS}
-s3:
-  access_key: ${S3_ACCESS_KEY}
-  secret: ${S3_SECRET_KEY}
-  region: ${S3_REGION}
-  endpoint: ${S3_ENDPOINT}
-  bucket: ${S3_BUCKET}

@@ -1,6 +1,6 @@
 # LiveKit Egress (self-hosted)
 
-Recording worker for call audio/video -> S3 or R2. Follows [LiveKit egress self-hosting](https://docs.livekit.io/transport/self-hosting/egress/).
+Recording worker for call audio/video. Follows [LiveKit egress self-hosting](https://docs.livekit.io/transport/self-hosting/egress/).
 
 Must use the **same Redis** and API key/secret as [`../livekit-server`](../livekit-server).
 

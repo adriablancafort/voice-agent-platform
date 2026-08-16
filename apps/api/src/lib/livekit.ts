@@ -1,6 +1,12 @@
-import { SIPOutboundConfig } from "@livekit/protocol"
+import {
+  EncodedFileOutput,
+  EncodedFileType,
+  S3Upload,
+  SIPOutboundConfig,
+} from "@livekit/protocol"
 import {
   AgentDispatchClient,
+  EgressClient,
   RoomAgentDispatch,
   RoomConfiguration,
   SipClient,
@@ -25,6 +31,66 @@ function createAgentDispatchClient() {
     env.LIVEKIT_API_KEY,
     env.LIVEKIT_API_SECRET
   )
+}
+
+function createEgressClient() {
+  return new EgressClient(
+    env.LIVEKIT_URL,
+    env.LIVEKIT_API_KEY,
+    env.LIVEKIT_API_SECRET
+  )
+}
+
+function egressConfigured() {
+  return Boolean(
+    env.S3_ACCESS_KEY &&
+      env.S3_SECRET_KEY &&
+      env.S3_BUCKET &&
+      env.S3_REGION &&
+      env.S3_ENDPOINT &&
+      env.S3_PUBLIC_URL
+  )
+}
+
+export function getRecordingUrl(callId: string) {
+  if (!egressConfigured()) return null
+  return `${env.S3_PUBLIC_URL}/recordings/${callId}.mp4`
+}
+
+export async function startCallRecording(roomName: string, callId: string) {
+  if (!egressConfigured()) return
+
+  const egress = createEgressClient()
+  await egress.startRoomCompositeEgress(
+    roomName,
+    {
+      file: new EncodedFileOutput({
+        fileType: EncodedFileType.MP4,
+        filepath: `recordings/${callId}.mp4`,
+        disableManifest: true,
+        output: {
+          case: "s3",
+          value: new S3Upload({
+            accessKey: env.S3_ACCESS_KEY,
+            secret: env.S3_SECRET_KEY,
+            bucket: env.S3_BUCKET,
+            region: env.S3_REGION,
+            endpoint: env.S3_ENDPOINT,
+            forcePathStyle: true,
+          }),
+        },
+      }),
+    },
+    { audioOnly: true }
+  )
+}
+
+export async function stopCallRecording(roomName: string) {
+  if (!egressConfigured()) return
+
+  const egress = createEgressClient()
+  const active = await egress.listEgress({ roomName, active: true })
+  await Promise.all(active.map((item) => egress.stopEgress(item.egressId)))
 }
 
 type SipPhoneNumber = {

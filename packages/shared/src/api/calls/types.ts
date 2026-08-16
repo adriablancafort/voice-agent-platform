@@ -93,6 +93,7 @@ export type CallDetailResponse = {
   llmModel: string
   ttsModel: string
   livekitRoomName: string
+  recordingUrl: string | null
   startedAt: Date
   endedAt: Date | null
   durationMs: number | null
