@@ -1,0 +1,23 @@
+services:
+  caddy:
+    image: livekit/caddyl4
+    command: run --config /etc/caddy.yaml --adapter yaml
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./caddy.yaml:/etc/caddy.yaml
+      - ./caddy_data:/data
+  livekit:
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+  redis:
+    image: redis:7-alpine
+    command: redis-server /etc/redis.conf
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./redis.conf:/etc/redis.conf

@@ -1,0 +1,9 @@
+services:
+  sip:
+    image: livekit/sip:latest
+    restart: unless-stopped
+    network_mode: "host"
+    environment:
+      SIP_CONFIG_FILE: /etc/sip.yaml
+    volumes:
+      - ./sip.yaml:/etc/sip.yaml:ro

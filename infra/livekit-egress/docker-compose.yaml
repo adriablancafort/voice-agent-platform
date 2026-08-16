@@ -1,0 +1,12 @@
+services:
+  egress:
+    image: livekit/egress:latest
+    restart: unless-stopped
+    network_mode: "host"
+    cap_add:
+      - SYS_ADMIN
+    shm_size: "1gb"
+    environment:
+      EGRESS_CONFIG_FILE: /etc/egress.yaml
+    volumes:
+      - ./egress.yaml:/etc/egress.yaml:ro
