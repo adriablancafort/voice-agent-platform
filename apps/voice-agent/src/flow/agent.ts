@@ -1,4 +1,4 @@
-import { llm, voice } from "@livekit/agents"
+import { Agent, tool } from "@livekit/agents"
 import { z } from "zod"
 
 import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
@@ -28,7 +28,7 @@ function buildNodeInstructions(
   return nodeInstructions
 }
 
-export class FlowAgent extends voice.Agent {
+export class FlowAgent extends Agent {
   private readonly graph: FlowGraph
   private readonly variables: Variables
 
@@ -39,36 +39,35 @@ export class FlowAgent extends voice.Agent {
 
     this.graph = graph
     this.variables = variables
-    this._tools = this._buildNodeTools(graph.startNode)
   }
 
-  private _buildNodeTools(node: FlowConversationNode): llm.ToolContext {
-    const tools: llm.ToolContext = {}
+  private buildNodeTools(node: FlowConversationNode) {
+    const tools = []
 
     for (const edge of node.outgoingEdges) {
       if (edge.condition.type !== "prompt") {
         continue
       }
 
-      tools[edge.transitionToolName] = llm.tool({
-        description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition.prompt)}`,
-        execute: async () => {
-          await this._transitionTo(edge.targetNode)
-        },
-      })
+      tools.push(
+        tool({
+          name: edge.transitionToolName,
+          description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition.prompt)}`,
+          execute: async () => {
+            await this.transitionTo(edge.targetNode)
+          },
+        })
+      )
     }
 
     if (node.extractVariables) {
-      tools.extract_variables = this._buildExtractTool(
-        node,
-        node.extractVariables
-      )
+      tools.push(this.buildExtractTool(node, node.extractVariables))
     }
 
     return tools
   }
 
-  private _buildExtractTool(
+  private buildExtractTool(
     node: FlowConversationNode,
     extractVariables: ExtractVariable[]
   ) {
@@ -89,7 +88,8 @@ export class FlowAgent extends voice.Agent {
       shape[variable.key] = field.optional()
     }
 
-    return llm.tool({
+    return tool({
+      name: "extract_variables",
       description:
         "Call when the user provides the requested values. Only include the fields you are confident about.",
       parameters: z.object(shape),
@@ -98,15 +98,15 @@ export class FlowAgent extends voice.Agent {
           this.variables.set(key, String(value))
         }
 
-        const target = this._matchedTarget(node)
+        const target = this.matchedTarget(node)
         if (target) {
-          await this._transitionTo(target)
+          await this.transitionTo(target)
         }
       },
     })
   }
 
-  private _matchedTarget(node: FlowConversationNode): FlowNode | undefined {
+  private matchedTarget(node: FlowConversationNode): FlowNode | undefined {
     const edge = node.outgoingEdges.find(
       (candidate) =>
         candidate.condition.type === "always" ||
@@ -116,35 +116,38 @@ export class FlowAgent extends voice.Agent {
     return edge?.targetNode
   }
 
-  private async _transitionTo(node: FlowNode) {
+  private async transitionTo(node: FlowNode) {
     if (node.type === "end") {
       await endCall()
       return
     }
 
-    this._instructions = buildNodeInstructions(this.graph, node, this.variables)
-    await this.updateTools(this._buildNodeTools(node))
-    await this._enterNode(node)
+    await this.updateInstructions(
+      buildNodeInstructions(this.graph, node, this.variables)
+    )
+    await this.updateTools(this.buildNodeTools(node))
+    await this.enterNode(node)
   }
 
-  private async _enterNode(node: FlowConversationNode) {
+  private async enterNode(node: FlowConversationNode) {
     const speech =
       node.instructions.type === "say"
         ? this.session.say(this.variables.replace(node.instructions.text))
         : this.session.generateReply()
 
-    const target = this._matchedTarget(node)
+    const target = this.matchedTarget(node)
     if (target) {
       await speech.waitForPlayout()
-      await this._transitionTo(target)
+      await this.transitionTo(target)
     }
   }
 
   override async onEnter() {
     const startNode = this.graph.startNode
+    await this.updateTools(this.buildNodeTools(startNode))
 
     if (startNode.startSpeaker === "agent") {
-      await this._enterNode(startNode)
+      await this.enterNode(startNode)
     }
   }
 }

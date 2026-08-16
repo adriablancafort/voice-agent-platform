@@ -9,7 +9,6 @@ import type {
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
-  turnDetectionConfigSchema,
 } from "./schemas"
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
@@ -25,4 +24,3 @@ export type FlowEdgeConfig = z.infer<typeof flowEdgeConfigSchema>
 export type FlowEdgeCondition = z.infer<typeof flowEdgeConditionSchema>
 export type ExpressionCondition = z.infer<typeof expressionConditionSchema>
 export type ExpressionOperator = z.infer<typeof expressionOperatorSchema>
-export type TurnDetectionConfig = z.infer<typeof turnDetectionConfigSchema>

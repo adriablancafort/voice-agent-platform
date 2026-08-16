@@ -21,12 +21,6 @@ export const ttsConfigSchema = z
   })
   .strict()
 
-export const turnDetectionConfigSchema = z
-  .object({
-    model: z.enum(["multilingual", "english"]),
-  })
-  .strict()
-
 export const flowNodeInstructionsSchema = z.object({
   type: z.enum(["prompt", "say"]),
   text: z.string().trim().min(1),
@@ -136,7 +130,6 @@ export const agentConfigSchema = z
     stt: sttConfigSchema,
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
-    turnDetection: turnDetectionConfigSchema,
     globalPrompt: z.string(),
     nodes: z.array(flowNodeConfigSchema).min(1),
     edges: z.array(flowEdgeConfigSchema),

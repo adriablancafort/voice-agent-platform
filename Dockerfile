@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 FROM node:${NODE_VERSION}-slim AS base
 
 ENV PNPM_HOME="/pnpm"
@@ -43,8 +43,6 @@ COPY --from=build --chown=appuser:appuser /app /app
 USER appuser
 
 WORKDIR /app/apps/voice-agent
-
-RUN node dist/main.js download-files
 
 ENV NODE_ENV=production
 

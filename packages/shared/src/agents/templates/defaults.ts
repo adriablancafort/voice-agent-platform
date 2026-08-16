@@ -13,9 +13,6 @@ export function createDefaultAgentConfig(): AgentConfig {
       model: "cartesia/sonic-3",
       voice: "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
     },
-    turnDetection: {
-      model: "multilingual",
-    },
     globalPrompt: "You are a helpful assistant",
     nodes: [
       {

@@ -3,19 +3,16 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "vite build",
-    "dev": "pnpm run build && node dist/main.js dev",
-    "download-files": "pnpm run build && node dist/main.js download-files",
+    "dev": "tsx src/main.ts dev",
+    "build": "rm -rf dist && rolldown -c",
     "start": "node dist/main.js start",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
-    "@livekit/agents": "^1.4.1",
-    "@livekit/agents-plugin-livekit": "^1.4.1",
-    "@livekit/agents-plugin-silero": "^1.4.1",
-    "@livekit/plugins-ai-coustics": "^0.2.12",
+    "@livekit/agents": "^1.6.4",
+    "@livekit/plugins-ai-coustics": "^0.3.0",
     "@workspace/shared": "workspace:*",
     "dotenv": "catalog:",
     "livekit-server-sdk": "catalog:",
@@ -23,8 +20,8 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "jiti": "^2.6.1",
-    "typescript": "catalog:",
-    "vite": "catalog:"
+    "rolldown": "^1.2.4",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }
