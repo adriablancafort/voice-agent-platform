@@ -8,7 +8,8 @@
     "start": "node dist/apps/api/src/index.js",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false ."
+    "format": "biome check --write --linter-enabled=false .",
+    "sync-inbound-sip": "tsx scripts/sync-inbound-sip.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.1",

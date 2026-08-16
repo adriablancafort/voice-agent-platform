@@ -34,7 +34,7 @@ type SipPhoneNumber = {
 }
 
 export async function provisionInbound(phoneNumber: SipPhoneNumber) {
-  if (!phoneNumber.sipUsername) return
+  if (!phoneNumber.sipUsername || !phoneNumber.sipPassword) return
 
   const sip = createSipClient()
 
@@ -74,6 +74,31 @@ export async function deprovisionInbound(phoneNumber: { number: string }) {
       await sip.deleteSipDispatchRule(rule.sipDispatchRuleId)
     }
     await sip.deleteSipTrunk(trunk.sipTrunkId)
+  }
+}
+
+export async function clearSipConfig() {
+  const sip = createSipClient()
+
+  const dispatchRules = await sip.listSipDispatchRule()
+  for (const rule of dispatchRules) {
+    await sip.deleteSipDispatchRule(rule.sipDispatchRuleId)
+  }
+
+  const inboundTrunks = await sip.listSipInboundTrunk()
+  for (const trunk of inboundTrunks) {
+    await sip.deleteSipTrunk(trunk.sipTrunkId)
+  }
+
+  const outboundTrunks = await sip.listSipOutboundTrunk()
+  for (const trunk of outboundTrunks) {
+    await sip.deleteSipTrunk(trunk.sipTrunkId)
+  }
+
+  return {
+    deletedDispatchRules: dispatchRules.length,
+    deletedInboundTrunks: inboundTrunks.length,
+    deletedOutboundTrunks: outboundTrunks.length,
   }
 }
 
