@@ -9,75 +9,86 @@ import type {
   StartWebCallRequest,
 } from "@workspace/shared/api/calls/types"
 import { api } from "@/lib/api"
+import { endCall } from "@/lib/end-call"
 import { parseJsonObject } from "@/lib/json"
 
 export function parseDispatchMetadata(metadata: string | undefined) {
   return parseJsonObject(metadata) as CallDispatchMetadata
 }
 
-export function startCall(
+export async function startCall(
   attributes: CallVariableValues,
   metadata: CallDispatchMetadata,
   livekitRoomName: string
 ) {
   const startedAt = new Date().toISOString()
 
-  if (metadata.direction === "outbound") {
-    if (!metadata.agentId || !metadata.fromNumber || !metadata.toNumber) {
-      throw new Error(
-        "Outbound calls require agentId, fromNumber and toNumber in dispatch metadata"
+  try {
+    if (metadata.direction === "outbound") {
+      if (!metadata.agentId || !metadata.fromNumber || !metadata.toNumber) {
+        throw new Error(
+          "Outbound calls require agentId, fromNumber and toNumber in dispatch metadata"
+        )
+      }
+
+      return await api.post<StartCallResponse, StartOutboundCallRequest>(
+        "/calls/start/outbound",
+        {
+          body: {
+            agentId: metadata.agentId,
+            agentVersionId: metadata.agentVersionId ?? null,
+            fromNumber: metadata.fromNumber,
+            toNumber: metadata.toNumber,
+            livekitRoomName,
+            startedAt,
+          },
+        }
       )
     }
 
-    return api.post<StartCallResponse, StartOutboundCallRequest>(
-      "/calls/start/outbound",
-      {
-        body: {
-          agentId: metadata.agentId,
-          agentVersionId: metadata.agentVersionId ?? null,
-          fromNumber: metadata.fromNumber,
-          toNumber: metadata.toNumber,
-          livekitRoomName,
-          startedAt,
-        },
+    if (metadata.direction === "inbound") {
+      const toNumber = attributes["sip.trunkPhoneNumber"]
+
+      if (!toNumber) {
+        throw new Error(
+          "Inbound calls require a sip.trunkPhoneNumber attribute"
+        )
       }
-    )
-  }
 
-  if (metadata.direction === "inbound") {
-    const toNumber = attributes["sip.trunkPhoneNumber"]
-
-    if (!toNumber) {
-      throw new Error("Inbound calls require a sip.trunkPhoneNumber attribute")
+      return await api.post<StartCallResponse, StartInboundCallRequest>(
+        "/calls/start/inbound",
+        {
+          body: {
+            toNumber,
+            fromNumber: attributes["sip.phoneNumber"] ?? "",
+            livekitRoomName,
+            startedAt,
+          },
+        }
+      )
     }
 
-    return api.post<StartCallResponse, StartInboundCallRequest>(
-      "/calls/start/inbound",
+    const agentId = attributes.agent_id
+
+    if (!agentId) {
+      throw new Error("Web calls require an agent_id attribute")
+    }
+
+    return await api.post<StartCallResponse, StartWebCallRequest>(
+      "/calls/start/web",
       {
         body: {
-          toNumber,
-          fromNumber: attributes["sip.phoneNumber"] ?? "",
+          agentId,
+          agentVersionId: attributes.agent_version_id || null,
           livekitRoomName,
           startedAt,
         },
       }
     )
+  } catch (error) {
+    await endCall()
+    throw error
   }
-
-  const agentId = attributes.agent_id
-
-  if (!agentId) {
-    throw new Error("Web calls require an agent_id attribute")
-  }
-
-  return api.post<StartCallResponse, StartWebCallRequest>("/calls/start/web", {
-    body: {
-      agentId,
-      agentVersionId: attributes.agent_version_id || null,
-      livekitRoomName,
-      startedAt,
-    },
-  })
 }
 
 export function completeCall(
