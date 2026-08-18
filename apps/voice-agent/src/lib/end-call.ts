@@ -17,6 +17,4 @@ export async function endCall() {
   if (participant) {
     await roomService.removeParticipant(roomName, participant.identity)
   }
-
-  ctx.shutdown()
 }
