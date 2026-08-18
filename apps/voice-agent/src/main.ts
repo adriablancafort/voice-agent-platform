@@ -59,6 +59,7 @@ export default defineAgent({
       inputOptions: {
         noiseCancellation: audioEnhancement({ model: EnhancerModel.QuailVfS }),
       },
+      record: false,
     })
   },
 })
